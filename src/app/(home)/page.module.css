@@ -1,0 +1,15 @@
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  justify-items: center;
+  overflow: hidden;
+}
+
+.collections {
+  height: 252px;
+  width: 100vw;
+  max-width: 1000px;
+  display: grid;
+  justify-content: center;
+}
