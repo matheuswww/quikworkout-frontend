@@ -33,6 +33,8 @@
   justify-self: center;
   text-transform: uppercase;
   align-self: center;
+  cursor: pointer;
+  animation: up .5s forwards linear;
 }
 
 .phrase1 {

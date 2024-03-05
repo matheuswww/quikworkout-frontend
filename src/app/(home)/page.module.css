@@ -7,9 +7,17 @@
 }
 
 .collections {
-  height: 252px;
   width: 100vw;
   max-width: 1000px;
+  height: max-content;
   display: grid;
   justify-content: center;
+}
+
+.allCollections {
+  display: grid;
+  justify-content: center;
+  width: 100vw;
+  max-width: 1020px;
+  margin-top: 50px;
 }

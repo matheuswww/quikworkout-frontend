@@ -1,0 +1,116 @@
+.card {
+  position: relative;
+  display: block;
+  background-color: transparent;
+  margin-top: 12px;
+  margin-left: 11px;
+  -webkit-tap-highlight-color: transparent;
+  transition: .5s;
+  transform: translateY(5px);
+  width: max-content;
+  height: max-content;
+}
+
+.h2 {
+  position: relative;
+}
+
+.product {
+  height: 100%;
+  list-style: none;
+}
+
+.card img {
+  opacity: 35%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.card p {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-family: var(--inkfree);
+  font-size: 1.5rem;
+}
+
+.slide {
+  height: 100%;
+  display: inline-flex;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+}
+
+.wrapper {
+  height: 102%;
+  overflow: hidden;
+}
+
+.card {
+  list-style: none;
+}
+
+.card img {
+  object-fit: cover;
+}
+
+.wrapper ul li:last-child a {
+  margin-right: 11px;
+}
+
+.card:hover {
+  transition: .5s;
+  transform: translateY(-5px);
+}
+
+.card:hover img {
+  opacity: 60%;
+  background-color: transparent;
+}
+
+.card:focus {
+  transition: .5s;
+  transform: translateY(-5px);
+}
+
+.card:focus img {
+  opacity: 50%;
+}
+
+@media (min-width: 405px) {
+  .card img {
+    width: 180px;
+  }
+}
+
+@media (min-width: 950px) {
+  .card img {
+    width: 264px;
+    height: 370px;
+    left: 8px;
+  }
+
+  .wrapper ul li:last-child a {
+    margin-right: 0px;
+  }
+  .wrapper ul li:first-child a {
+    margin-left: 0px;
+  }
+
+  .card p {
+    font-size: 2rem;
+  }
+
+  .h2 {
+    margin-left: 0px;
+    font-size: 1.5rem;
+  }
+
+  .h2::after {
+    width: 18px;
+  }
+}
