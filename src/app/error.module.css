@@ -1,0 +1,40 @@
+.wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.internalServerError {
+  font-size: 1.4rem;
+  color: white;
+  font-family: var(--interSemiBold);
+}
+
+.message {
+  font-size: 1rem;
+  color: white;
+  font-family: var(--interSemiBold);
+  margin-top: 5px;
+  width: 303px;
+}
+
+.header {
+  display: none;
+}
+
+@media (min-width: 465px) {
+ .internalServerError {
+  font-size: 2rem;
+ } 
+ .message {
+  font-size: 1.5rem;
+  width: 410px;
+ }
+ .wrapper img {
+  width: 31px;
+  height: 25px;
+ }
+}

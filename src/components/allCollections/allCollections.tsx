@@ -9,7 +9,7 @@ export default async function AllCollections() {
     <>
       <h2 className={styles.h2}>Todas as Coleções  </h2>
       <div className={styles.wrapper}>
-        {data.clothing?.map((clothing) =>
+        {(data.status != 400 && data.status != 500) ? data.clothing ? data.clothing.map((clothing) =>
           clothing.inventario.map((inventory) => {
             if (inventory.images == null) {
               return null
@@ -24,7 +24,7 @@ export default async function AllCollections() {
               </Link>
             )
           })
-        )}
+        ) : <div className={styles.notFound}><p>Nenhuma roupa foi encontrada</p></div> : <p className={styles.error}>Oops, parece que houve um erro</p>}
       </div>
     </>
   )
