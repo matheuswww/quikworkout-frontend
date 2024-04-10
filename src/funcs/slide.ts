@@ -36,6 +36,7 @@ export default class slide {
   }
 
   onStart(event: MouseEvent | TouchEvent) {
+    event.preventDefault()
     let moveType: 'mousemove' | 'touchmove'
     if (event instanceof MouseEvent) {
       event.preventDefault()
@@ -70,9 +71,9 @@ export default class slide {
 
   addSlideEvents() {
     this.wrapper.addEventListener('mousedown', this.onStart)
-    document.addEventListener('mouseup', this.onEnd, { passive: true })
-    this.wrapper.addEventListener('touchstart', this.onStart, { passive: true })
-    document.addEventListener('touchend', this.onEnd, { passive: true })
+    document.addEventListener('mouseup', this.onEnd)
+    this.wrapper.addEventListener('touchstart', this.onStart)
+    document.addEventListener('touchend', this.onEnd)
   }
 
   bindEvents() {

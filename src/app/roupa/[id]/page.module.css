@@ -1,0 +1,36 @@
+.main {
+  height: 100vh;
+  width: 100%;
+  background-image: linear-gradient(270deg, #000000, #19191d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main section {
+  width: 100%;
+  display: grid;
+  margin-top: 45px;
+}
+
+@media (min-width: 800px) {
+  .main section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 780px;
+  }
+}
+
+@media (max-height: 420px) {
+  .main {
+    height: auto;
+  }
+}
+
+@media (min-width: 1130px) {
+  .main section {
+    width: 915px;
+    margin-top: 0px;
+  }
+}

@@ -8,7 +8,7 @@
   justify-self: center;
   position: relative;
   margin-left: 0px;
-  width: 219px;
+  width: max-content;
   font-size: 1.5rem;
 }
 
@@ -50,7 +50,7 @@
 .price {
   padding-top: 2px;
   padding-left: 20px;
-  font-size: .7rem;
+  font-size: .8rem;
   font-family: var(--interSemiBold);
   color: #B4B4B4;
 }

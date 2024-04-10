@@ -1,4 +1,4 @@
-import { clothingPath } from "./clothingPath"
+import { api, clothingPath } from "./clothingPath"
 
 interface params {
   corPrincipal: boolean
@@ -47,13 +47,7 @@ interface data {
 
 
 export default async function GetAllClothing(params: params | null):Promise<response> {
-  let url = process.env.API
-  if (url == undefined) {
-    return {
-      status: 500,
-      clothing: null,
-    }
-  }
+  let url = api
   url+=clothingPath+"/getClothing"
   if (params !== null) {
     url += getParams(params)
@@ -61,13 +55,24 @@ export default async function GetAllClothing(params: params | null):Promise<resp
   try {
     const res = await fetch(url, {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      next: {
+        revalidate: 60 * 10
+      }
     }).then(res => res)
-    const data = await res.json()
     let status:statusCode
-    if (res.status === 200 || res.status == 404 || res.status == 400 || res.status == 500) {
+    if (res.status === 200 || res.status === 404 || res.status === 400 || res.status === 500) {
       status = res.status
     } else {
       status = 500
+    }
+    let data:data[] | null
+    if (status == 200) {
+      data = await res.json()
+    } else {
+      data = null
     }
     return {
       status: status,
