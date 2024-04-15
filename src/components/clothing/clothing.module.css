@@ -1,3 +1,7 @@
+.activeButton {
+  background-color: #565656e9;
+}
+
 .infos {
   display: grid;
   grid-template-columns: 130px 160px;
@@ -31,6 +35,16 @@
   justify-self: center;
   text-align: center;
   position: relative;
+  animation: enter .5s forwards;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .product {
@@ -59,18 +73,62 @@
   margin: 5px 0px 15px 0px;
 }
 
+.colors button {
+  width: 160px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: #19191d;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 7px;
+  border: none;
+  border: 2px solid #ACACAC;
+  z-index: -1;
+}
+
+.colors button p {
+  color: white;
+  font-family: var(--interRegular) !important;
+  font-size: 1rem !important;
+  margin-top: 1px;
+}
+
+.expand {
+  display: block;
+  background-color: white;
+  height: 10px;
+  width: 2px;
+  position: relative;
+  top: 8px;
+  left: -15px;
+  transform: rotate(-43deg);
+}
+
+.expand::after {
+  content: "";
+  display: block;
+  background-color: white;
+  height: 11px;
+  width: 2px;
+  position: absolute;
+  transform: rotate(-92deg);
+  right: -5px;
+  bottom: -5px;
+}
+
+.gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), .sizes label, 
+.counter p:nth-child(3), .addPurchase p, .description {
+  color: white;
+  font-family: var(--interRegular);
+  font-size: 0.9rem;
+}
+
 .gender p:nth-child(1), .material p:nth-child(1), .category p:nth-child(1), .sizes p:nth-child(1), .colors p:nth-child(1), .counter p:nth-child(1) {
   color: white;
   font-family: var(--inkfree);
   font-size: 1.4rem;
 }
 
-.gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), .sizes label, .colors select, 
-.counter p:nth-child(3), .addPurchase p, .description {
-  color: white;
-  font-family: var(--interRegular);
-  font-size: 0.9rem;
-}
 
 .sizes label {
   display: inline-flex;
@@ -88,11 +146,7 @@
 
 .sizes label:last-child {
   margin-right: 0px;
-}
-
-.sizes label:hover {
-  background-color: #565656;
-  cursor: pointer;
+  width: 38px;
 }
 
 .sizes label input {
@@ -100,23 +154,17 @@
   opacity: 0;
 }
 
-.selected {
-  background-color: #565656;
-}
-
-.sizes label:nth-child(5) {
-  width: 35px;
-}
-
-.colors select {
-  -webkit-tap-highlight-color: transparent;
-  border-radius: 5px;
-  outline: none;
-  width: 147px;
-  border: 2px solid #ACACAC;
-  height: 28px;
-  background-color: #19191d;
+.sizes label:hover {
   cursor: pointer;
+  background-color: var(--btnHover);
+}
+
+.sizes label:active {
+  background-color: var(--btnClicked);
+}
+
+.selected {
+  background-color: var(--btnHover);
 }
 
 .counter {
@@ -166,16 +214,6 @@
   transform: rotate(88deg);
 }
 
-.counter button:hover {
-  background-color: rgba(255, 255, 255, 0);
-  cursor: pointer;
-}
-
-.counter button:active {
-  background-color: #565656;
-  cursor: pointer;
-}
-
 .addPurchase {
   display: flex;
   justify-content: center;
@@ -193,11 +231,6 @@
 
 .addPurchase p {
   margin-left: 5px;
-}
-
-.addPurchase:hover {
-  background-color: rgba(255, 255, 255, 0);
-  cursor: pointer;
 }
 
 .addPurchase:active {
@@ -240,10 +273,16 @@
   align-self: start;
 }
 
-.indexImages img {
+.indexImages li button img {
   width: 100%;
   height: 100%;
   border-radius: 8px;
+  pointer-events: none;
+}
+
+.indexImages li button {
+  background-color: transparent;
+  border: none;
   opacity: 70%;
 }
 
@@ -254,7 +293,6 @@
   height: 65px;
   margin-top: 10px;
   margin-left: 10px;
-  cursor: pointer;
 }
 
 .activeThumb {
@@ -270,10 +308,47 @@
   height: max-content;
 }
 
+.selectModal {
+  display: none;
+  transition: .5s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: max-content;
+  background: #19191d;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  z-index: 999;
+  opacity: 0;
+  transform: translate(-50%, -35%);
+}
+
+.selectModal.active {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.selectModal button {
+  background-color: transparent;
+  border: none;
+  font-family: var(--interRegular) !important;
+  font-size: 1rem !important;
+  color: white !important;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid #ACACAC;
+  padding: 10px;
+}
+
+.selectModal button:last-child {
+  border-bottom: 0px;
+}
+
 @media (min-width: 400px) {
   .images {
     width: 325px;
-    margin-top: 45px;
   }
 
   .clothing {
@@ -309,7 +384,7 @@
   }
 
   .more::before {
-    left: 30%;
+    left: 29%;
   }
 }
 
@@ -329,6 +404,10 @@
 
   .infos {
     grid-template-columns: 205px 155px;
+  }
+
+  .colors select {
+    height: 30px;
   }
 }
 
@@ -368,7 +447,6 @@
 
   .indexImages {
     width: 70px;
-    height: 75px;
   }
 
   .gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), .sizes label, .colors select, 
@@ -390,3 +468,48 @@
   }
 }
 
+@media (hover: hover) { 
+  .more:hover,.less:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+  .colors button:hover,.colors button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+  .selectModal button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+  .addPurchase:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+  .indexImages button:hover img {
+    opacity: 70%;
+    cursor: pointer;
+  }
+
+  .indexImages button:hover {
+    cursor: pointer;
+  }
+}
+
+.more:active,.less:active {
+  background-color: var(--btnClicked);
+}
+
+.colors button:active,.colors button:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+.selectModal button:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+.addPurchase:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}

@@ -22,7 +22,9 @@
 :root {
   --interSemiBold: 'inter-SemiBold';
   --inkfree: 'inkfree';
-  --interRegular: 'inter-Regular'
+  --interRegular: 'inter-Regular';
+  --btnClicked: #363636;
+  --btnHover: #5d5d5d ;
 }
 
 .body {

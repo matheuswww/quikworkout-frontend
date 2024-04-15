@@ -22,7 +22,9 @@ export default function Clothing({...props}: props) {
   const [color,setColor] = useState<string | null>(null)
   const [mainColor,setMainColor] = useState<string | null>(null)
   const [windowWidth,setWindowWidth] = useState<boolean>(false)
-  const indexImages = useRef<HTMLDivElement | null>(null)
+  const indexImages = useRef<HTMLUListElement | null>(null)
+  const buttonToOpenModalRef = useRef<HTMLButtonElement | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
 
   function handleCount(event: SyntheticEvent) {
     if (event.currentTarget.classList.contains(styles.more)) {
@@ -37,6 +39,33 @@ export default function Clothing({...props}: props) {
     } else if (count - 1 > 0) {
       setCount((count) => count = count - 1)
     } 
+  }
+
+  function handleClick() {
+    const main = document.body.firstChild
+    let section = main instanceof HTMLElement && main.lastChild
+    if (section instanceof HTMLElement && modalRef.current instanceof HTMLElement && buttonToOpenModalRef.current instanceof HTMLElement) {
+      section.style.opacity = ".1"
+      modalRef.current.style.display = "flex"
+      setTimeout(() => {
+        modalRef.current instanceof HTMLElement && modalRef.current.classList.add(styles.active) 
+      });
+      buttonToOpenModalRef.current.style.pointerEvents = "none"
+    }
+    document.addEventListener("click", handleCloseModal)
+    function handleCloseModal() {
+      modalRef.current instanceof HTMLElement && modalRef.current.classList.remove(styles.active)
+      setTimeout(() => {
+        if(buttonToOpenModalRef.current instanceof HTMLElement && modalRef.current instanceof HTMLElement) {          
+          buttonToOpenModalRef.current.style.pointerEvents = "initial"
+          modalRef.current.style.display = "none"
+        }
+       }, 500)
+      if(section instanceof HTMLElement) {
+        section.style.opacity = "1"
+      }
+      document.removeEventListener("click", handleCloseModal)
+    }
   }
 
   useEffect(() => {
@@ -64,7 +93,6 @@ export default function Clothing({...props}: props) {
       if (images.current.children[1] != undefined) {
         images.current.removeChild(images.current.children[1])
       }
-      slide.current.style.transform = `translate3d(0px,0,0)`
       slideWithControl(slide.current, images.current, indexImages.current?.childNodes, styles.index, styles.active, styles.activeThumb)
     }
   },[data, color])
@@ -80,23 +108,34 @@ export default function Clothing({...props}: props) {
   },[size, color])
 
   return (
+   <>
+    <div className={styles.selectModal} ref={modalRef}>
+    {mainColor &&  <button value={mainColor} key={mainColor} onClick={((event: SyntheticEvent) => event.currentTarget instanceof HTMLButtonElement && setColor(event.currentTarget.value))}>{mainColor}</button>}
+    {data?.clothing?.inventario.map(({cor,corPrincipal}) => {
+      if (corPrincipal && color == null) {
+        setColor(cor)
+        setMainColor(cor)
+      }
+      return !corPrincipal && <button value={cor} key={cor} onClick={((event: SyntheticEvent) => event.currentTarget instanceof HTMLButtonElement && setColor(event.currentTarget.value))}>{cor}</button>
+    })}
+    </div>
     <section>
      {data?.status == 404 && notFound()}
-     <div className={`${styles.indexImages} ${data?.clothing && styles.loading}`} ref={indexImages} >
+     <ul className={`${styles.indexImages} ${data?.clothing && styles.loading}`} ref={indexImages} >
      {data?.clothing ? data.clothing.inventario.map(({ images, imgDesc, cor }) => {
         return (
           (color == cor && windowWidth) &&
             images?.map(( src, index ) => {
                 return (
                   <li key={src}>
-                    { <SkeletonImage src={src} id={index.toString()} alt={imgDesc} width={290} height={460} key={data.clothing?.id} className={index == 0 ? styles.activeThumb : ""} draggable={false}/> }
+                    { <button className={index == 0 ? styles.activeThumb : ""} id={index.toString()}><SkeletonImage src={src} alt={imgDesc} width={290} height={460} key={data.clothing?.id} draggable={false}/></button> }
                   </li>
                 )
               })
             )
         }) : <div className={stylesLoad.indexImages}><Skeleton/></div>}
-      </div>
-      {data?.clothing ? <div className={styles.images} ref={images}>
+      </ul>
+      {data?.clothing? <div className={styles.images} ref={images}>
         <ul className={styles.slide} ref={slide}>
           { data.clothing.inventario[0].images == null && notFound() }
           { data.clothing.inventario.map(({ images,imgDesc, cor }) => {
@@ -170,9 +209,9 @@ export default function Clothing({...props}: props) {
             </div>
             <div className={styles.counter}>
               <p>quantidades</p>
-              <button className={styles.more} onClick={handleCount}></button>
+              <button className={styles.more} onClick={handleCount} ></button>
               <p>{count}</p>
-              <button className={styles.less} onClick={handleCount}></button>
+              <button className={styles.less} onClick={handleCount} ></button>
             </div>
             <div className={styles.material}>
               <p>material</p>
@@ -180,16 +219,10 @@ export default function Clothing({...props}: props) {
             </div>
             <div className={styles.colors}>
               <p>cores</p>
-              <select onChange={((event: SyntheticEvent) => event.currentTarget instanceof HTMLSelectElement && setColor(event.currentTarget.value))}>
-                {mainColor &&  <option value={mainColor} key={mainColor}>{mainColor}</option>}
-                {data.clothing.inventario.map(({cor,corPrincipal}) => {
-                  if (corPrincipal && color == null) {
-                    setColor(cor)
-                    setMainColor(cor)
-                  }
-                  return !corPrincipal && <option value={cor} key={cor}>{cor}</option>
-                })}
-              </select>
+              <button onClick={handleClick} ref={buttonToOpenModalRef}>
+                <p>{color}</p>
+                <span className={styles.expand}></span>
+              </button>
             </div>
             <button className={styles.addPurchase}><Shop src={"/img/shop.png"} alt="" width={14} height={17}/><p>adicionar a bolsa</p></button>
           </div>
@@ -199,5 +232,6 @@ export default function Clothing({...props}: props) {
           <Skeleton className={stylesLoad.content}/>
         </div>}
       </section>
+    </>
   )
 }

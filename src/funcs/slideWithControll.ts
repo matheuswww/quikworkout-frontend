@@ -38,6 +38,7 @@ export function slideWithControl(
     if (prevElement instanceof HTMLElement && index && thumbs && event.target instanceof HTMLElement) {
       prevElement.classList.remove(activeThumbClass)
       event.target.classList.add(activeThumbClass)
+      
       const thumbIndex = Number(event.target.id)
       index.children[item].classList.remove(activeIndexClass)
       index.children[thumbIndex].classList.add(activeIndexClass)
@@ -91,14 +92,14 @@ export function slideWithControl(
       if (event instanceof MouseEvent) {
         var mouseUp = new MouseEvent('mouseup', {
           bubbles: false,
-          cancelable: true,
+          cancelable: false,
           view: window
         })
         document.dispatchEvent(mouseUp)
       } else {
         var touchEnd = new TouchEvent('touchend', {
           bubbles: false,
-          cancelable: true,
+          cancelable: false,
           view: window
         })
         document.dispatchEvent(touchEnd)
@@ -129,7 +130,7 @@ export function slideWithControl(
         (Math.abs(dist.finalPosition) + dist.movement < Math.abs(dist.finalPosition) && Math.abs(dist.movement) > 5) ||
         (Math.abs(dist.movePosition) < middleOfItem && (Math.abs(dist.finalPosition) + dist.movement < Math.abs(dist.finalPosition) && Math.abs(dist.movement) > 5))
       ) {
-        if (item >= slide.children.length - 1) {
+        if (item >= slide.children.length - 1) {    
           moveSlideOnEnd(dist.finalPosition)
         } else {
           moveSlideOnEnd(dist.finalPosition - itemWidth)
@@ -189,6 +190,10 @@ export function slideWithControl(
   };
 
   (function init() {
+    item = 0
+    dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 }
+    index = null
+    slide.style.transform = `translate3d(0px,0,0)`
     createSlideIndex()
     addSlideEvents()
   })()

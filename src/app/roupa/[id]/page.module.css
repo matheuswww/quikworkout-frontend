@@ -10,7 +10,8 @@
 .main section {
   width: 100%;
   display: grid;
-  margin-top: 45px;
+  margin-top: 15px;
+  transition: .5s;
 }
 
 @media (min-width: 800px) {
@@ -19,6 +20,12 @@
     justify-content: center;
     align-items: center;
     width: 780px;
+  }
+}
+
+@media (min-width: 400px) {
+  .main section {
+    margin-top: 50px;
   }
 }
 
