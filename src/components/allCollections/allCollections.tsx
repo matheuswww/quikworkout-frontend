@@ -13,8 +13,10 @@ export default async function AllCollections() {
             if (clothing.inventario[0].images == null) {
               return null
             }
+            const images = clothing.inventario.find((item) => item.corPrincipal)?.images
+            const image = images?.length ? btoa(images[0]) : ""
             return(
-              <Link href={"/roupa/"+clothing.id} key={clothing.id} className={styles.card}>
+              <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} key={clothing.id} className={styles.card}>
                 <SkeletonImage src={clothing.inventario[0].images[0]} alt={clothing.inventario[0].imgDesc} width={225} height={300} className={styles.clothing} />
                 <div className={styles.clothingInfos}>
                   <p className={styles.name}>{clothing.nome}</p>

@@ -33,13 +33,15 @@ export function slideWithControl(
     })
   })
   
-  const onClick = function(event: MouseEvent | TouchEvent) {
+  const onClick = function(event: Event) {
     let prevElement = thumbs && thumbs[item].firstChild
     if (prevElement instanceof HTMLElement && index && thumbs && event.target instanceof HTMLElement) {
-      prevElement.classList.remove(activeThumbClass)
-      event.target.classList.add(activeThumbClass)
-      
       const thumbIndex = Number(event.target.id)
+      let currentElement = thumbs && thumbs[thumbIndex].firstChild
+      prevElement.classList.remove(activeThumbClass)
+      if(currentElement instanceof HTMLElement) {
+        currentElement.classList.add(activeThumbClass)
+      }
       index.children[item].classList.remove(activeIndexClass)
       index.children[thumbIndex].classList.add(activeIndexClass)
       item = thumbIndex
@@ -48,6 +50,11 @@ export function slideWithControl(
       dist.movePosition = move
       dist.finalPosition = move
     }
+  }
+
+  const onKeyDown = function(event: Event) {
+    wrapper.scrollLeft = 0
+    onClick(event)
   }
 
   const moveSlide = function(distX: number) {
@@ -185,6 +192,13 @@ export function slideWithControl(
     thumbs && thumbs.forEach((thumb) => {
       if (thumb instanceof HTMLElement) {
         thumb.addEventListener('click', onClick)
+      }
+    })
+    slide.childNodes.forEach((li) => { 
+      if (li instanceof HTMLLIElement) {
+        if(li.firstChild instanceof HTMLImageElement) {
+          li.firstChild.addEventListener("focus", onKeyDown)
+        }
       }
     })
   };

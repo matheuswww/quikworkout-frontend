@@ -41,9 +41,11 @@
 @keyframes enter {
   from {
     opacity: 0;
+    transform: translate3d(0,-50px,0);
   }
   to {
     opacity: 1;
+    transform: translate3d(0,0px,0) !important;
   }
 }
 
@@ -142,6 +144,7 @@
   align-items: center;
   position: relative;
   -webkit-tap-highlight-color: transparent;
+  text-transform: uppercase;
 }
 
 .sizes label:last-child {
@@ -273,6 +276,10 @@
   align-self: start;
 }
 
+.indexImages.load {
+  animation: enter .5s forwards;
+}
+
 .indexImages li button img {
   width: 100%;
   height: 100%;
@@ -303,7 +310,7 @@
   margin-top: 0px;
 }
 
-.loading {
+.load {
   width: max-content;
   height: max-content;
 }

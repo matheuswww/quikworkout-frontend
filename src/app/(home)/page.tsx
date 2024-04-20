@@ -6,6 +6,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Página inicial quikworkout, venha se vestir com estilo!',
+  keywords: "quikworkout, crossfit, academia, roupa crossfit, roupa academia"
  }
 
 export default function Home() { 

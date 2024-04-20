@@ -38,6 +38,7 @@ interface inventario {
 interface data {
   id: string,
   nome: string,
+  descricao: string,
   sexo: string,
   categoria: string,
   material: string,
