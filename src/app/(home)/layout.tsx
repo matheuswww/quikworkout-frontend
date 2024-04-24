@@ -2,8 +2,6 @@ import { Inter } from 'next/font/google'
 import styles from './layout.module.css'
 import Menu from '@/components/menu/menu'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export default function RootLayout({
   children,
 }: {

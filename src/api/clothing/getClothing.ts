@@ -1,4 +1,5 @@
-import { api, clothingPath } from "./clothingPath"
+import { api } from "../path"
+import { clothingPath } from "./clothingPath"
 
 type statusCode = 200 | 404 | 400 | 500
 

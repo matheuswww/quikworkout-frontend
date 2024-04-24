@@ -1,0 +1,58 @@
+.container {
+  visibility: hidden;
+  align-items: center;
+  position: absolute;
+  top: 75px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #b62525;
+  width: 295px;
+  border-radius: 10px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container p {
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+  font-family: 'inter-SemiBold';
+}
+
+.container button {
+  border-radius: 50px;
+  width: 30px;
+  height: 27px;
+  border: none;
+  position: absolute;
+  right: -10px;
+  top: -5px;
+  background: #fd3d3d;
+  color: white;
+  border: 1px solid white;
+  font-size: 1.2rem;
+}
+
+.container button:hover {
+  cursor: pointer;
+  background: #a82424;
+}
+
+.container.active {
+  animation: enter .5s forwards;
+}
+
+@keyframes enter {
+  from {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(-50%, -150%);
+  }
+  to {
+    visibility: initial;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}

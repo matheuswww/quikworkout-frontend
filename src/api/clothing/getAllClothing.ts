@@ -1,4 +1,5 @@
-import { api, clothingPath } from "./clothingPath"
+import { api } from "../path"
+import { clothingPath } from "./clothingPath"
 
 interface params {
   corPrincipal: boolean
