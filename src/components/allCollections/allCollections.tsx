@@ -25,7 +25,7 @@ export default async function AllCollections() {
               </Link>
             )
           }
-        ) : <div className={styles.notFound}><p>Nenhuma roupa foi encontrada</p></div> : <p className={styles.error}>Oops, parece que houve um erro</p>}
+        ) : <div className={styles.notFound}><p>Nenhuma roupa foi encontrada</p></div> : <p className={styles.error}>Oops, parece que houve um erro, tente recarregar a página</p>}
       </div>
     </>
   )

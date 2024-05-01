@@ -7,7 +7,7 @@ import Background from 'next/image'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Signup, { Status } from '@/api/auth/signup'
+import Signup, { StatusSignup } from '@/api/auth/signup'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
@@ -48,7 +48,7 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function SignupForm() {
-  const [status, setStatus] = useState<Status | null>(null)
+  const [status, setStatus] = useState<StatusSignup | null>(null)
   const [isEmail, setIsEmail] = useState<boolean>(true)
   const [load,setLoad] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
@@ -70,8 +70,6 @@ export default function SignupForm() {
       nome: data.name,
       senha: data.password,
     })
-    console.log(status);
-    
     setStatus(status)
     setLoad(false)
   }
@@ -100,7 +98,7 @@ export default function SignupForm() {
             <label htmlFor="confirmPassword">Confirmar senha</label>
             <Password {...register("confirmPassword")} id="confirmPassword" placeholder="confirmar senha"/> 
             {errors.confirmPassword?.message && <p className={styles.error}>{errors.confirmPassword.message}</p>}
-            <Link href="#">já possui uma conta?</Link>
+            <Link href="/autenticacao/entrar">já possui uma conta?</Link>
             <button className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "cadastrando, aguarde" : "cadastrar"}</button>
           </form>
         </section>

@@ -1,10 +1,10 @@
-import Signup from "@/components/authForm/signup";
+import SignupForm from "@/components/authForm/signup";
 import { Metadata } from "next";
 
 export const metadata:Metadata = {
   title: "Cadastro",
   description: "Efetuar cadastro na quikworkout",
-  keywords: "login, login quikworkout, criar conta, criar conta quikworkout, quikworkout, cadastro, cadastro quikworkout",
+  keywords: "login, login quikworkout, criar conta, criar conta quikworkout, quikworkout, cadastro, cadastro quikworkout, cadastrar, cadastrar quikworkout",
   openGraph: {
     title: "Cadastro",
     description: "Efetuar cadastro na quikworkout",
@@ -12,8 +12,8 @@ export const metadata:Metadata = {
   }
 }
 
-export default function Login() {
+export default function Signup() {
   return (
-    <Signup />
+    <SignupForm />
   )
 }

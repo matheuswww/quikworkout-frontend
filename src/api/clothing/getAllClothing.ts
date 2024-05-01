@@ -18,10 +18,10 @@ interface params {
   Limite: number | null
 }
 
-type statusCode = 200 | 404 | 400 | 500
+type status = 200 | 404 | 400 | 500
 
 interface response {
-  status: statusCode
+  status: status
   clothing: data[] | null
 }
 
@@ -64,7 +64,7 @@ export default async function GetAllClothing(params: params | null):Promise<resp
         revalidate: 60 * 10
       }
     }).then(res => res)
-    let status:statusCode
+    let status:status
     if (res.status === 200 || res.status === 404 || res.status === 400 || res.status === 500) {
       status = res.status
     } else {
@@ -81,7 +81,7 @@ export default async function GetAllClothing(params: params | null):Promise<resp
       clothing: data
     }
   } catch(err) {
-    console.error("error trying fetch data:", err);
+    console.error("error trying getAllClothing:", err);
     return {
       status: 500,
       clothing: null

@@ -60,7 +60,7 @@ export default async function GetClothing(id: string):Promise<getClothingByIdRes
       clothing: data
     }
   } catch(err) {
-    console.error("error trying fetch data:", err);
+    console.error("error trying getClothing:", err);
     return {
       status: 500,
       clothing: null

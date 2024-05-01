@@ -1,5 +1,5 @@
 import { api } from "../path"
-import { authPath } from "./authPath"
+import { authPath } from "./userPath"
 
 interface params {
   nome: string
@@ -8,9 +8,9 @@ interface params {
   senha: string
 }
 
-export type Status = 201 | 409 | 500
+export type StatusSignup = 201 | 409 | 500
 
-export default async function Signup(params: params):Promise<Status> {
+export default async function Signup(params: params):Promise<StatusSignup> {
   let url = api
   url+="/"+authPath+"/signup"
   try {
@@ -28,7 +28,7 @@ export default async function Signup(params: params):Promise<Status> {
       return 500
     }
   } catch(err) {
-    console.error("error trying POST:", err);
+    console.error("error trying signUp:", err);
     return 500
   }
 }
