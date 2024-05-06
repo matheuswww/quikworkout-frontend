@@ -28,7 +28,7 @@ export default async function Signup(params: params):Promise<StatusSignup> {
       return 500
     }
   } catch(err) {
-    console.error("error trying signUp:", err);
+    console.error("error trying signup:", err);
     return 500
   }
 }

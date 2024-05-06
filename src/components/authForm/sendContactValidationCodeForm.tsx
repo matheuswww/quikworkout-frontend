@@ -1,5 +1,4 @@
 'use client'
-
 import GetUser, { getUserResponse } from '@/api/auth/getUser'
 import styles from './sendContactValidationCodeForm.module.css'
 import { SyntheticEvent, useEffect, useState } from 'react'
@@ -8,7 +7,7 @@ import SpinLoading from '../spinLoading/spinLoading'
 import { deleteCookie } from '@/action/deleteCookie'
 import sendContactValidationCode from '@/api/auth/sendContactValidationCode'
 import PopupError from '../popupError/popupError'
-import ValidateCodeForm from './validateCodeForm'
+import CheckContactValidationCodeForm from './checkContactValidationCodeForm'
 
 interface props {
   cookieName: string | undefined
@@ -25,21 +24,25 @@ export default function SendContactValidationCodeForm({...props}: props) {
   const [next, setNext] = useState<boolean>(false)
 
   useEffect(() => {
-    ((async function() {
-      const res = await GetUser(cookie)
-      setData(res)
-      if(res.data && 'verificado' in res.data && res.data.verificado) {
-        setLoad(true)
-        router.push("/")
-      } else {
-        if (res.status == 404 || res.status == 401) {
-          await deleteCookie("userProfile")
-          router.push("/autenticacao/cadastrar")
+    if(props.cookieName == undefined || props.cookieVal == undefined) {
+      router.push("/autenticacao/entrar")
+    } else {
+      ((async function() {
+        const res = await GetUser(cookie)
+        setData(res)
+        if(res.data && 'verificado' in res.data && res.data.verificado) {
+          setLoad(true)
+          router.push("/")
         } else {
-          setLoad(false)
+          if (res.status == 404 || res.status == 401) {
+            await deleteCookie("userProfile")
+            router.push("/autenticacao/entrar")
+          } else {
+            setLoad(false)
+          }
         }
-      }
-    })())
+      })())
+    }
   }, [])
 
   useEffect(() => {
@@ -83,7 +86,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
       router.push("/")
       return
     }
-    localStorage.setItem("time", new Date().getTime().toString())
+    localStorage.setItem("timeSendContactValidationCode", new Date().getTime().toString())
   }
     
   return (
@@ -97,14 +100,14 @@ export default function SendContactValidationCodeForm({...props}: props) {
             <form className={styles.form} onSubmit={handleSubmnit}>
               {data?.status != 500 ?
                 <>
-                <h1 aria-hidden={load ? "true" : "false"}>{props.welcome ? "Estamos quase lá!" : "Validação de contato"}</h1>
-                {load ? <p aria-hidden={"true"}>Carregando...</p> : 
+                <h1>{props.welcome ? "Estamos quase lá!" : "Validação de contato"}</h1>
+                {load ? <p>Carregando...</p> : 
                 data?.data && 'email' in data.data ? 
-                  <p aria-hidden={load ? "true" : "false"}>Clique aqui para enviarmos um código de verificação para seu email</p>
+                  <p>Clique aqui para enviarmos um código de verificação para seu email</p>
                   :
-                  <p aria-hidden={load ? "true" : "false"}>Clique aqui para enviarmos um código de verificação para seu telefone</p>
+                  <p>Clique aqui para enviarmos um código de verificação para seu telefone</p>
                 }
-                <button aria-hidden={load ? "true" : "false"} disabled={load ? true : false}>{load ? "Carregando..." : "Enviar código"}</button> 
+                <button disabled={load ? true : false}>{load ? "Carregando..." : "Enviar código"}</button> 
                 </>
               :
                 <>
@@ -115,7 +118,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
             </form>
           </main>
          </>
-        : <ValidateCodeForm cookie={cookie} email={data?.data && 'email' in data.data ? true : false} />
+        : <CheckContactValidationCodeForm cookie={cookie} email={data?.data && 'email' in data.data ? true : false} />
       }
     </>
   )

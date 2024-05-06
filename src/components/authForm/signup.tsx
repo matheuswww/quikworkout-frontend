@@ -11,6 +11,7 @@ import Signup, { StatusSignup } from '@/api/auth/signup'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
+import ValidateEmailAndPhoneNumber from '@/funcs/validateEmailAndPhoneNumber'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
@@ -20,30 +21,7 @@ const schema = z.object({
 }).refine((fields) => fields.password == fields.confirmPassword, {
   path: [ 'confirmPassword' ],
   message: "as senhas precisam ser iguais"
-}).refine((fields) => {
-  let possibleNumber = fields.emailOrPhoneNumber
-  let regex = /[+\-]/g;
-  if(possibleNumber.startsWith("+55")) {
-    possibleNumber = possibleNumber.slice(3)
-  }
-  if(possibleNumber.match(regex) != null) {
-    possibleNumber = possibleNumber.replace(regex, '')
-  }
-  const num = Number(possibleNumber)
-  if(!isNaN(num)) {
-    fields.emailOrPhoneNumber = num.toString()
-    if(fields.emailOrPhoneNumber.length >= 8) {
-      regex = /^[1-9]{2}[0-9]{9}$/;
-      return regex.test(fields.emailOrPhoneNumber)
-    }
-    return false
-  }
-  regex = /^[\w\d.-]+@([\w-]+\.)+[\w-]{2,4}$/;
-  return regex.test(fields.emailOrPhoneNumber)
-}, {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone incorreto"
-})
+}).refine((fields) => ValidateEmailAndPhoneNumber(fields.emailOrPhoneNumber))
 
 type FormProps = z.infer<typeof schema>
 

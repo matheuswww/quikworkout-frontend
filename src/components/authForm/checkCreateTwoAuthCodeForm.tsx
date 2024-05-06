@@ -1,0 +1,114 @@
+'use client'
+import Link from 'next/link'
+import styles from './validateCodeForm.module.css'
+import { SyntheticEvent, useEffect, useState } from 'react'
+import { setInterval } from 'timers'
+import PopupError from '../popupError/popupError'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import SpinLoading from '../spinLoading/spinLoading'
+import { useRouter } from 'next/navigation'
+import CheckCreateTwoAuthCode, { checkCreateTwoAuthCodeResponse } from '@/api/auth/checkCreateTwoAuthCode'
+import { deleteCookie } from '@/action/deleteCookie'
+
+interface props {
+  email: boolean
+  cookie: string
+}
+
+const schema = z.object({
+  code: z.string().min(6, "o código deve conter 6 caracteres").max(6, "o código deve conter 6 caracteres")
+})
+
+type FormProps = z.infer<typeof schema>
+
+export default function CheckCreateTwoAuthCodeForm({...props}:props) {
+  const router = useRouter()
+  const [timer,setTimer] = useState<number>(0)
+  const [load, setLoad] = useState<boolean>(false)
+  const [error, setError] = useState<checkCreateTwoAuthCodeResponse | null>(null)
+  const [popUpError, setPopUpError] = useState<number | null>(null)
+  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+    resolver: zodResolver(schema)
+  })
+
+  async function handleForm(data: FormProps) {
+    setLoad(true)    
+    const res = await CheckCreateTwoAuthCode(props.cookie, {
+      codigo: data.code
+    })
+    if(res == "usuário já possui autenticação de dois fatores") {
+      localStorage.removeItem("timeSendCreateTwoAuthCode")
+      router.push("/")
+    }
+    if(res == "código valido porém não foi possivel criar uma sessão") {
+      localStorage.removeItem("timeSendCreateTwoAuthCode")
+      router.push("/autenticacao/entrar")
+    }
+    if (res == 401){
+      await deleteCookie("userProfile")
+      localStorage.removeItem("timeSendCreateTwoAuthCode")
+      router.push("/autenticacao/criar-dois-fatores")
+    } else if (res != 200) {
+      if(typeof res == "string") {
+        setError(res)
+      } else if (res == 500) {
+        setPopUpError(res)
+      }
+      setLoad(false)
+    } else {
+      localStorage.removeItem("timeSendCreateTwoAuthCode")
+      router.push("/")
+    }
+  }
+
+  function handleClick(event: SyntheticEvent) {
+    event.preventDefault()
+    if(timer >= 60) {
+      var newUrl = window.location.pathname
+      window.history.replaceState(null, "", newUrl);
+      window.location.reload()
+    }
+  }
+
+  useEffect(() => {
+    const prevTime = Number(localStorage.getItem("timeSendCreateTwoAuthCode"))
+    const currentTIme = new Date().getTime()
+    let elapsedTime: number = 0
+    if(prevTime) {
+      elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
+      if(elapsedTime > 60 * 6) {
+        localStorage.removeItem("timeSendCreateTwoAuthCode")
+        router.push("/autenticacao/criar-dois-fatores")
+      }
+    } else {
+      elapsedTime = 60
+    }
+    setTimer(elapsedTime)
+    const interval = setInterval(() => {
+      setTimer((t) => t + 1)
+      if(timer >= 60) {
+        clearInterval(interval)
+      }
+    },1000)
+  }, [])
+  
+  return (
+    <>
+      {popUpError == 500 && <PopupError handleOut={(() => setPopUpError(null))} />}
+      {load && <SpinLoading />}
+      <main className={`${styles.main} ${load && styles.lowOpacity}`}>
+        <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
+          <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
+          <input {...register("code")} type="number" placeholder="insira seu código" />
+          {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
+          <Link onClick={handleClick} href="/autenticacao/criar-dois-fatores">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <button type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
+        </form>
+      </main>
+    </>
+  )
+}

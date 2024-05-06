@@ -12,6 +12,8 @@ type statusGetUser = 200 | 404 | 500 | 401
 interface data {
   nome: string
   email: string
+  twoAuthEmail: string
+  twoAuthTelefone: string
   telefone: string
   verificado: boolean
 }

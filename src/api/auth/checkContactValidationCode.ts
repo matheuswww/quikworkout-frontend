@@ -2,14 +2,6 @@ import { api } from "../path"
 import { ResponseErr } from "../responseErr"
 import { authPath } from "./userPath"
 
-const msgs = [
-  "usuário verificado porém não foi possível criar uma sessão",
-  "usuário já verificado",
-  "máximo de tentativas atingido",
-  "código inválido",
-  "código expirado"
-]
-
 export type checkContactValidationCodeResponse = 
   "usuário verificado porém não foi possível criar uma sessão" |
   "usuário já verificado" |
@@ -41,7 +33,7 @@ export default async function CheckContactValidationCode(cookie: string, params:
         return res.json()
       }
     })
-    if(status == 200) {
+    if(status == 200 || status == 500) {
       return status
     }
     let msg: checkContactValidationCodeResponse | null = null
@@ -51,12 +43,9 @@ export default async function CheckContactValidationCode(cookie: string, params:
     if(msg != null) {
       return msg
     }
-    if(status == 500) {      
-      return status
-    }
     return 500
   } catch(err) {
-    console.error("error trying checkContactValidationCode:", err);
+    console.error("error trying validateCode:", err);
     return 500
   }
 }
