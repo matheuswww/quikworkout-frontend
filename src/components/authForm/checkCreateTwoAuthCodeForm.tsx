@@ -36,22 +36,29 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setError(null)
     setLoad(true)    
     const res = await CheckCreateTwoAuthCode(props.cookie, {
       codigo: data.code
     })
+    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
+      router.push("/auth/criar-dois-fatores")
+      return
+    }
     if(res == "usuário já possui autenticação de dois fatores") {
       localStorage.removeItem("timeSendCreateTwoAuthCode")
       router.push("/")
+      return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/autenticacao/entrar")
+      router.push("/auth/entrar")
+      return
     }
     if (res == 401){
-      await deleteCookie("userProfile")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/autenticacao/criar-dois-fatores")
+      router.push("/auth/criar-dois-fatores")
+      return
     } else if (res != 200) {
       if(typeof res == "string") {
         setError(res)
@@ -62,6 +69,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
     } else {
       localStorage.removeItem("timeSendCreateTwoAuthCode")
       router.push("/")
+      return
     }
   }
 
@@ -82,7 +90,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
         localStorage.removeItem("timeSendCreateTwoAuthCode")
-        router.push("/autenticacao/criar-dois-fatores")
+        router.push("/auth/criar-dois-fatores")
       }
     } else {
       elapsedTime = 60
@@ -105,8 +113,8 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
           <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
-          <Link onClick={handleClick} href="/autenticacao/criar-dois-fatores">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
-          <button type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
+          <Link onClick={handleClick} href="/auth/criar-dois-fatores">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <button disabled={load ? true : false} type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
         </form>
       </main>
     </>

@@ -56,7 +56,7 @@
   background-color: var(--btnClicked);
 }
 
-@media (max-width: 450px) {
+@media (max-width: 535px) {
   .form button {
     width: 100%;
   }

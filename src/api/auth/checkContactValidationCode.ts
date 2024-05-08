@@ -8,6 +8,7 @@ export type checkContactValidationCodeResponse =
   "máximo de tentativas atingido" |
   "código inválido" |
   "código expirado" |
+  "você não possui um código registrado" |
   500 | 200
 
 interface params {
@@ -37,7 +38,7 @@ export default async function CheckContactValidationCode(cookie: string, params:
       return status
     }
     let msg: checkContactValidationCodeResponse | null = null
-    if(res.message == "usuário verificado porém não foi possível criar uma sessão" || res.message == "usuário já verificado" || res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado") {
+    if(res.message == "usuário verificado porém não foi possível criar uma sessão" || res.message == "usuário já verificado" || res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "você não possui um código registrado") {
       msg = res.message
     }
     if(msg != null) {

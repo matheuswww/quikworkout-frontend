@@ -7,7 +7,7 @@ export const metadata: Metadata = {
    title: 'validação de contato',
    description: 'validação de contato',
    keywords: "validar contato, quikworkout, validar contato quikworkout, email, senha, validar email, validar senha"
-  }
+}
 
 interface sendContactValidationCode {
    searchParams: {

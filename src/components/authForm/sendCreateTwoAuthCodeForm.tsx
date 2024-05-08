@@ -10,7 +10,7 @@ import SendCreateTwoAuthCode, { sendCreateTwoAuthCodeResponse } from '@/api/auth
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import { useRouter } from 'next/navigation'
-import GetUser, { getUserResponse } from '@/api/auth/getUser'
+import GetUser from '@/api/auth/getUser'
 import { deleteCookie } from '@/action/deleteCookie'
 import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
 
@@ -32,11 +32,11 @@ type FormProps = z.infer<typeof schema>
 export default function SendCreateTwoAuthCodeForm({...props}: props) {
   const router = useRouter()
   const cookie = props.cookieName+"="+props.cookieVal
-  const [data, setData] = useState<getUserResponse | null>(null)
   const [error, setError] = useState<sendCreateTwoAuthCodeResponse | null>(null)
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
+  const [isEmail, setIsEmail] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -45,23 +45,22 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
 
   useEffect(() => {
     if(props.cookieName == undefined || props.cookieVal == undefined) {
-      router.push("/autenticacao/entrar")
+      router.push("/auth/entrar")
     } else {
       if(props.cookieName == undefined || props.cookieVal == undefined) {
-        router.push("/autenticacao/entrar")
+        router.push("/auth/entrar")
       } else {
         ((async function() {
           const res = await GetUser(cookie)
-          setData(res)
           if((res.data && 'twoAuthEmail' in res.data && res.data.twoAuthEmail != "") || (res.data && 'twoAuthTelefone' in res.data && res.data.twoAuthTelefone != "")) {
             setLoad(true)
             router.push("/")
           } else if (!res.data?.verificado){
-            router.push("/autenticacao/validar-contato")
+            router.push("/auth/validar-contato")
           } else {
             if (res.status == 404 || res.status == 401) {
               await deleteCookie("userProfile")
-              router.push("/autenticacao/entrar")
+              router.push("/auth/entrar")
             } else {
               setLoad(false)
             }
@@ -89,9 +88,11 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
   },[next])
 
   async function handleForm(data: FormProps) {
-    let isNum: boolean = false
-    if(!isNaN(Number(data.emailOrPhoneNumber))) {
-      isNum = true
+    setError(null)
+    let isNum: boolean = true
+    if(isNaN(Number(data.emailOrPhoneNumber))) {
+      isNum = false
+      setIsEmail(true)
     }
     setLoad(true)
     const res = await SendCreateTwoAuthCode(cookie, {
@@ -100,7 +101,7 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
       senha: data.password
     })
     if(res == "seu código foi gerado porem não foi possivel criar uma sessão") {
-      router.push("/autenticacao/entrar")
+      router.push("/auth/entrar")
     }
     if(res == 500) {
       setPopUpError(true)
@@ -109,9 +110,9 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
     } else if (res == "usuário já possui autenticação de dois fatores") {
       router.push("/")
     } else if (res == "usuário não é verificado") {
-      router.push("/autenticacao/validar-contato")
+      router.push("/auth/validar-contato")
     } else if (res == 401) {
-      router.push("/autenticacao/entrar")
+      router.push("/auth/entrar")
     } else if (res == 200) {
       localStorage.setItem("timeSendCreateTwoAuthCode", new Date().getTime().toString())
       setNext(true)
@@ -137,12 +138,12 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
               <label htmlFor="password">Sua senha</label>
               <Password {...register("password")} id="password" placeholder="senha"/>
               {error == "senha errada" && error != null && <p className={styles.error}>{error}</p>}
-              <button className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando" : "Enviar código"}</button>
+              <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>
         </main>
       </>
-      : <CheckCreateTwoAuthCodeForm cookie={cookie} email={data?.data && 'twoAuthEmail' in data.data && data.data.email != "" ? true : false}/> }
+      : <CheckCreateTwoAuthCodeForm cookie={cookie} email={isEmail ? true : false}/> }
     </>
   )
 }

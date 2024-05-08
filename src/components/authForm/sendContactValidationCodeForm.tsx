@@ -22,21 +22,25 @@ export default function SendContactValidationCodeForm({...props}: props) {
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
+  const [isEmail, setEmail] = useState<boolean>(false)
 
   useEffect(() => {
     if(props.cookieName == undefined || props.cookieVal == undefined) {
-      router.push("/autenticacao/entrar")
+      router.push("/auth/entrar")
     } else {
       ((async function() {
         const res = await GetUser(cookie)
         setData(res)
+        if(res.data && 'email' in res.data && res.data.email != "") {
+          setEmail(true)
+        }
         if(res.data && 'verificado' in res.data && res.data.verificado) {
           setLoad(true)
           router.push("/")
         } else {
           if (res.status == 404 || res.status == 401) {
             await deleteCookie("userProfile")
-            router.push("/autenticacao/entrar")
+            router.push("/auth/entrar")
           } else {
             setLoad(false)
           }
@@ -64,16 +68,17 @@ export default function SendContactValidationCodeForm({...props}: props) {
 
   async function handleSubmnit(event: SyntheticEvent) {
     event.preventDefault();
+    setData(null)
     const res = await sendContactValidationCode(cookie)
     if (res == 401) {
       await deleteCookie("userProfile")
-      router.push("/autenticacao/cadastrar")
+      router.push("/auth/cadastrar")
     }
     if (res == 500) {
       setPopUpError(true)
     }
     if (res == 404) {
-      router.push("/autenticacao/cadastrar")
+      router.push("/auth/cadastrar")
     }
     if(res == 400) {
       router.push("/")
@@ -118,7 +123,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
             </form>
           </main>
          </>
-        : <CheckContactValidationCodeForm cookie={cookie} email={data?.data && 'email' in data.data ? true : false} />
+        : <CheckContactValidationCodeForm cookie={cookie} email={isEmail} />
       }
     </>
   )

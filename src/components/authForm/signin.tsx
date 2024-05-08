@@ -7,20 +7,16 @@ import Background from 'next/image'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Signup, { StatusSignup } from '@/api/auth/signup'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import ValidateEmailAndPhoneNumber from '@/funcs/validateEmailAndPhoneNumber'
+import { useRouter } from 'next/navigation'
+import Signin, { signinResponse } from '@/api/auth/signin'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
-  password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
-  confirmPassword: z.string(),
-  name: z.string().min(2, "nome precisa ter pelo menos de 2 caracteres").max(20, "O nome deve ter no maximo 20 caracteres"),
-}).refine((fields) => fields.password == fields.confirmPassword, {
-  path: [ 'confirmPassword' ],
-  message: "as senhas precisam ser iguais"
+  password: z.string(),
 }).refine((fields) => ValidateEmailAndPhoneNumber(fields.emailOrPhoneNumber), {
   path: [ 'emailOrPhoneNumber' ],
   message: "email ou telefone inválido"
@@ -28,9 +24,10 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function SignupForm() {
-  const [status, setStatus] = useState<StatusSignup | null>(null)
-  const [isEmail, setIsEmail] = useState<boolean>(true)
+export default function SigninForm() {
+  const router = useRouter()
+  const [error, setError] = useState<signinResponse | null>(null)
+  const [status, setStatus] = useState<number>(0)
   const [load,setLoad] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
@@ -39,48 +36,54 @@ export default function SignupForm() {
   })
 
   const handleForm = async (data: FormProps) => {
-    setStatus(null)
+    setError(null)
     let isNum: boolean = false
     if(!isNaN(Number(data.emailOrPhoneNumber))) {
       isNum = true
-      setIsEmail(false)
     }
     setLoad(true)
-    const status = await Signup({
+    const res = await Signin({
       email: isNum ? "" : data.emailOrPhoneNumber,
       telefone: isNum ? data.emailOrPhoneNumber : "",
-      nome: data.name,
       senha: data.password,
     })
-    setStatus(status)
+    if(typeof res == "object") {
+      if(!res.twoAuth) {
+        router.push("/")
+        return
+      }
+      router.push("/auth/validar-codigo-dois-fatores")
+      return
+    }
+    if(res == "contato não cadastrado" || res == "senha errada") {
+      setError(res)
+    }
+    if(res == 500) {
+      setStatus(status)
+    }
     setLoad(false)
   }
 
   return (
     <>
       { load && <SpinLoading /> }
-      { status == 500 && <PopupError handleOut={(() => setStatus(null))} className={styles.popupError} /> }
+      { status == 500 && <PopupError handleOut={(() => setStatus(0))} className={styles.popupError} /> }
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <div className={styles.containerBackground}>
           <Background src="/img/background-login.jpg" alt="mulher em um barra de crossfit executando um exercício" fill loading="lazy" quality={80} className={styles.background}/>
         </div>
         <section className={styles.section}>
-          <form className={`${styles.form} ${styles.formSignup}`} onSubmit={handleSubmit(handleForm)} style={{height: "530px !important"}}>
-            <h1>Efetuar Cadastro</h1>
-            <label htmlFor="name">Nome</label>
-            <input {...register("name")} type="text" id="name" placeholder="nome"/>
-            {errors.name?.message && <p className={styles.error}>{errors.name.message}</p>}
+          <form className={`${styles.form} ${styles.formSignin}`} onSubmit={handleSubmit(handleForm)} style={{height: "375px !important"}}>
+            <h1>Entrar</h1>
             <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
             <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-            {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : status == 409 && <p className={styles.error}>Este {isEmail ? "email" : "telefone"} já esta sendo utilizado</p>}
+            {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : error == "contato não cadastrado" && <p className={styles.error}>{error}</p>}
             <label htmlFor="password">Senha</label>
             <Password {...register("password")} id="password" placeholder="senha"/> 
-            {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
-            <label htmlFor="confirmPassword">Confirmar senha</label>
-            <Password {...register("confirmPassword")} id="confirmPassword" placeholder="confirmar senha"/> 
-            {errors.confirmPassword?.message && <p className={styles.error}>{errors.confirmPassword.message}</p>}
-            <Link href="/auth/entrar">já possui uma conta?</Link>
-            <button disabled={load ? true : false} className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "cadastrando, aguarde" : "cadastrar"}</button>
+            {error == "senha errada" && <p className={styles.error}>senha inválida</p>}
+            <Link href="/auth/esqueci-minha-senha">Esqueceu sua senha?</Link>
+            <button disabled={load ? true : false} className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "entrando, aguarde" : "entrar"}</button>
+            <Link href="/auth/cadastrar" className={styles.noAccount}>Não possui uma conta?</Link>
           </form>
         </section>
       </main>

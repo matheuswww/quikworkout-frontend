@@ -1,20 +1,18 @@
 'use client'
-
 import Link from 'next/link'
 import styles from './validateCodeForm.module.css'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers'
-import CheckContactValidationCode, { checkContactValidationCodeResponse } from '@/api/auth/checkContactValidationCode'
 import PopupError from '../popupError/popupError'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import { useRouter } from 'next/navigation'
+import CheckForgotPasswordCode, { checkForgotPasswordCodeResponse } from '@/api/auth/checkForgotPasswordCode'
 
 interface props {
   email: boolean
-  cookie: string
 }
 
 const schema = z.object({
@@ -23,11 +21,11 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CheckContactValidationCodeForm({...props}:props) {
+export default function CheckForgotPasswordCodeForm({...props}:props) {
   const router = useRouter()
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
-  const [error, setError] = useState<checkContactValidationCodeResponse | null>(null)
+  const [error, setError] = useState<checkForgotPasswordCodeResponse | null>(null)
   const [popUpError, setPopUpError] = useState<number | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
@@ -38,19 +36,28 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   async function handleForm(data: FormProps) {
     setError(null)
     setLoad(true)    
-    const res = await CheckContactValidationCode(props.cookie, {
+    const res = await CheckForgotPasswordCode({
       codigo: data.code
     })
-    if (res == "usuário verificado porém não foi possível criar uma sessão") {
-      localStorage.removeItem("timeSendContactValidationCode")
+    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
+      router.push("/auth/esqueci-minha-senha")
+      return
+    }
+    if(res == "usuário já possui autenticação de dois fatores") {
+      localStorage.removeItem("timeSendForgotPasswordCode")
+      router.push("/")
+      return
+    }
+    if(res == "código valido porém não foi possivel criar uma sessão") {
+      localStorage.removeItem("timeSendForgotPasswordCode")
       router.push("/auth/entrar")
       return
     }
-    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
-      router.push("/auth/validar-contato")
+    if (res == 401){
+      localStorage.removeItem("timeSendForgotPasswordCode")
+      router.push("/auth/esqueci-minha-senha")
       return
-    }
-    if(res != 200 && res != "usuário já verificado") {
+    } else if (res != 200) {
       if(typeof res == "string") {
         setError(res)
       } else if (res == 500) {
@@ -58,8 +65,9 @@ export default function CheckContactValidationCodeForm({...props}:props) {
       }
       setLoad(false)
     } else {
-      localStorage.removeItem("timeSendContactValidationCode")
-      router.push("/")
+      localStorage.removeItem("timeSendForgotPasswordCode")
+      localStorage.setItem("timeResetPassword", new Date().getTime().toString())
+      router.push("/auth/resetar-senha")
       return
     }
   }
@@ -74,14 +82,14 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   }
 
   useEffect(() => {
-    const prevTime = Number(localStorage.getItem("timeSendContactValidationCode"))
+    const prevTime = Number(localStorage.getItem("timeSendForgotPasswordCode"))
     const currentTIme = new Date().getTime()
     let elapsedTime: number = 0
     if(prevTime) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
-        localStorage.removeItem("timeSendContactValidationCode")
-        router.push("/auth/validar-contato")
+        localStorage.removeItem("timeSendForgotPasswordCode")
+        router.push("/auth/esqueci-minha-senha")
       }
     } else {
       elapsedTime = 60
@@ -104,8 +112,8 @@ export default function CheckContactValidationCodeForm({...props}:props) {
           <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
-          <Link onClick={handleClick} href="/auth/validar-contato">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
-          <button type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
+          <Link onClick={handleClick} href="/auth/esqueci-minha-senha">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <button disabled={load ? true : false} type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
         </form>
       </main>
     </>

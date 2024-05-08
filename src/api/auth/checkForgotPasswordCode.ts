@@ -1,8 +1,8 @@
 import { api } from "../path"
 import { ResponseErr } from "../responseErr"
-import { twoAuthPath } from "./userPath"
+import { authPath } from "./userPath"
 
-export type checkCreateTwoAuthCodeResponse = 
+export type checkForgotPasswordCodeResponse = 
   "máximo de tentativas atingido" |
   "código inválido" |
   "código expirado" |
@@ -16,16 +16,15 @@ interface params {
   codigo: string
 }
 
-export default async function CheckCreateTwoAuthCode(cookie: string, params: params):Promise<checkCreateTwoAuthCodeResponse> {
+export default async function CheckForgotPasswordCode(params: params):Promise<checkForgotPasswordCodeResponse> {
   let url = api
-  url+="/"+twoAuthPath+"/checkCreateTwoAuthCode"
+  url+="/"+authPath+"/checkForgotPasswordCode"
   try {
     let status: number = 0
     const res: ResponseErr = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cookie": cookie
       },
       credentials: "include",
       body: JSON.stringify(params),
@@ -35,10 +34,11 @@ export default async function CheckCreateTwoAuthCode(cookie: string, params: par
         return res.json()
       }
     })
+    
     if(status == 200 || status == 500 || status == 401) {
       return status
     }
-    let msg: checkCreateTwoAuthCodeResponse | null = null
+    let msg: checkForgotPasswordCodeResponse | null = null
     if(res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "código valido porém não foi possivel criar uma sessão" || res.message == "código inválido" || res.message == "usuário já possui autenticação de dois fatores" || res.message == "você não possui um código registrado") {
       msg = res.message
     }
@@ -47,7 +47,7 @@ export default async function CheckCreateTwoAuthCode(cookie: string, params: par
     }
     return 500
   } catch(err) {
-    console.error("error trying CheckCreateTwoAuthCode:", err);
+    console.error("error trying CheckForgotPassword:", err);
     return 500
   }
 }

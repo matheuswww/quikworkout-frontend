@@ -2,12 +2,11 @@ import { api } from "../path"
 import { ResponseErr } from "../responseErr"
 import { twoAuthPath } from "./userPath"
 
-export type checkCreateTwoAuthCodeResponse = 
-  "máximo de tentativas atingido" |
-  "código inválido" |
+export type checkTwoAuthCodeResponse = 
+  "máximo de tentativas atingido" |  
+  "usuário não possui autenticação de dois fatores" |
   "código expirado" |
-  "cookie inválido" |
-  "usuário já possui autenticação de dois fatores" |
+  "código inválido" |
   "código valido porém não foi possivel criar uma sessão" |
   "você não possui um código registrado" |
   500 | 200 | 401
@@ -16,9 +15,9 @@ interface params {
   codigo: string
 }
 
-export default async function CheckCreateTwoAuthCode(cookie: string, params: params):Promise<checkCreateTwoAuthCodeResponse> {
+export default async function CheckTwoAuthCode(cookie: string, params: params):Promise<checkTwoAuthCodeResponse> {
   let url = api
-  url+="/"+twoAuthPath+"/checkCreateTwoAuthCode"
+  url+="/"+twoAuthPath+"/checkTwoAuthCode"
   try {
     let status: number = 0
     const res: ResponseErr = await fetch(url, {
@@ -38,8 +37,8 @@ export default async function CheckCreateTwoAuthCode(cookie: string, params: par
     if(status == 200 || status == 500 || status == 401) {
       return status
     }
-    let msg: checkCreateTwoAuthCodeResponse | null = null
-    if(res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "código valido porém não foi possivel criar uma sessão" || res.message == "código inválido" || res.message == "usuário já possui autenticação de dois fatores" || res.message == "você não possui um código registrado") {
+    let msg: checkTwoAuthCodeResponse | null = null
+    if(res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "código valido porém não foi possivel criar uma sessão" || res.message == "usuário não possui autenticação de dois fatores" || res.message == "você não possui um código registrado") {
       msg = res.message
     }
     if(msg != null) {
@@ -47,7 +46,7 @@ export default async function CheckCreateTwoAuthCode(cookie: string, params: par
     }
     return 500
   } catch(err) {
-    console.error("error trying CheckCreateTwoAuthCode:", err);
+    console.error("error trying validateCode:", err);
     return 500
   }
 }

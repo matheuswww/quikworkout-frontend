@@ -115,6 +115,12 @@
   }
 }
 
+@media (max-width: 540px) {
+  .form button, .form input {
+    width: 100%;
+  }
+}
+
 .lowOpacity {
   transition: .5s;
   opacity: .1;

@@ -11,30 +11,29 @@
   opacity: .1;
 }
 
-.section {
-  width: 250px;
-}
 
 .form {
   display: grid;
   justify-content: center;
   background-color: transparent;
-  padding: 20px;
+  padding: 15px;
   border-radius: 4px;
-  height: 320px;
+  height: max-content;
 }
 
 .form input {
-  padding: 8px;
-  width: 250px;
+  margin-top: 15px;
+  padding: 5px;
+  padding-left: 0px;
+  width: 450px;
   outline: none;
   border: none;
-  margin-top: 5px;
   font-family: var(--interSemiBold);
   color: #c8c8c8;
   background-color: transparent;
   border-radius: 0px;
   border-bottom: 1px solid white;
+  font-size: 1rem;
 }
 
 .form label {
@@ -52,16 +51,25 @@
   color: #c8c8c8;
 }
 
-.form a {
-  margin-top: 5px;
-  text-decoration: none;
-  font-family: var(--interSemiBold);
-  font-size: .8rem;
-  color: #c8c8c8;
-  width: max-content;
+.error {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-family: 'inter-SemiBold';
+  color: #ec5656;
+  width: 250px;
 }
 
-.button {
+.form a {
+  margin-top: 10px;
+  text-decoration: none;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  color: #c8c8c8;
+  width: max-content;
+  max-width: 229px;
+}
+
+.buttonForm {
   margin-top: 5px;
   height: 40px;
   width: 250px;
@@ -74,20 +82,13 @@
   transform: translateY(20px);
   border: 1px solid white;
   border-radius: 4px;
+  width: 200px;
 }
 
-.error {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  font-family: 'inter-SemiBold';
-  color: #ec5656;
-  width: 250px;
-}
-
-.lowOpacity {
-  transition: .5s;
-  opacity: .1;
-  pointer-events: none;
+.form input[type=number]::-webkit-inner-spin-button, 
+.form input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .loading {
@@ -95,52 +96,43 @@
   cursor: wait !important;
 }
 
-@media (min-width: 360px) {
-  .section {
-    width: 350px;
-  }
-
-  .form input,.button,.error {
-    width: 300px;
-  }
-}
-
-@media (min-width: 540px) {
-  .form input,.button,.error {
-    width: 370px;
-  }
-}
-
-@media (min-width: 460px) {
-  .section {
-    width: 330px;
-  }
+.visibility {
+  background-color: red;
 }
 
 @media (hover: hover) { 
-  .button:hover {
+  .buttonForm:hover {
     cursor: pointer;
     background-color: var(--btnHover);
   }
 }
 
-@media (min-width: 1000px) {
-  .form input {
-    width: 450px;
-  }
-
-  .button {
-    width: 200px;
-  }
-}
-
-.button:active {
+.buttonForm:active {
   cursor: pointer;
   background-color: var(--btnClicked);
 }
 
-@media (max-height: 530px) {
-  .main {
-    height: 100%
+
+@media (max-height: 170px) {
+  .form {
+    height: 100%;
   }
+}
+
+@media (max-width: 1000px) {
+  .form input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .buttonForm {
+    width: 100%;
+  }
+}
+
+.lowOpacity {
+  transition: .5s;
+  opacity: .1;
+  pointer-events: none;
 }
