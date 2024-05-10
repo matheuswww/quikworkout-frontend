@@ -28,7 +28,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkCreateTwoAuthCodeResponse | null>(null)
-  const [popUpError, setPopUpError] = useState<number | null>(null)
+  const [popUpError, setPopUpError] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -36,6 +36,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setPopUpError(false)
     setError(null)
     setLoad(true)    
     const res = await CheckCreateTwoAuthCode(props.cookie, {
@@ -51,11 +52,13 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
+      await deleteCookie("userProfile")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
       router.push("/auth/entrar")
       return
     }
     if (res == 401){
+      await deleteCookie("userProfile")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
       router.push("/auth/criar-dois-fatores")
       return
@@ -63,7 +66,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       if(typeof res == "string") {
         setError(res)
       } else if (res == 500) {
-        setPopUpError(res)
+        setPopUpError(true)
       }
       setLoad(false)
     } else {
@@ -106,7 +109,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
   
   return (
     <>
-      {popUpError == 500 && <PopupError handleOut={(() => setPopUpError(null))} />}
+      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>

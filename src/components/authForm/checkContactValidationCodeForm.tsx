@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import { useRouter } from 'next/navigation'
+import { deleteCookie } from '@/action/deleteCookie'
 
 interface props {
   email: boolean
@@ -28,7 +29,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkContactValidationCodeResponse | null>(null)
-  const [popUpError, setPopUpError] = useState<number | null>(null)
+  const [popUpError, setPopUpError] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -36,12 +37,14 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setPopUpError(false)
     setError(null)
     setLoad(true)    
     const res = await CheckContactValidationCode(props.cookie, {
       codigo: data.code
     })
-    if (res == "usuário verificado porém não foi possível criar uma sessão") {
+    if (res == "usuário verificado porém não foi possível criar uma sessão" || res == 401) {
+      await deleteCookie("userProfile")
       localStorage.removeItem("timeSendContactValidationCode")
       router.push("/auth/entrar")
       return
@@ -54,7 +57,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
       if(typeof res == "string") {
         setError(res)
       } else if (res == 500) {
-        setPopUpError(res)
+        setPopUpError(true)
       }
       setLoad(false)
     } else {
@@ -97,7 +100,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   
   return (
     <>
-      {popUpError == 500 && <PopupError handleOut={(() => setPopUpError(null))} />}
+      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>

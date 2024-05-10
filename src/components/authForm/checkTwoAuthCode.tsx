@@ -33,9 +33,10 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
 
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkTwoAuthCodeResponse | null>(null)
-  const [popUpError, setPopUpError] = useState<number | null>(null)
+  const [popUpError, setPopUpError] = useState<boolean>(false)
 
   async function handleForm(data: FormProps) { 
+    setPopUpError(false)
     setError(null)
     setLoad(true)    
     const res = await CheckTwoAuthCode(cookie, {
@@ -50,6 +51,7 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
+      await deleteCookie("userTwoAuth")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
       router.push("/auth/entrar")
       return
@@ -62,7 +64,7 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
       if(typeof res == "string") {
         setError(res)
       } else if (res == 500) {
-        setPopUpError(res)
+        setPopUpError(false)
       }
       setLoad(false)
     } else {
@@ -72,7 +74,7 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
 
   return (
     <>
-      {popUpError == 500 && <PopupError handleOut={(() => setPopUpError(null))} />}
+      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>

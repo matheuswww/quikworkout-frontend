@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import ResetPassword from '@/api/auth/resetPassword'
 import Password from './password'
 import { useEffect, useState } from 'react'
+import { deleteCookie } from '@/action/deleteCookie'
 
 interface props {
   cookieName: string | undefined
@@ -43,6 +44,7 @@ export default function ResetPasswordForm({...props}:props) {
       return
     }
     if (res == 401){
+      await deleteCookie("userResetPass")
       localStorage.removeItem("timeResetPassword")
       router.push("/auth/entrar")
       return

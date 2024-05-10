@@ -9,7 +9,7 @@ export type checkContactValidationCodeResponse =
   "código inválido" |
   "código expirado" |
   "você não possui um código registrado" |
-  500 | 200
+  500 | 200 | 401
 
 interface params {
   codigo: string
@@ -34,7 +34,7 @@ export default async function CheckContactValidationCode(cookie: string, params:
         return res.json()
       }
     })
-    if(status == 200 || status == 500) {
+    if(status == 200 || status == 500 || status == 401) {
       return status
     }
     let msg: checkContactValidationCodeResponse | null = null

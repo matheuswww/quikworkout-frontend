@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import { useRouter } from 'next/navigation'
 import CheckForgotPasswordCode, { checkForgotPasswordCodeResponse } from '@/api/auth/checkForgotPasswordCode'
+import { deleteCookie } from '@/action/deleteCookie'
 
 interface props {
   email: boolean
@@ -26,7 +27,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkForgotPasswordCodeResponse | null>(null)
-  const [popUpError, setPopUpError] = useState<number | null>(null)
+  const [popUpError, setPopUpError] = useState<boolean>(false)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -34,6 +35,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setPopUpError(false)
     setError(null)
     setLoad(true)    
     const res = await CheckForgotPasswordCode({
@@ -49,11 +51,13 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
+      await deleteCookie("userAuthResetPass")
       localStorage.removeItem("timeSendForgotPasswordCode")
       router.push("/auth/entrar")
       return
     }
     if (res == 401){
+      await deleteCookie("userAuthResetPass")
       localStorage.removeItem("timeSendForgotPasswordCode")
       router.push("/auth/esqueci-minha-senha")
       return
@@ -61,7 +65,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       if(typeof res == "string") {
         setError(res)
       } else if (res == 500) {
-        setPopUpError(res)
+        setPopUpError(true)
       }
       setLoad(false)
     } else {
@@ -105,7 +109,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
   
   return (
     <>
-      {popUpError == 500 && <PopupError handleOut={(() => setPopUpError(null))} />}
+      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
