@@ -1,14 +1,14 @@
 import { api } from "../path"
 import { clothingPath } from "./clothingPath"
 
-type statusCode = 200 | 404 | 400 | 500
+type statusCode = 200 | 404 | 500
 
 export interface getClothingByIdResponse {
   status: statusCode
   clothing: data | null
 }
 
-interface inventario {
+export interface inventario {
   cor: string,
   corPrincipal: boolean,
   imgDesc: string,
@@ -42,19 +42,17 @@ export default async function GetClothing(id: string):Promise<getClothingByIdRes
       cache: "no-store"
     }).then(res => res)
     let status:statusCode
-    if (res.status === 200 || res.status === 404 || res.status === 400 || res.status === 500) {
+    if (res.status === 200 || res.status === 404 || res.status === 500) {
       status = res.status
     } else {
       status = 500
-    }
-    
+    }    
     let data:data | null
     if (status == 200) {
       data = await res.json()
     } else {
       data = null
     }
-
     return {
       status: status,
       clothing: data

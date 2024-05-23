@@ -1,7 +1,6 @@
 import Clothing from "@/components/clothing/clothing"
-import styles from './page.module.css'
 import { Metadata } from "next"
-import { request } from "http"
+import { cookies } from "next/headers"
 
 interface clothingProps {
   params: {
@@ -29,9 +28,9 @@ export function generateMetadata({...props}: clothingProps): Metadata {
 }
 
 export default function Product({...props}: clothingProps) {
+  const cookieInfos = cookies().get("userProfile")
+  
   return (
-    <main className={styles.main}>
-      <Clothing id={props.params.id}/>
-    </main>
+    <Clothing id={props.params.id} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value}/>
   )
 }

@@ -1,0 +1,264 @@
+'use client'
+import { useEffect, useRef, useState } from 'react'
+import Edit from 'next/image'
+import styles from './getClothingCartForm.module.css'
+import Link from 'next/link'
+import SkeletonImage from '../skeletonImage/skeletonImage'
+import GetClothingCart, { getClothingCartResponse } from '@/api/clothing/getClothingCart'
+import { useRouter } from 'next/navigation'
+import { deleteCookie } from '@/action/deleteCookie'
+import SpinLoading from '../spinLoading/spinLoading'
+import DeleteClothingCart from './deleteClothingCartForm'
+import PopupError from '../popupError/popupError'
+import EditClothingCartForm from './editClothingCartForm'
+import formatPrice from '@/funcs/formatPrice'
+
+interface props {
+  cookieName?: string
+  cookieVal?: string
+}
+
+export interface clothingCart {
+  clothing_id: string,
+  color: string,
+  size: "p" | "m" | "g" | "gg",
+  avaibleQuantity: number
+  quantidade: number
+}
+
+export default function GetClothingCartForm({...props}: props) {
+  const router = useRouter()
+  const [data, setData] = useState<getClothingCartResponse | null>(null)
+  const [load, setLoad] = useState<boolean>(true)
+  const [newPageLoad, setNewPageLoad] = useState<boolean>(false)
+  const [newPage, setNewPage] = useState<boolean>(false)
+  const [end, setEnd] = useState<boolean>(false)
+  const [totalPrice, setTotalPrice] = useState<number>(0)
+  const [openDeleteClothingCart,setDeleteClothingCart] = useState<boolean>(false)
+  const [openEditClothingCart,setEditClothingCart] = useState<boolean>(false)
+  const [clothing, setClothing] = useState<clothingCart | null>(null)
+  const [popupError, setPopupError] = useState<boolean>(false)
+  const [refresh,setRefresh] = useState<boolean>(false)
+  const deleteRef = useRef<HTMLButtonElement | null>(null)
+  const editRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    if(!end) {
+      (async function() {
+        if(props.cookieName == undefined || props.cookieVal == undefined) {
+          router.push("/auth/entrar")
+          return
+        }
+        const cookie = props.cookieName+"="+props.cookieVal
+        var cursor: string | undefined
+        if(data?.clothing) {
+          setNewPageLoad(true)
+          const lastIndex = data.clothing.length
+          if(lastIndex && lastIndex - 1 >= 0 && data.clothing) {
+            cursor = data.clothing[lastIndex - 1].criado_em
+          }3
+        }
+        const res = await GetClothingCart(cookie, cursor)
+        if(data?.clothing && res.status == 404) {
+          setEnd(true)
+          setLoad(false)
+          setNewPageLoad(false)
+          return
+        }
+        let totalPrice = 0
+        res.clothing?.map(({preco,quantidade}) => {
+          totalPrice += preco*quantidade
+        })
+        setTotalPrice((t) => totalPrice+t)
+        if(res.status === 401) {
+          await deleteCookie(props.cookieName)
+          router.push("/auth/entrar")
+          return
+        }
+        setLoad(false)
+        setNewPageLoad(false)
+        if(data?.clothing && res.clothing) {
+          data.clothing.push(...res.clothing)
+          setData({
+            clothing: data.clothing,
+            status: 200
+          })
+        } else {
+          setData(res)
+        }
+        setLoad(false)
+      }())
+    }
+  },[newPage])
+
+  useEffect(() => {
+    if(refresh) {
+      setNewPage(false)
+      setEnd(false)
+      setTotalPrice(0)
+      setDeleteClothingCart(false)
+      setEditClothingCart(false)
+      setClothing(null)
+      setRefresh(false);
+      (async function() {
+        if(props.cookieName == undefined || props.cookieVal == undefined) {
+          router.push("/auth/entrar")
+          return
+        }
+        const cookie = props.cookieName+"="+props.cookieVal
+        var cursor: string | undefined
+        if(data?.clothing) {
+          const lastIndex = data.clothing.length
+          if(lastIndex && lastIndex - 1 >= 0 && data.clothing) {
+            cursor = data.clothing[lastIndex - 1].criado_em
+          }
+        }
+        const res = await GetClothingCart(cookie, cursor)
+        if(data?.clothing && res.status == 404) {
+          setEnd(true)
+          setLoad(false)
+          return
+        }
+        let totalPrice = 0
+        res.clothing?.map(({preco,quantidade}) => {
+          totalPrice += preco*quantidade
+        })
+        if(totalPrice != 0) {
+          setTotalPrice(totalPrice)
+        }
+        if(res.status === 401) {
+          await deleteCookie(props.cookieName)
+          router.push("/auth/entrar")
+          return
+        }
+        setLoad(false)
+        setData(res)
+        setLoad(false)
+      }())
+    }
+  }, [refresh])
+
+  useEffect(() => {
+    const final = document.querySelector("#final")
+    if(final instanceof HTMLSpanElement) {
+      const observer = new IntersectionObserver((entries) => {
+        if(entries.some((entry) => entry.isIntersecting)) {          
+          if(final.classList.contains(styles.show)) {
+            setNewPage(true)
+          }
+        }
+      })
+      observer.observe(final)
+      return () => observer.disconnect()
+    }
+  },[])
+
+  function handleSetClothing(roupa_id: string, cor: string, size: string, avaibleQuantity: number, quantity: number) {
+    if(size === "p" || size === "m" || size === "g" || size === "gg" ) {
+      setClothing({
+        clothing_id: roupa_id,
+        color: cor,
+        size: size,
+        avaibleQuantity: avaibleQuantity,
+        quantidade: quantity
+      })
+    }    
+  }
+
+  function handleDeleteClothingCart(roupa_id: string, cor: string, size: string, avaibleQuantity: number, quantity: number) {
+    setDeleteClothingCart(true)
+    handleSetClothing(roupa_id, cor, size, avaibleQuantity, quantity)
+  }
+
+  function handleEditClothingCart(roupa_id: string, cor: string, size: string, avaibleQuantity: number, quantity: number) {
+    setEditClothingCart(true)
+    handleSetClothing(roupa_id, cor, size, avaibleQuantity, quantity)
+  }
+  
+  return (
+    <>
+     {popupError && <PopupError handleOut={() => setPopupError(false)} />}
+     {load && <SpinLoading />}
+     {<EditClothingCartForm setRefresh={setRefresh} cookieName={props.cookieName} cookieVal={props.cookieVal} setLoad={setLoad} setPopupError={setPopupError} clothing={clothing} buttonToOpen={editRef.current} open={openEditClothingCart} setOpen={setEditClothingCart}  />}
+     {<DeleteClothingCart setPopupError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} clothing={clothing} open={openDeleteClothingCart} setOpen={setDeleteClothingCart} buttonToOpen={deleteRef.current} />}
+      <main className={`${styles.main} ${data?.status == 404 && styles.mainNotFound} ${(load || openDeleteClothingCart || openEditClothingCart) && styles.opacity} ${data?.status == 404 || data?.status == 500 && styles.centralize}`}>
+        <section className={styles.section}>
+          {data?.status != 500 && data?.status != 404 && <>
+            <div>
+              <h1 className={styles.title}>Minha bolsa</h1>
+              {data?.status == 200 && data.clothing && <>
+                {totalPrice != 0 && <p className={styles.totalPrice}>Preço total: R${formatPrice(totalPrice)}</p>}
+                <Link href="#" className={styles.finishOrder}>Finalizar todas as compras</Link>
+              </>}
+            </div>
+          </>}
+          {load && <p className={styles.loading}>Carregando...</p>}
+          {data?.status == 200 && data.clothing?.map((data) => {
+            return (
+              <div className={styles.item} key={data.roupa_id+data.cor+data.tamanho}>
+              <p className={styles.name}>Crossfit</p>
+              <SkeletonImage src={data.imagem} alt="#" className={styles.image} width={75} height={85} quality={100}/>
+              <div className={styles.infos}>
+                <div>
+                  <p className={styles.inkfree}>preço total:&nbsp;</p>
+                  <p className={styles.interRegular}>R${formatPrice(data.preco)}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>categoria:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.categoria}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>quanitdade:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.quantidade}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>genêro:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.sexo == "M" ? "masculino" : data.sexo == "F" ? "feminino" : "unissex"}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>cor:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.cor}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>material:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.material}</p>
+                </div>
+                <div>
+                  <p className={styles.inkfree}>tamamanho:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.tamanho}</p>
+                </div>
+              </div>
+              <p className={`${styles.description} ${styles.interRegular}`}>{data.descricao}</p>
+              <Link href="#" >Finalizar compra</Link>
+              <button className={styles.delete} ref={deleteRef} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="remover produto de minha bolsa"><span aria-hidden="true">x</span></button>
+              <button className={styles.edit} ref={editRef} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="editar produto"><Edit src="/img/edit.png" width={12} height={12} alt="editar produto"/></button>
+            </div>
+            )
+          })}
+          <span aria-hidden={true} id="final" className={`${data?.clothing && styles.show}`}></span>
+          {data?.status == 404 && 
+            <>
+              <p className={styles.p} style={{marginTop: "25px"}}>Nenhum produto foi encontrado</p>
+              <Link style={{marginLeft: "10px"}} href="/" className={styles.seeClothing}>Ver roupas</Link>
+            </>
+          }
+          {data?.status == 500 &&
+            <p className={styles.p}>Parece que houve um erro! Tente recarregar a página</p>
+          }
+          {newPageLoad && 
+            <div className={styles.ldsRing} aria-label="carregando" tabIndex={0}>
+              <div aria-hidden="true">
+                </div>
+                <div aria-hidden="true">
+                </div>
+                <div aria-hidden="true">
+                </div>
+                <div aria-hidden="true">
+              </div>
+            </div>
+          }
+        </section>
+      </main>
+    </>
+  )
+}

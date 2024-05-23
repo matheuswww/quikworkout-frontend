@@ -112,6 +112,7 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
     } else if (res == "usuário não é verificado") {
       router.push("/auth/validar-contato")
     } else if (res == 401) {
+      await deleteCookie("userProfile")
       router.push("/auth/entrar")
     } else if (res == 200) {
       localStorage.setItem("timeSendCreateTwoAuthCode", new Date().getTime().toString())

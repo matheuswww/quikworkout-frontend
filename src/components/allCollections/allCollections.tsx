@@ -2,6 +2,7 @@ import GetAllClothing from "@/api/clothing/getAllClothing"
 import styles from './allCollections.module.css'
 import Link from "next/link";
 import SkeletonImage from "../skeletonImage/skeletonImage";
+import formatPrice from "@/funcs/formatPrice";
 
 export default async function AllCollections() {
   const data = await GetAllClothing(null)
@@ -20,7 +21,7 @@ export default async function AllCollections() {
                 <SkeletonImage src={clothing.inventario[0].images[0]} alt={clothing.inventario[0].imgDesc} width={225} height={300} className={styles.clothing} />
                 <div className={styles.clothingInfos}>
                   <p className={styles.name}>{clothing.nome}</p>
-                  <p className={styles.price}>R${clothing.preco}0</p>
+                  <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
                 </div>
               </Link>
             )

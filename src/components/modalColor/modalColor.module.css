@@ -1,0 +1,100 @@
+.changeColorButton {
+  width: 160px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: #19191d;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 7px;
+  border: none;
+  border: 2px solid #ACACAC;
+  z-index: -1;
+}
+
+.changeColorButton p {
+  color: white;
+  font-family: var(--interRegular) !important;
+  font-size: 1rem !important;
+  margin-top: 1px;
+}
+
+.expand {
+  display: block;
+  background-color: white;
+  height: 10px;
+  width: 2px;
+  position: relative;
+  top: 8px;
+  left: -15px;
+  transform: rotate(-43deg);
+}
+
+.expand::after {
+  content: "";
+  display: block;
+  background-color: white;
+  height: 11px;
+  width: 2px;
+  position: absolute;
+  transform: rotate(-92deg);
+  right: -5px;
+  bottom: -5px;
+}
+
+.selectModal {
+  display: none;
+  transition: .5s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: max-content;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translate(-50%, -35%);
+}
+
+.selectModal.active {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.selectModal button {
+  background-color: transparent;
+  border: none;
+  font-family: var(--interRegular) !important;
+  font-size: 1rem !important;
+  color: white !important;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid #ACACAC;
+  padding: 10px;
+}
+
+.selectModal button:last-child {
+  border-bottom: 0px;
+}
+
+@media (hover: hover) {
+  .selectModal button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  } 
+  .changeColorButton:hover,.changeColorButton:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.changeColorButton:active,.changeColorButton:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+.selectModal button:hover {
+  cursor: pointer;
+  background-color: var(--btnHover);
+}

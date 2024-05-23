@@ -1,0 +1,93 @@
+.container {
+  transition: .5s;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%);
+  width: 310px;
+  height: 285px;
+  background-color: #19191df7;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 999;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px 58px 45px 45px 65px;
+  opacity: 0;
+  display: none;
+}
+
+.opacity {
+  opacity: .1 !important;
+}
+
+.container div,.container button {
+  grid-column: span 2;
+  justify-self: center;
+}
+
+.container.active {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.editCart {
+  width: 230px;
+  margin-top: 10px;
+  height: 38px;
+  color: white;
+  text-decoration: none;
+  font-size: .9rem;
+  background: transparent;
+  border: 1px solid #969696;
+  padding: 10px;
+  font-family: 'inter-Regular';
+  border-radius: 5px;
+  text-align: center;
+  grid-column: span 2;
+  justify-self: start;
+  display: block;
+}
+
+.close {
+  border-radius: 50px;
+  width: 30px;
+  height: 27px;
+  border: none;
+  position: absolute;
+  right: -4px;
+  top: -5px;
+  background: #373737;
+  color: white;
+  border: 1px solid white;
+  font-size: 1.1rem;
+}
+
+.p {
+  grid-column: span 2;
+  color: #dbdbdb;
+  font-family: 'inter-SemiBold';
+  margin: 10px;
+  text-align: center;
+}
+
+.noSizes {
+  grid-column: span 2;
+  color: #dbdbdb;
+  font-family: 'inter-SemiBold';
+  margin: 10px;
+  position: relative;
+  bottom: 22px;
+  text-align: center;
+}
+
+@media (hover: hover) { 
+  .close:hover,.editCart:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.editCart:active,.close:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}

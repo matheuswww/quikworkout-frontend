@@ -24,7 +24,7 @@ export function slideWithControl(
     middleOfItem = itemWidth / 2
     const move = -(item * itemWidth)
     moveSlide(move)
-    dist.movePosition = move     
+    dist.movePosition = move
     dist.finalPosition = move
     thumbs && thumbs.forEach((thumb) => {
       if (thumb instanceof HTMLElement) {
@@ -114,7 +114,7 @@ export function slideWithControl(
     }
   }
 
-  const moveSlideOnEnd = function(distX: number) {
+  const moveSlideOnEnd = function(distX: number) { 
     slide.style.transition = '.5s'
     wrapper.style.pointerEvents = 'none'
     moveSlide(distX)
@@ -149,6 +149,7 @@ export function slideWithControl(
             index.children[item].classList.add(activeIndexClass)
           }
         }
+        
       } else if (Math.abs(dist.movement) < 5) {
         moveSlideOnEnd(dist.finalPosition)
       } else {

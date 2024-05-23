@@ -40,7 +40,7 @@ const SkeletonImage = React.forwardRef<HTMLImageElement | null, skeletonImagePro
         ref={ref}
         onLoad={handleLoad}
       />
-      <span className={`${load && styles.skeleton}`}></span>
+      {load && <span className={`${load && styles.skeleton}`}></span>}
     </>
   );
 });

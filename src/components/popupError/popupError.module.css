@@ -5,13 +5,14 @@
   top: 75px;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #b62525;
+  background-color: #b62525f0;
   width: 295px;
   border-radius: 10px;
   height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .container p {

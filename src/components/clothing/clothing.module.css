@@ -1,3 +1,23 @@
+.main {
+  height: 100vh;
+  width: 100%;
+  background-image: linear-gradient(270deg, #000000, #19191d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main.opacity {
+  opacity: .1;
+}
+
+.main section {
+  width: 100%;
+  display: grid;
+  margin-top: 15px;
+  transition: .5s;
+}
+
 .activeButton {
   background-color: #565656e9;
 }
@@ -75,26 +95,6 @@
   margin: 5px 0px 15px 0px;
 }
 
-.colors button {
-  width: 160px;
-  height: 28px;
-  border-radius: 5px;
-  background-color: #19191d;
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 7px;
-  border: none;
-  border: 2px solid #ACACAC;
-  z-index: -1;
-}
-
-.colors button p {
-  color: white;
-  font-family: var(--interRegular) !important;
-  font-size: 1rem !important;
-  margin-top: 1px;
-}
-
 .expand {
   display: block;
   background-color: white;
@@ -118,8 +118,8 @@
   bottom: -5px;
 }
 
-.gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), .sizes label, 
-.counter p:nth-child(3), .addPurchase p, .description {
+.gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2),
+.addPurchase p, .description {
   color: white;
   font-family: var(--interRegular);
   font-size: 0.9rem;
@@ -131,90 +131,12 @@
   font-size: 1.4rem;
 }
 
-
-.sizes label {
-  display: inline-flex;
-  border: 2px solid #ACACAC;
-  width: 26px;
-  height: 24px;
-  margin-right: 10px;
-  border-radius: 5px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-  text-transform: uppercase;
-}
-
-.sizes label:last-child {
-  margin-right: 0px;
-  width: 38px;
-}
-
-.sizes label input {
-  position: fixed;
-  opacity: 0;
-}
-
-.sizes label:hover {
-  cursor: pointer;
-  background-color: var(--btnHover);
-}
-
-.sizes label:active {
-  background-color: var(--btnClicked);
-}
-
 .selected {
   background-color: var(--btnHover);
 }
 
 .counter {
   -webkit-tap-highlight-color: transparent;
-}
-
-.counter p:nth-child(3) {
-  display: inline;
-  position: relative;
-  top: 5px;
-  padding: 0px 5px;
-}
-
-.more,.less {
-  color: white;
-  background-color: transparent;
-  width: 26px;
-  height: 24px;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  border: 2px solid #ACACAC;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
-}
-
-.more::after,.less::after {
-  content: "";
-  display: block;
-  background-color: white;
-  width: 10px;
-  height: 2px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-}
-
-.more::before {
-  content: "";
-  display: block;
-  background-color: white;
-  width: 10px;
-  height: 2px;
-  position: absolute;
-  left: 29%;
-  top: 46%;
-  transform: rotate(88deg);
 }
 
 .addPurchase {
@@ -310,68 +232,26 @@
   margin-top: 0px;
 }
 
+.loadButton {
+  opacity: .5;
+  cursor: wait !important;
+}
+
 .load {
   width: max-content;
   height: max-content;
 }
 
-.selectModal {
-  display: none;
-  transition: .5s;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: max-content;
-  background: #19191d;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 5px;
-  z-index: 999;
-  opacity: 0;
-  transform: translate(-50%, -35%);
-}
-
-.selectModal.active {
-  opacity: 1;
-  transform: translate(-50%, -50%);
-}
-
-.selectModal button {
-  background-color: transparent;
-  border: none;
-  font-family: var(--interRegular) !important;
-  font-size: 1rem !important;
-  color: white !important;
-  width: 100%;
-  text-align: center;
-  border-bottom: 2px solid #ACACAC;
-  padding: 10px;
-}
-
-.selectModal button:last-child {
-  border-bottom: 0px;
-}
-
 @media (min-width: 400px) {
   .images {
-    width: 325px;
-  }
-
-  .clothing {
-    width: 325px;
-    height: 485px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    width: 290px;
   }
 
   .name,.price {
     font-size: 2rem;
   }
 
-  .gender p:nth-child(1), .material p:nth-child(1), .category p:nth-child(1), .sizes p:nth-child(1), .colors p:nth-child(1), .counter p:nth-child(1) {
+  .gender p:nth-child(1), .material p:nth-child(1), .category p:nth-child(1), .sizes p:nth-child(1),.colors  p:nth-child(1), .counter p:nth-child(1) {
     color: white;
     font-family: var(--inkfree);
     font-size: 1.6rem;
@@ -383,15 +263,6 @@
 
   .infos {
     grid-template-columns: 170px 155px;
-  }
-
-  .sizes label,.more,.less {
-    width: 28px;
-    height: 26px;
-  }
-
-  .more::before {
-    left: 29%;
   }
 }
 
@@ -411,10 +282,6 @@
 
   .infos {
     grid-template-columns: 205px 155px;
-  }
-
-  .colors select {
-    height: 30px;
   }
 }
 
@@ -456,11 +323,11 @@
     width: 70px;
   }
 
-  .gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), .sizes label, .colors select, 
-  .counter p:nth-child(3), .addPurchase p, .description {
-  color: white;
-  font-family: var(--interRegular);
-  font-size: 1rem;
+  .gender p:nth-child(2), .material p:nth-child(2), .category p:nth-child(2), 
+  .addPurchase p, .description {
+    color: white;
+    font-family: var(--interRegular);
+    font-size: 1rem;
   }
 
   .infos {
@@ -476,18 +343,6 @@
 }
 
 @media (hover: hover) { 
-  .more:hover,.less:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
-  .colors button:hover,.colors button:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
-  .selectModal button:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
   .addPurchase:hover {
     cursor: pointer;
     background-color: var(--btnHover);
@@ -502,21 +357,35 @@
   }
 }
 
-.more:active,.less:active {
-  background-color: var(--btnClicked);
-}
-
-.colors button:active,.colors button:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
-}
-
-.selectModal button:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
-}
-
 .addPurchase:active {
   cursor: pointer;
   background-color: var(--btnClicked);
+}
+
+@media (min-width: 800px) {
+  .main section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 780px;
+  }
+}
+
+@media (min-width: 400px) {
+  .main section {
+    margin-top: 50px;
+  }
+}
+
+@media (max-height: 420px) {
+  .main {
+    height: auto;
+  }
+}
+
+@media (min-width: 1130px) {
+  .main section {
+    width: 915px;
+    margin-top: 0px;
+  }
 }
