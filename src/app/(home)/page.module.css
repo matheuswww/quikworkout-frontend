@@ -6,19 +6,3 @@
   overflow: hidden;
   background-image: linear-gradient(272deg, #000000, #19191d);
 }
-
-.collections {
-  width: 100vw;
-  max-width: 1000px;
-  height: max-content;
-  display: grid;
-  justify-content: center;
-}
-
-.allCollections {
-  display: grid;
-  justify-content: center;
-  width: 100vw;
-  max-width: 1020px;
-  margin-top: 50px;
-}

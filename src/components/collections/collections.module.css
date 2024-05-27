@@ -11,6 +11,14 @@
   height: max-content;
 }
 
+.collections {
+  width: 100vw;
+  max-width: 1000px;
+  height: max-content;
+  display: grid;
+  justify-content: center;
+}
+
 .h2 {
   position: relative;
 }

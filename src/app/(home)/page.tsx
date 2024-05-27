@@ -7,17 +7,25 @@ export const metadata: Metadata = {
   title: 'Home',
   description: 'Página inicial quikworkout, venha se vestir com estilo!',
   keywords: "quikworkout, crossfit, academia, roupa crossfit, roupa academia"
- }
+}
 
-export default function Home() { 
+interface props {
+  searchParams: {
+    categoria?: string
+    material?: string
+    cor?: string
+    m?: string
+    f?: string
+    precoMaximo?: number
+    precoMinimo?: number
+  }
+}
+
+export default function Home({searchParams}: props) { 
   return (
     <main className={styles.main}>
-      <section className={styles.collections}>
-        <Collections />
-      </section>
-      <section className={styles.allCollections}>
-        <AllCollections />
-      </section>
+      <Collections />
+      <AllCollections searchParams={searchParams} />
     </main>
   )
 }

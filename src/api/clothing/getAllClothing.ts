@@ -2,20 +2,17 @@ import { api } from "../path"
 import { clothingPath } from "./clothingPath"
 
 interface params {
-  corPrincipal: boolean
-  p: boolean | null
-  m: boolean | null
-  g: boolean | null
-  gg: boolean | null
-  id: string | null
-  sexo: string | null
-  categoria: string | null
-  cor: string | null
-  material: string | null
-  cursor: string | null
-  precoMaximo: number | null
-  precoMinimo: number | null
-  Limite: number | null
+  sexo?: string
+  categoria?: string
+  cor?: string
+  material?: string
+  cursor?: string
+  precoMaximo?: number
+  precoMinimo?: number
+  Limite?: number
+  corPrincipal?: string
+  m?: string
+  f?: string
 }
 
 type status = 200 | 404 | 400 | 500
@@ -48,12 +45,11 @@ interface data {
 }
 
 
-export default async function GetAllClothing(params: params | null):Promise<response> {
+export default async function GetAllClothing(params: params):Promise<response> {
   let url = api
   url+=clothingPath+"/getClothing"
-  if (params !== null) {
-    url += getParams(params)
-  }
+  params.corPrincipal = "true"
+  url += getParams(params)
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -92,47 +88,38 @@ export default async function GetAllClothing(params: params | null):Promise<resp
 function getParams(params: params): string {
   let urlParams: string = "?";
 
-  if (params.Limite !== null) {
+  if (params.Limite !== undefined) {
     urlParams += "limite=" + params.Limite + "&";
   }
-  if (params.categoria !== null) {
+  if (params.categoria !== undefined) {
     urlParams += "categoria=" + params.categoria + "&";
   }
-  if (params.corPrincipal !== null) {
-    urlParams += "corPrincipal=" + params.corPrincipal + "&";
-  }
-  if (params.p !== null) {
-    urlParams += "p=" + params.p + "&";
-  }
-  if (params.m !== null) {
-    urlParams += "m=" + params.m + "&";
-  }
-  if (params.g !== null) {
-    urlParams += "g=" + params.g + "&";
-  }
-  if (params.gg !== null) {
-    urlParams += "gg=" + params.gg + "&";
-  }
-  if (params.id !== null) {
-    urlParams += "id=" + params.id + "&";
-  }
-  if (params.sexo !== null) {
-    urlParams += "sexo=" + params.sexo + "&";
-  }
-  if (params.cor !== null) {
+  if (params.cor !== undefined) {
     urlParams += "cor=" + params.cor + "&";
   }
-  if (params.material !== null) {
+  if (params.material !== undefined) {
     urlParams += "material=" + params.material + "&";
   }
-  if (params.cursor !== null) {
+  if (params.cursor !== undefined) {
     urlParams += "cursor=" + params.cursor + "&";
   }
-  if (params.precoMaximo !== null) {
+  if (params.precoMaximo !== undefined) {
     urlParams += "precoMaximo=" + params.precoMaximo + "&";
   }
-  if (params.precoMinimo !== null) {
+  if (params.precoMinimo !== undefined) {
     urlParams += "precoMinimo=" + params.precoMinimo + "&";
+  }
+  if(params.m !== undefined) {
+    urlParams += "m=" + params.m + "&";
+  }
+  if(params.f !== undefined) {
+    urlParams += "f=" + params.f + "&";
+  }
+  if(params.cor !== undefined) {
+    urlParams += "cor=" + params.cor + "&";
+  }
+  if(params.corPrincipal !== undefined) {
+    urlParams += "corPrincipal=" + params.corPrincipal + "&";
   }
 
   urlParams = urlParams.slice(0, -1);

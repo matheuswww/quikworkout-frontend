@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default function middleware(request: NextRequest) {
   const url = new URL(request.url)
+  if(url.pathname == "/usuario/minha-bolsa") {
+    return GetClothingCartURL(request)
+  }
   if(url.pathname == "/auth/validar-contato") {
     return SendContactValidationCodeURL(request)
   }
@@ -17,6 +20,14 @@ export default function middleware(request: NextRequest) {
   if(url.pathname == "/auth/resetar-senha") {
     return ResetPasswordURL(request)
   }
+}
+
+function GetClothingCartURL(request: NextRequest) {
+  const cookie = request.cookies.get("userProfile")
+  if(cookie) {
+    return NextResponse.next()
+  }
+  return NextResponse.redirect(request.nextUrl.origin+"/auth/entrar")
 }
 
 function SendContactValidationCodeURL(request: NextRequest) {
@@ -65,5 +76,5 @@ function ResetPasswordURL(request: NextRequest) {
 
 export const config = {
   matcher: ['/auth/validar-contato','/auth/criar-dois-fatores','/auth/entrar',
-  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha']
+  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', '/usuario/minha-bolsa']
 }
