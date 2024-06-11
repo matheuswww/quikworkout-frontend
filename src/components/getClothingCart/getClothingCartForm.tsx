@@ -65,16 +65,16 @@ export default function GetClothingCartForm({...props}: props) {
           setNewPageLoad(false)
           return
         }
-        let totalPrice = 0
-        res.clothing?.map(({preco,quantidade}) => {
-          totalPrice += preco*quantidade
-        })
-        setTotalPrice((t) => totalPrice+t)
         if(res.status === 401) {
           await deleteCookie(props.cookieName)
           router.push("/auth/entrar")
           return
         }
+        let totalPrice = 0
+        res.clothing?.map(({preco,quantidade}) => {
+          totalPrice += preco*quantidade
+        })
+        setTotalPrice((t) => totalPrice+t)
         setLoad(false)
         setNewPageLoad(false)
         if(data?.clothing && res.clothing) {
@@ -131,7 +131,6 @@ export default function GetClothingCartForm({...props}: props) {
           router.push("/auth/entrar")
           return
         }
-        setLoad(false)
         setData(res)
         setLoad(false)
       }())
@@ -188,7 +187,7 @@ export default function GetClothingCartForm({...props}: props) {
               <h1 className={styles.title}>Minha bolsa</h1>
               {data?.status == 200 && data.clothing && <>
                 {totalPrice != 0 && <p className={styles.totalPrice}>Preço total: R${formatPrice(totalPrice)}</p>}
-                <Link href="#" className={styles.finishOrder}>Finalizar todas as compras</Link>
+                <Link href={`/finalizar-compra?page=${Math.ceil((data.clothing.length / 10)) - 1}`} className={styles.finishOrder}>Finalizar todas as compras</Link>
               </>}
             </div>
           </>}
@@ -197,7 +196,7 @@ export default function GetClothingCartForm({...props}: props) {
             return (
               <div className={styles.item} key={data.roupa_id+data.cor+data.tamanho}>
               <p className={styles.name}>Crossfit</p>
-              <SkeletonImage src={data.imagem} alt="#" className={styles.image} width={75} height={85} quality={100}/>
+              <SkeletonImage src={data.imagem} alt={data.alt} className={styles.image} width={75} height={85} quality={100}/>
               <div className={styles.infos}>
                 <div>
                   <p className={styles.inkfree}>preço total:&nbsp;</p>
@@ -229,7 +228,7 @@ export default function GetClothingCartForm({...props}: props) {
                 </div>
               </div>
               <p className={`${styles.description} ${styles.interRegular}`}>{data.descricao}</p>
-              <Link href="#" >Finalizar compra</Link>
+              <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} >Finalizar compra</Link>
               <button className={styles.delete} ref={deleteRef} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="remover produto de minha bolsa"><span aria-hidden="true">x</span></button>
               <button className={styles.edit} ref={editRef} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="editar produto"><Edit src="/img/edit.png" width={12} height={12} alt="editar produto"/></button>
             </div>

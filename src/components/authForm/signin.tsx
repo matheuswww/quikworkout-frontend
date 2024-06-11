@@ -10,14 +10,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
-import ValidateEmailAndPhoneNumber from '@/funcs/validateEmailAndPhoneNumber'
 import { useRouter } from 'next/navigation'
 import Signin, { signinResponse } from '@/api/auth/signin'
+import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
   password: z.string(),
-}).refine((fields) => ValidateEmailAndPhoneNumber(fields.emailOrPhoneNumber), {
+}).refine((fields) => {
+  if(fields.emailOrPhoneNumber.includes("@")) {
+    return ValidateEmail(fields.emailOrPhoneNumber)
+  }
+  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+}, {
   path: [ 'emailOrPhoneNumber' ],
   message: "email ou telefone inválido"
 })

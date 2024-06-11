@@ -64,7 +64,7 @@
   }
 }
 
-.delete:active,.deelete:hover {
+.delete:active,.delete:hover {
   cursor: pointer;
   background-color: var(--btnClicked);
 }

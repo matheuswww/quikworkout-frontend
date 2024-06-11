@@ -1,21 +1,26 @@
-export default function ValidateEmailAndPhoneNumber(emailOrPhoneNumber: string): boolean {
-  let possibleNumber = emailOrPhoneNumber
-  let regex = /[+\-]/g;
-  if(possibleNumber.startsWith("+55")) {
+// Função para validar um email
+export function ValidateEmail(email: string): boolean {
+  const regex = /^[\w\d.-]+@([\w-]+\.)+[\w-]{2,4}$/
+  return regex.test(email)
+}
+
+export function ValidatePhoneNumber(phoneNumber: string): boolean {
+  let possibleNumber = phoneNumber
+  let regex = /[+\-]/g
+  if (possibleNumber.startsWith("+55")) {
     possibleNumber = possibleNumber.slice(3)
   }
-  if(possibleNumber.match(regex) != null) {
+  if (possibleNumber.match(regex) !== null) {
     possibleNumber = possibleNumber.replace(regex, '')
   }
   const num = Number(possibleNumber)
-  if(!isNaN(num)) {
-    emailOrPhoneNumber = num.toString()
-    if(emailOrPhoneNumber.length >= 8) {
-      regex = /^[1-9]{2}[0-9]{9}$/;
-      return regex.test(emailOrPhoneNumber)
+  if (!isNaN(num)) {
+    phoneNumber = num.toString()
+    if (phoneNumber.length >= 8) {
+      regex = /^[1-9]{2}[0-9]{9}$/
+      return regex.test(phoneNumber)
     }
     return false
   }
-  regex = /^[\w\d.-]+@([\w-]+\.)+[\w-]{2,4}$/;
-  return regex.test(emailOrPhoneNumber)
+  return false
 }

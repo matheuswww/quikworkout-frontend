@@ -1,6 +1,6 @@
 import { api } from "../path"
 import { ResponseErr } from "../responseErr"
-import { authPath } from "./userPath"
+import { authPath } from "../user/userPath"
 
 export type checkForgotPasswordCodeResponse = 
   "máximo de tentativas atingido" |

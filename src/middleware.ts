@@ -2,17 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default function middleware(request: NextRequest) {
   const url = new URL(request.url)
+  if(
+    url.pathname == "/auth/criar-dois-fatores" ||
+    url.pathname == "/auth/entrar" ||
+    url.pathname == "/finalizar-compra"
+  ) {
+    return CheckUserProfileCookieNotExist(request)
+  }
   if(url.pathname == "/usuario/minha-bolsa") {
-    return GetClothingCartURL(request)
-  }
-  if(url.pathname == "/auth/validar-contato") {
-    return SendContactValidationCodeURL(request)
-  }
-  if(url.pathname == "/auth/criar-dois-fatores") {
-    return SendCreateTwoAuthCodeURL(request)
-  }
-  if(url.pathname == "/auth/entrar") {
-    return SigninURL(request)
+    return CheckUserProfileCookieExist(request)
   }
   if(url.pathname == "/auth/validar-codigo-dois-fatores") {
     return CheckTwoAuthCodeURL(request)
@@ -22,33 +20,17 @@ export default function middleware(request: NextRequest) {
   }
 }
 
-function GetClothingCartURL(request: NextRequest) {
-  const cookie = request.cookies.get("userProfile")
-  if(cookie) {
-    return NextResponse.next()
-  }
-  return NextResponse.redirect(request.nextUrl.origin+"/auth/entrar")
-}
-
-function SendContactValidationCodeURL(request: NextRequest) {
-  const cookie = request.cookies.get("userProfile")
-  if(cookie) {
-    return NextResponse.next()
-  }
-  return NextResponse.redirect(request.nextUrl.origin+"/auth/entrar")
-}
-
-function SendCreateTwoAuthCodeURL(request: NextRequest) {
-  const cookie = request.cookies.get("userProfile")
-  if(cookie) {
-    return NextResponse.next()
-  }
-  return NextResponse.redirect(request.nextUrl.origin+"/auth/entrar")
-}
-
-function SigninURL(request: NextRequest) {
+function CheckUserProfileCookieNotExist(request: NextRequest) {
   const cookie = request.cookies.get("userProfile")
   if(!cookie) {
+    return NextResponse.next()
+  }
+  return NextResponse.redirect(request.nextUrl.origin+"/")
+}
+
+function CheckUserProfileCookieExist(request: NextRequest) {
+  const cookie = request.cookies.get("userProfile")
+  if(cookie) {
     return NextResponse.next()
   }
   return NextResponse.redirect(request.nextUrl.origin+"/")
@@ -75,6 +57,6 @@ function ResetPasswordURL(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/validar-contato','/auth/criar-dois-fatores','/auth/entrar',
+  matcher: ['/auth/criar-dois-fatores','/auth/entrar',
   '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', '/usuario/minha-bolsa']
 }

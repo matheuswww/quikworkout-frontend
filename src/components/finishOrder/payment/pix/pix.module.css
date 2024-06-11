@@ -1,0 +1,14 @@
+.p {
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  margin-top: 8px;
+}
+
+.div {
+  margin-left: 12px;
+}
+
+.displayNone {
+  display: none;
+}

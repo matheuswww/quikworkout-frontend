@@ -1,0 +1,46 @@
+.container {
+  display: grid;
+}
+
+.paymentMethod {
+  align-self: center;
+  margin-top: 10px;
+  background: #0c0c0c;
+  display: grid;
+  justify-content: center;
+  height: 60px;
+  width: 258px;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 70px 38px;
+  justify-self: center;
+  align-items: center;
+  border: 1px solid #969696;
+}
+
+.paymentMethod p {
+  justify-self: start;
+}
+
+.p {
+  font-size: .9rem;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  margin-top: 5px;
+}
+
+.displayNone {
+  display: none;
+}
+
+@media (hover: hover) { 
+  .paymentMethod:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.paymentMethod:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}

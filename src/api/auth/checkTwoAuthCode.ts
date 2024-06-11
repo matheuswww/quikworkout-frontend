@@ -1,6 +1,6 @@
 import { api } from "../path"
 import { ResponseErr } from "../responseErr"
-import { twoAuthPath } from "./userPath"
+import { twoAuthPath } from "../user/userPath"
 
 export type checkTwoAuthCodeResponse = 
   "máximo de tentativas atingido" |  

@@ -1,5 +1,4 @@
 import { api } from "../path"
-import { ResponseErr } from "../responseErr"
 import { userPath } from "./userPath"
 
 export interface getUserResponse {

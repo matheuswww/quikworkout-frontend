@@ -1,5 +1,4 @@
 'use client'
-import GetUser, { getUserResponse } from '@/api/auth/getUser'
 import styles from './sendContactValidationCodeForm.module.css'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -8,6 +7,7 @@ import { deleteCookie } from '@/action/deleteCookie'
 import sendContactValidationCode from '@/api/auth/sendContactValidationCode'
 import PopupError from '../popupError/popupError'
 import CheckContactValidationCodeForm from './checkContactValidationCodeForm'
+import GetUser, { getUserResponse } from '@/api/user/getUser'
 
 interface props {
   cookieName: string | undefined

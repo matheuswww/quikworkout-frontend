@@ -5,10 +5,10 @@ type statusCode = 200 | 404 | 401 | 500
 
 export interface getClothingCartResponse {
   status: statusCode
-  clothing: data[] | null
+  clothing: dataGetClothingCart[] | null
 }
 
-interface data {
+export interface dataGetClothingCart {
   roupa_id: string;
   cor: string;
   quantidade: number;
@@ -24,14 +24,18 @@ interface data {
   excedeEstoque: boolean;
   imagem: string;
   criado_em: string
+  alt: string
 }
 
 
-export default async function GetClothingCart(cookie: string, cursor?: string):Promise<getClothingCartResponse> {
+export default async function GetClothingCart(cookie: string, cursor?: string, clothing_id?: string, color?:string, size?:string):Promise<getClothingCartResponse> {
   let url = api
   url += clothingPath+"/getClothingCart"
   if(cursor) {
     url+="?cursor="+cursor
+  }
+  if(clothing_id && color && size) {
+    url+="?roupa_id="+clothing_id+"&cor="+color+"&tamanho="+size
   }
   try {
     const res = await fetch(url, {
@@ -49,7 +53,7 @@ export default async function GetClothingCart(cookie: string, cursor?: string):P
     } else {
       status = 500
     } 
-    let data:data[] | null
+    let data:dataGetClothingCart[] | null
     if (status == 200) {
       data = await res.json()
     } else {

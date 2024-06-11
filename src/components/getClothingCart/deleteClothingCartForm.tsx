@@ -67,10 +67,6 @@ export default function DeleteClothingCartForm({open, setOpen, buttonToOpen, clo
         router.push("/auth/entrar")
         return
       }
-      if(data === 500) {
-        setPopupError(true)
-        return
-      }
       document.body.style.pointerEvents = "none"
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active) 

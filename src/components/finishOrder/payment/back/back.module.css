@@ -1,0 +1,18 @@
+.back {
+  display: flex;
+  margin-top: 15px;
+}
+
+.label {
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+}
+
+.button {
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  background-color: transparent;
+  border: none;
+}

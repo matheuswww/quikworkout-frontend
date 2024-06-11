@@ -1,5 +1,5 @@
 import { api } from "../path"
-import { authPath } from "./userPath"
+import { authPath } from "../user/userPath"
 
 interface params {
   nome: string

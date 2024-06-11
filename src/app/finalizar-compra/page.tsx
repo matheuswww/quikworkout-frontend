@@ -1,0 +1,20 @@
+import FinishPurchaseForm from "@/components/finishOrder/finishOrderForm";
+import { cookies } from "next/headers";
+
+interface props {
+  searchParams: {
+    page: number
+    clothing_id: string
+    color: string
+    size: string
+  }
+
+}
+
+export default function FinishPurchase({searchParams}: props) {
+  const cookieInfos = cookies().get("userProfile")
+
+  return (
+    <FinishPurchaseForm cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size}/>
+  )
+}
