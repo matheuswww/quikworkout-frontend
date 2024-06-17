@@ -10,6 +10,9 @@ export function ValidatePhoneNumber(phoneNumber: string): boolean {
   if (possibleNumber.startsWith("+55")) {
     possibleNumber = possibleNumber.slice(3)
   }
+  if (possibleNumber.startsWith("55")) {
+    possibleNumber = possibleNumber.slice(2)
+  }
   if (possibleNumber.match(regex) !== null) {
     possibleNumber = possibleNumber.replace(regex, '')
   }

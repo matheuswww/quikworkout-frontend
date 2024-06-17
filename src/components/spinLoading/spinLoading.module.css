@@ -7,7 +7,7 @@
   display: grid;
   width: 80px;
   height: 105px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

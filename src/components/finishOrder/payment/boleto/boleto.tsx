@@ -4,13 +4,15 @@ import styles from './boleto.module.css'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { boleto } from '../../finishOrderForm'
+import { boleto } from '@/api/clothing/payOrderInterfaces'
 
 interface props {
   showBoleto: boolean
-  setPaymentType: Dispatch<SetStateAction<"card" | "pix" | "boleto" | null>>
+  setPaymentType: Dispatch<SetStateAction<"card" | "credit_card" | "debit_card" | "pix" | "boleto" | null>>
+  paymentType: "card" | "credit_card" | "debit_card" | "pix" | "boleto" | null
   setBoleto: Dispatch<boleto | null>
   boleto: boleto | null
+  responseError: string | null
 }
 
 const schema = z.object({
@@ -38,7 +40,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function Boleto({ showBoleto,setPaymentType,setBoleto,boleto }:props) {
+export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto,boleto,responseError }:props) {
   const [saved, setSaved] = useState<boolean>(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
@@ -86,7 +88,7 @@ export default function Boleto({ showBoleto,setPaymentType,setBoleto,boleto }:pr
       <label className={styles.label} htmlFor="instructionLine2">Linha de instrução 2  (opcional)</label>
       <textarea {...register("instructionLine2")} placeholder="segunda linha de instrução do boleto" className={styles.textarea} id="instructionLine2" maxLength={75}></textarea>
       {errors.instructionLine2 && <p className={styles.error}>{errors.instructionLine2.message}</p>}
-      <button style={{marginRight: "15px"}} className={styles.button} type="submit">Salvar dados do boleto</button>
+      <button style={{marginRight: "15px"}} className={styles.button} type="submit" id="submit">Salvar dados do boleto</button>
     </form>
     :
     boleto &&
@@ -117,6 +119,7 @@ export default function Boleto({ showBoleto,setPaymentType,setBoleto,boleto }:pr
         <p className={styles.value}>{boleto.linhasInstrucao.linha_2}</p>
       </div>
       }
+      {(paymentType == "boleto" && responseError) && <p className={styles.error} style={{marginLeft: "12px",wordBreak:"break-all"}}>{responseError}</p>}
       <button className={styles.button} onClick={() => setSaved(false)}>Editar dados do boleto</button>
     </div>
   )

@@ -3,23 +3,25 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styles from './card.module.css'
 import Back from '../back/back'
-import Create3DSSession, { create3DSSessionData } from '@/api/order/create3DSSession'
+import Create3DSSession from '@/api/order/create3DSSession'
 import { useRouter } from 'next/navigation'
-import { card } from '../../finishOrderForm'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { card } from '@/api/clothing/payOrderInterfaces'
 
 interface props {
   cookieName?: string
   cookieVal?: string
-  setPaymentType: Dispatch<SetStateAction<"card" | "pix" | "boleto" | null>>
+  setPaymentType: Dispatch<SetStateAction<"card" | "credit_card" | "debit_card" | "pix" | "boleto" | null>>
+  paymentType: "card" | "credit_card" | "debit_card" | "pix" | "boleto" | null
   setError: Dispatch<boolean>
   setLoad: Dispatch<boolean>
   showCard: boolean
   load: boolean
   setCard: Dispatch<card | null>
   card: card | null
+  responseError: string | null
 }
 
 const schema = z.object({
@@ -33,20 +35,19 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function Card({ setPaymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card  }:props) {
+export default function Card({ setPaymentType,paymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card, responseError  }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
     resolver: zodResolver(schema)
   })
   const router = useRouter()
-  const [cardType, setCardType] = useState<"credito" | "debito" | null>(null)
   const [next, setNext] = useState<boolean>(false)
   const [Id3DS, setId3DS] = useState<string | null>(null)
   const [saved,setSaved] = useState<boolean>(false)
 
   useEffect(() => {
-    if(cardType == "debito") {
+    if(paymentType == "debit_card") {
       (async function() {
         if(cookieName == undefined || cookieVal == undefined) {
           router.push("/auth/entrar")
@@ -72,23 +73,23 @@ export default function Card({ setPaymentType,showCard,setError,setLoad, cookieN
         setLoad(false)
         setNext(true)
       }())
-    } else if (cardType == "credito") {
+    } else if (paymentType == "credit_card") {
       setNext(true)
     }
-  }, [cardType])
+  }, [paymentType])
 
   function handleForm(data: FormProps) {
     let expMonth = Number(data.expMonth)
     let installments = Number(data.installments)
     let threedsId = Id3DS
-    if(cardType == "debito" && threedsId == null) {
+    if(paymentType == "debit_card" && threedsId == null) {
       setError(false)
       return
     }
     if(!isNaN(expMonth) && !isNaN(installments)) {
       setCard({
         nome: data.holder,
-        numeroCartao: data.cardNumber,
+        numeroCartao: data.cardNumber.replace(/\s+/g, ''),
         cvv: data.cvv,
         expAno: data.expYear,
         expMes: expMonth,
@@ -106,12 +107,13 @@ export default function Card({ setPaymentType,showCard,setError,setLoad, cookieN
       <div className={`${styles.selectCard} ${!showCard && styles.displayNone}`}>
         <Back handleBack={() => setPaymentType(null)} ariaLabel="Voltar para formas de pagamento" />
         <p className={styles.p}>Tipo de cartão</p>
-        <button disabled={load} type="button" className={styles.button} onClick={() => setCardType("debito")}>Débito</button><button disabled={load} type="button" className={styles.button} onClick={() => setCardType("credito")}>Crédito</button>
+        <button disabled={load} type="button" className={styles.button} onClick={() => setPaymentType("debit_card")}>Débito</button>
+        <button disabled={load} type="button" className={styles.button} onClick={() => setPaymentType("credit_card")}>Crédito</button>
       </div>
     :
     !saved ?
       <form className={`${styles.form} ${!showCard && styles.displayNone}`} onSubmit={handleSubmit(handleForm)}>
-      <Back handleBack={() => {setNext(false);setLoad(false);setCardType(null)}} ariaLabel="Voltar para tipo de cartão" />
+      <Back handleBack={() => {setNext(false);setLoad(false);setPaymentType("card")}} ariaLabel="Voltar para tipo de cartão" />
       <label className={styles.label} htmlFor="cardNumber">Número do cartão</label>
       <input {...register("cardNumber")} type="text" placeholder="número do cartão" id="cardNumber"/>
       {errors.cardNumber && <p className={styles.error}>{errors.cardNumber.message}</p>}
@@ -151,7 +153,7 @@ export default function Card({ setPaymentType,showCard,setError,setLoad, cookieN
         <option value="2034">2034</option>
         <option value="2035">2040</option>
       </select>
-      {cardType == "credito" &&
+      {paymentType == "credit_card" &&
         <>
           <label className={`${styles.label}`} htmlFor="installments" {...register("installments")}>Parcelas</label>
           <select id="installments" {...register("installments")}>
@@ -164,7 +166,7 @@ export default function Card({ setPaymentType,showCard,setError,setLoad, cookieN
           </select>
         </>
       }
-      <button className={styles.button} type="submit">Salvar dados do cartão</button>
+      <button className={styles.button} type="submit" id="submit">Salvar dados do cartão</button>
     </form>
     : 
     card &&
@@ -189,12 +191,13 @@ export default function Card({ setPaymentType,showCard,setError,setLoad, cookieN
         <p className={styles.field}>Ano de expiração: </p>
         <p className={styles.value}>{card.expAno}</p>
       </div>
-      {cardType == "credito" && 
+      {paymentType == "credit_card" && 
         <div className={styles.values}>
           <p className={styles.field}>Parcelas: </p>
           <p className={styles.value}>{card.parcelas}</p>
         </div>
       }
+      {((paymentType == "credit_card" || paymentType == "debit_card") && responseError) && <p className={styles.error} style={{marginLeft: "12px",wordBreak:"break-all"}}>{responseError}</p>}
       <button className={styles.button} onClick={() => setSaved(false)} style={{marginRight: "15px"}}>Editar dados do cartão</button>
     </div>
   )

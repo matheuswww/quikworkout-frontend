@@ -32,7 +32,6 @@
   display: grid;
   grid-template-columns: 95px 1fr 10px 10px;
   grid-template-rows: repeat(3, auto);
-  margin-top: 15px;
   margin-left: 12px;
   border-bottom: 1px solid #454545;
   padding-bottom: 16px;
@@ -69,6 +68,30 @@
   font-family: var(--interSemiBold);
   font-size: .9rem;
   width: 280px;
+}
+
+.button {
+  font-size: .9rem;
+  background: transparent;
+  border: 1px solid #969696;
+  height: 38px;
+  border-radius: 5px;
+  text-align: center;
+  color: #e4e4e4;
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+  width: 258px;
+  justify-self: center;
+  margin-bottom: 7px;
+}
+
+.error {
+  font-size: 0.9rem;
+  font-family: 'inter-SemiBold';
+  color: #ec5656;
+  width: 276px;
+  margin-left: 12px;
+  margin-bottom: 5px;
 }
 
 @keyframes enter {

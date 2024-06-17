@@ -4,7 +4,7 @@ import { clothingPath } from "./clothingPath"
 
 export interface calcFreightResponse {
   status: statusCode
-  data: data | responseErrors | null
+  data: calcFreightData | responseErrors | null
 }
 
 type statusCode = 500 | 200 | 401 | 400
@@ -15,7 +15,7 @@ type responseErrors =
   "roupa não encontrada" |
   "peso maxímo atingido" 
 
-interface data {
+export interface calcFreightData {
   vlrFrete: number
   prazoEnt: number
   transport: string
@@ -47,7 +47,7 @@ export default async function CalcFreight(params: params):Promise<calcFreightRes
   url+="&cep="+params.cep+"&servico="+params.servico
   try {
     let status:number = 0
-    const res: ResponseErr | data | null = await fetch(url, {
+    const res: ResponseErr | calcFreightData | null = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"

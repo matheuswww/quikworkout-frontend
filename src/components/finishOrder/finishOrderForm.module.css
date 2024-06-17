@@ -24,6 +24,15 @@
   margin-bottom: 20px;
 }
 
+.error {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-family: 'inter-SemiBold';
+  color: #ec5656;
+  width: 276px;
+  margin-left: 12px;
+}
+
 @media (hover: hover) { 
   .button:hover {
     cursor: pointer;

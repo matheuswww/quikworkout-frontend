@@ -10,9 +10,10 @@ interface props {
   clothing: dataGetClothingCart[]
   totalPrice: string
   freight: string | null
+  responseError: string | null
 }
 
-export default function Products({clothing, totalPrice, freight}:props) {
+export default function Products({clothing, totalPrice, freight, responseError}:props) {
   const [productsForm, setProductsForm] = useState<boolean>(false)
   const [totalPriceWithFreight, setTotalPriceWithFreight] = useState<string | null>(null)
 
@@ -22,14 +23,20 @@ export default function Products({clothing, totalPrice, freight}:props) {
       return
     }
     let val: string | null = freight
+    let val2: string | null = totalPrice
+    
     if(freight?.includes(",")) {
       val = freight.replace(",",".")
     }
-    let total = Number(totalPrice)+Number(val)
+    if(totalPrice.includes(",")) {
+      val2 = totalPrice.replace(",",".")
+    }
+    let total = Number(val2)+Number(val)
     if(!isNaN(total)) {
       setTotalPriceWithFreight(total.toString())
       return
     }
+    
     setTotalPriceWithFreight(null)
   }, [freight])
 
@@ -38,9 +45,9 @@ export default function Products({clothing, totalPrice, freight}:props) {
       <div style={{display: "flex"}}>
       {
         !productsForm ? 
-        <button className={styles.arrow} id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="diminuir sessão de revisão de produtos"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
+        <button className={styles.arrow} type="button" id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="diminuir sessão de revisão de produtos"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
         :
-        <button className={styles.arrow} id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="expandir sessão de revisão de produto"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
+        <button className={styles.arrow} type="button" id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="expandir sessão de revisão de produto"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
       }
       <label className={styles.label} style={{marginTop: "18px"}} htmlFor="arrowProducts">Revisar produtos</label>
     </div>
@@ -48,6 +55,8 @@ export default function Products({clothing, totalPrice, freight}:props) {
       <div className={`${productsForm && styles.displayNone}`}>
         <p className={styles.price}>Preço total: R${totalPrice}</p>
         {!totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
+        <button style={{marginLeft: "12px",marginTop: "22px"}} type="submit" className={styles.button}>Finalizar compra</button>
+        { <p className={styles.error}>{responseError}</p>}
         {clothing.map((infos) => {
           return (
             <div className={`${styles.clothing}`} key={infos.roupa_id+infos.cor+infos.tamanho}>

@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import styles from './calcFreight.module.css'
 import { dataGetClothingCart } from '@/api/clothing/getClothingCart'
-import CalcFreight from '@/api/clothing/calcFreight'
+import CalcFreight, { calcFreightData } from '@/api/clothing/calcFreight'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -47,7 +47,7 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
   })
 
   const [calcFreight, setCalcFreight] = useState<boolean>(true)
-  const [price, setPrice] = useState<number>(0)
+  const [data, setData] = useState<calcFreightData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [popupError, setPopupError] = useState<boolean>(false)
 
@@ -80,40 +80,35 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
         if(res.status == 500) {
           setPopupError(true)
           setLoad(false)
-          setPrice(0)
           setFreight(null)
           return
         }
         if(res.data == "cep de destino inválido") {
           setError(res.data)
           setLoad(false)
-          setPrice(0)
           setFreight(null)
           return
         }
         if(res.data == "frete não disponível") {
           setError("frete não disponível para este endereço e tipo de entrega")
           setLoad(false)
-          setPrice(0)
           setFreight(null)
           return
         }
         if(res.data == "peso maxímo atingido") {
           setError("tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega")
           setLoad(false)
-          setPrice(0)
           setFreight(null)
           return
         }
         if(res.data == "roupa não encontrada") {
           setError("parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa")
           setLoad(false)
-          setPrice(0)
           setFreight(null)
           return
         }
         if(res.data?.vlrFrete) {
-          setPrice(res.data.vlrFrete)
+          setData(res.data)
           setFreight(formatPrice(res.data.vlrFrete))
         }
         setLoad(false)
@@ -152,7 +147,8 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
               <label htmlFor="R">retirar</label>
               <input type="checkbox" className={styles.checkbox} id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
             </div>
-            {price != 0 && <p className={styles.price}>R${price}</p>}
+            {data?.vlrFrete && <p className={styles.price}>R${data?.vlrFrete}</p>}
+            {data?.prazoEnt && <p className={styles.price}>Prazo de entrega: {data?.prazoEnt} dias úteis</p>}
             <button disabled={load} className={`${styles.calcFreight}`}>Calcular frete</button>
           </form>
         </>

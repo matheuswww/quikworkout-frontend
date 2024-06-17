@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './address.module.css'
-import { Dispatch, useState } from "react"
+import { Dispatch, MutableRefObject, useState } from "react"
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import { z } from 'zod'
@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { regions } from './regionCode'
 import { ValidateCnpj, ValidateCpf } from './payment/validateCpfCnpj'
 import { ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
-import { enderecoContato } from './finishOrderForm'
+import { enderecoContato } from '@/api/clothing/payOrderInterfaces'
 
 const schema = z.object({
   name: z.string().min(1, "nome precisa ter pelo menos 1 carácter").max(30, "é permitido no máximo 30 caracteres"),
@@ -52,9 +52,10 @@ type FormProps = z.infer<typeof schema>
 interface props {
   setAddress: Dispatch<enderecoContato>
   address: enderecoContato | null
+  addressRef: MutableRefObject<HTMLElement | null>
 }
 
-export default function Address({ setAddress, address }:props) {
+export default function Address({ setAddress, address, addressRef }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -67,19 +68,26 @@ export default function Address({ setAddress, address }:props) {
   function handleForm(data: FormProps) {
     const region = data.regionCode.substring(5)
     const regionCode = data.regionCode.slice(0,2)
+    const DDD = data.phoneNumber.slice(0,2)
+    const number = data.phoneNumber.substring(2)
     setAddress({
       nome: data.name,
       cep: data.cep,
       cidade: data.city,
       complemento: data.complement,
       email: data.email,
-      telefone: data.phoneNumber,
+      telefone: {
+          DDI: "55",
+          DDD: DDD,
+          Numero: number
+      },
       bairro: data.neighbordhood,
-      numeroResidencia: data.phoneNumber,
+      numeroResidencia: data.residenceNumber,
       regiao: region,
       codigoRegiao: regionCode,
       rua: data.street,
-      cpfCnpj: data.cpfCnpj
+      cpfCnpj: data.cpfCnpj,
+      servico: delivery,
     })
     setSaved(true)
   }
@@ -95,7 +103,7 @@ export default function Address({ setAddress, address }:props) {
         }
         <label className={styles.label} style={{marginTop: "18px"}} htmlFor="arrowAddress">Endereço e contato</label>
       </div>
-      <section className={`${styles.section}`}>
+      <section className={`${styles.section}`} ref={addressRef}>
         { !saved ?
           <form className={`${styles.form} ${!addressForm && styles.displayNone}`} onSubmit={handleSubmit(handleForm)}>
           <label className={styles.label} htmlFor="name">Nome</label>
@@ -105,7 +113,7 @@ export default function Address({ setAddress, address }:props) {
           <input {...register("email")} className={styles.input} placeholder="email" type="text" id="email"/>
           {errors.email && <p className={styles.error}>{errors.email.message}</p>}
           <label className={styles.label} htmlFor="telefone">Telefone</label>
-          <input {...register("phoneNumber")} className={styles.input} placeholder="telefone" type="text" id="telefone"/>
+          <input {...register("phoneNumber")} className={styles.input} placeholder="telefone(+55 somente)" type="text" id="telefone"/>
           {errors.phoneNumber && <p className={styles.error}>{errors.phoneNumber.message}</p>}
           <label className={styles.label} htmlFor="cpfCnpj">Cpf ou cnpj</label>
           <input {...register("cpfCnpj")} className={styles.input} placeholder="cpf ou cnpj" type="text" id="cpfCnpj"/>
@@ -146,7 +154,7 @@ export default function Address({ setAddress, address }:props) {
             <option key={estado} value={`${estado} - ${capital}`}>{estado} - {capital}</option>
           ))}
           </select>
-          <button type="submit" style={{marginRight: "15px"}} className={styles.button}>Salvar endereço e contato</button>
+          <button type="submit" id="submit" style={{marginRight: "15px"}} className={styles.button}>Salvar endereço e contato</button>
         </form>
         : 
           address && 
@@ -161,7 +169,7 @@ export default function Address({ setAddress, address }:props) {
             </div>
             <div className={styles.values}>
               <p className={styles.field}>Telefone: </p>
-              <p className={styles.value}>{address.telefone}</p>
+              <p className={styles.value}>{address.telefone.DDD+address.telefone.Numero}</p>
             </div>
             <div className={styles.values}>
               <p className={styles.field}>{address.cpfCnpj.length === 11 ? 'CPF: ' : 'CNPJ: '}</p>

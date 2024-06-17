@@ -97,6 +97,10 @@
   color: white;
 }
 
+#submit {
+  margin-left: 15px;
+}
+
 @media (hover: hover) { 
   .button:hover {
     cursor: pointer;

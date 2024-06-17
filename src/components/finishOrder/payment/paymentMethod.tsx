@@ -5,10 +5,10 @@ import CardImg from 'next/image'
 import BoletoImg from 'next/image'
 import { Dispatch, SetStateAction } from 'react'
 import Card from './card/card'
-import { boleto, card } from '../finishOrderForm'
 import Pix from './pix/pix'
 import PixImg from 'next/image'
 import Boleto from './boleto/boleto'
+import { boleto, card } from '@/api/clothing/payOrderInterfaces'
 
 interface props {
   showPayment: boolean
@@ -21,17 +21,18 @@ interface props {
   card: card | null
   setBoleto: Dispatch<boleto | null>
   boleto: boleto | null
-  setPaymentType: Dispatch<SetStateAction<"card" | "pix" | "boleto" | null>>
-  paymentType: "card" | "pix" | "boleto" | null
+  setPaymentType: Dispatch<SetStateAction<"card" | "credit_card" | "debit_card" | "pix" | "boleto" | null>>
+  paymentType: "card" | "credit_card" | "debit_card" | "pix" | "boleto" | null
+  responseError: string | null
 }
 
-export default function PaymentMethod({ showPayment, cookieName, cookieVal, setError, setLoad, load, setCard, card, setPaymentType, paymentType, setBoleto, boleto }:props) {
+export default function PaymentMethod({ showPayment, cookieName, cookieVal, setError, setLoad, load, setCard, card, setPaymentType, paymentType, setBoleto, boleto, responseError }:props) {
   return (
     <>
-      {(paymentType == "card") && <Card card={card} showCard={showPayment} setCard={setCard} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} setPaymentType={setPaymentType} load={load} />}
-      {(paymentType == "pix") && <Pix setPaymentType={setPaymentType} showPix={showPayment} />}
-      {(paymentType == "boleto") && <Boleto boleto={boleto} setBoleto={setBoleto} setPaymentType={setPaymentType} showBoleto={showPayment} />}
-      <div className={`${styles.container} ${(paymentType == "card" || paymentType == "pix" || paymentType == "boleto" || !showPayment) && styles.displayNone}`}>
+      {(paymentType == "card" || paymentType == "debit_card" || paymentType == "credit_card") && <Card responseError={responseError} paymentType={paymentType} card={card} showCard={showPayment} setCard={setCard} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} setPaymentType={setPaymentType} load={load} />}
+      {(paymentType == "pix") && <Pix paymentType={paymentType} responseError={responseError} setPaymentType={setPaymentType} showPix={showPayment} />}
+      {(paymentType == "boleto") && <Boleto paymentType={paymentType} responseError={responseError} boleto={boleto} setBoleto={setBoleto} setPaymentType={setPaymentType} showBoleto={showPayment} />}
+      <div className={`${styles.container} ${(paymentType == "card" || paymentType == "credit_card" || paymentType == "debit_card" || paymentType == "pix" || paymentType == "boleto" || !showPayment) && styles.displayNone}`}>
         <button className={styles.paymentMethod} aria-label="pagar com cartão" onClick={() => setPaymentType("card")}>
           <p className={styles.p}>Cartão</p>
           <CardImg src="/img/card.png" alt="icone de um cartão" width={41} height={28}/>
