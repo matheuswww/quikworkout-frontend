@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { card } from '@/api/clothing/payOrderInterfaces'
+import Visibility from "next/image"
 
 interface props {
   cookieName?: string
@@ -25,7 +26,7 @@ interface props {
 }
 
 const schema = z.object({
-  cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido"),
+  cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido").min(15,"número de cartão inválido").max(20,"número de cartão inválido"),
   holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido"),
   cvv: z.string().min(1,"cvv").max(4,"cvv"),
   expMonth: z.string(),
@@ -45,6 +46,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
   const [next, setNext] = useState<boolean>(false)
   const [Id3DS, setId3DS] = useState<string | null>(null)
   const [saved,setSaved] = useState<boolean>(false)
+  const [visibility, setVisibility] = useState<boolean>(false)
 
   useEffect(() => {
     if(paymentType == "debit_card") {
@@ -173,7 +175,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
     <div className={`${!showCard && styles.displayNone}`} style={{display: "grid"}}>
       <div className={styles.values}>
         <p className={styles.field}>Número cartão: </p>
-        <p className={styles.value}>{card.numeroCartao}</p>
+        <p className={styles.value}>**** **** **** {card.numeroCartao.substring(12)}</p>
       </div>
       <div className={styles.values}>
         <p className={styles.field}>Nome do titular: </p>
@@ -181,7 +183,12 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
       </div>
       <div className={styles.values}>
         <p className={styles.field}>Cvv: </p>
-        <p className={styles.value}>{card.cvv}</p>
+        <div className={styles.visibility}>
+          <p className={styles.value}>{!visibility ? "***" : `${card.cvv}`}</p>
+          <button aria-label={visibility ? "ocultar cvv" : "mostrar cvv"}>
+            { visibility ? <Visibility src="/img/visibilityOn.png" alt="ocultar cvv" width={21} height={15} onClick={() => setVisibility(false)}/> : <Visibility src="/img/visibilityOff.png" alt="mostrar cvv" width={22} height={20} onClick={() => setVisibility(true)}/> }
+          </button>
+        </div>
       </div>
       <div className={styles.values}>
         <p className={styles.field}>Mês de expiração: </p>
@@ -198,7 +205,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         </div>
       }
       {((paymentType == "credit_card" || paymentType == "debit_card") && responseError) && <p className={styles.error} style={{marginLeft: "12px",wordBreak:"break-all"}}>{responseError}</p>}
-      <button className={styles.button} onClick={() => setSaved(false)} style={{marginRight: "15px"}}>Editar dados do cartão</button>
+      <button className={styles.button} onClick={() => setSaved(false)} style={{marginLeft: "12px"}}>Editar dados do cartão</button>
     </div>
   )
 }

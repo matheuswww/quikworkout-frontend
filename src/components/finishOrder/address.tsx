@@ -154,7 +154,7 @@ export default function Address({ setAddress, address, addressRef }:props) {
             <option key={estado} value={`${estado} - ${capital}`}>{estado} - {capital}</option>
           ))}
           </select>
-          <button type="submit" id="submit" style={{marginRight: "15px"}} className={styles.button}>Salvar endereço e contato</button>
+          <button type="submit" id="submit" className={styles.button}>Salvar endereço e contato</button>
         </form>
         : 
           address && 
@@ -207,7 +207,7 @@ export default function Address({ setAddress, address, addressRef }:props) {
               <p className={styles.field}>Tipo de entrega: </p>
               <p className={styles.value}>{delivery == "E" ? "entrega normal" : delivery == "R" ? "retirar" : delivery == "X" && "entrega expressa"}</p>
             </div>
-            <button className={styles.button} onClick={() => setSaved(false)}>Editar dados</button>
+            <button className={styles.button} onClick={() => setSaved(false)}>Editar endereço e contato</button>
           </>
         }
       </section>

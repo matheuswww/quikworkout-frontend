@@ -2,7 +2,7 @@
 
 import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import styles from './finishOrderForm.module.css'
-import GetClothingCart, { getClothingCartResponse } from '@/api/clothing/getClothingCart'
+import GetClothingCart, { dataGetClothingCart, getClothingCartResponse } from '@/api/clothing/getClothingCart'
 import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
 import SpinLoading from '../spinLoading/spinLoading'
@@ -13,7 +13,7 @@ import Payment from './payment/payment'
 import Address from './address'
 import Products from './products'
 import formatPrice from '@/funcs/formatPrice'
-import { boleto, card, enderecoContato, responseErrorsPayOrder, responseErrorsPayOrderType } from '@/api/clothing/payOrderInterfaces'
+import { boleto, card, clothing, enderecoContato, responseErrorsPayOrder, responseErrorsPayOrderType } from '@/api/clothing/payOrderInterfaces'
 import PayOrder from '@/api/clothing/payOrder'
 import CalcFreight from '@/api/clothing/calcFreight'
 
@@ -107,7 +107,7 @@ export default function FinishPurchaseForm({...props}: props) {
       }())
     }
   },[data])
-  
+
   async function calcFreight(): Promise<number | null> {
     if(data && data.clothing && address) {
       let clothingIds: string[] = []
@@ -180,6 +180,17 @@ export default function FinishPurchaseForm({...props}: props) {
       if(vlrFrete == null) {
         return
       }
+      const clothing: clothing[] = []
+      data?.clothing && data.clothing.map((infos) => {
+        if(!infos.excedeEstoque || infos.disponivel) {
+          clothing.push({
+            cor: infos.cor,
+            quantidade: infos.quantidade,
+            roupaId: infos.roupa_id,
+            tamanho: infos.tamanho,
+          })
+        }
+      })
       const res = await PayOrder(cookie, {
         bairro: address.bairro,
         cep: address.cep,
@@ -196,14 +207,7 @@ export default function FinishPurchaseForm({...props}: props) {
         servico: address.servico,
         boleto: boleto,
         cartao: card,
-        roupa: data.clothing.map(({roupa_id,cor,tamanho,quantidade}) => {
-          return {
-            roupaId: roupa_id,
-            cor: cor,
-            tamanho: tamanho,
-            quantidade: quantidade
-          }
-        }),
+        roupa: clothing,
         telefone: address.telefone,
         tipoPagamento: paymentType == "debit_card" ? "CARTAO_DEBITO" : paymentType == "credit_card" ? "CARTAO_CREDITO" : paymentType == "boleto" ? "BOLETO" : "PIX"
       })
@@ -212,7 +216,8 @@ export default function FinishPurchaseForm({...props}: props) {
         return
       }
       if(typeof res == "object" && 'pedido_id' in res) {
-
+        router.push("/usuario/meus-pedidos")
+        return
       }
       if(res == "cookie inválido") {
         await deleteCookie(props.cookieName)
@@ -226,8 +231,10 @@ export default function FinishPurchaseForm({...props}: props) {
       if(res == 500) {
         setPopupError(true)
       }
-      if(res == "roupa não encontrada") {
-        setResponseError("parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa")
+      if(res == "roupa não encontrada" || res == "a quantidade do pedido excede o estoque") {
+        setResponseError("parece que uma das suas roupas está indisponível, tente novamente, esta roupa não será incluida no pedido")
+        setEnd(false)
+        setData(null)
       }
       if(res ==  "peso maxímo atingido") {
         setResponseError("tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega")
@@ -241,16 +248,9 @@ export default function FinishPurchaseForm({...props}: props) {
       if(res == "preço calculado não é igual ao esperado" || res == "não foi possivel salvar o pedido") {
         setPopupError(true)
       }
-      if(res == "a quantidade do pedido excede o estoque") {
-        setResponseError("parece que uma das suas roupas está indisponível, verifique sua bolsa e atualize a quantidade pedida")
-      }
       const quantityErrorPattern = /a quantidade do pedido \d+ excede o estoque/
       if (typeof res == "string" && (responseErrorsPayOrder.includes(res as responseErrorsPayOrderType) || quantityErrorPattern.test(res) || res == "não foi possível pagar o pedido")) {
-
-      }
-      if(typeof res == "object" && "pedido_id" in res) {
-        router.push("/usuario/meus-pedidos")
-        return
+        /*retry_____payment*/
       }
       setLoad(false)
     }
@@ -263,7 +263,7 @@ export default function FinishPurchaseForm({...props}: props) {
       <main className={`${styles.main} ${load && styles.opacity}`}>
         {(data?.status == 200 && data.clothing) ?
           <>
-          <CalcFreightForm setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data.clothing} setDelivery={setDelivery} delivery={delivery} />
+          <CalcFreightForm totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data.clothing} setDelivery={setDelivery} delivery={delivery} />
           <Payment paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
           <Address addressRef={addressRef} setAddress={setAddress} address={address}/>
           <form onSubmit={handleSubmit}>

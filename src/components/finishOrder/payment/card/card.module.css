@@ -19,7 +19,7 @@
   color: #e4e4e4;
   margin-top: 15px;
   font-family: var(--interSemiBold);
-  width: 258px;
+  width: 272px;
   justify-self: center;
 }
 
@@ -42,7 +42,7 @@
 .form input {
   padding: 10px 0px;
   padding-left: 8px;
-  width: 258px;
+  width: 272px;
   outline: none;
   border: none;
   margin-top: 5px;
@@ -97,8 +97,41 @@
   color: white;
 }
 
+.visibility button {
+  background-color: transparent;
+  border: none;
+}
+
+.visibility {
+  display: inline;
+}
+
+.visibility button img {
+  margin-left: 4px;
+  position: relative;
+  top: 2px;
+}
+
 #submit {
   margin-left: 15px;
+}
+
+@media (min-width: 370px) {
+  .button,.form input {
+    width: 310px;
+  }
+}
+
+@media (min-width: 475px) {
+  .button,.form input {
+    width: 358px;
+  }
+}
+
+@media (min-width: 580px) {
+  .button,.form input {
+    width: 368px;
+  }
 }
 
 @media (hover: hover) { 

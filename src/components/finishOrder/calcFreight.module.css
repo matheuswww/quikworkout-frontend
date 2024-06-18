@@ -36,7 +36,7 @@
 
 .cep {
   padding: 8px;
-  width: 258px;
+  width: 272px;
   outline: none;
   border: none;
   margin-top: 5px;
@@ -64,13 +64,14 @@
   font-size: .9rem;
   background: transparent;
   border: 1px solid #969696;
-  height: 32px;
+  height: 38px;
   border-radius: 5px;
   text-align: center;
   color: #e4e4e4;
   margin-top: 15px;
   font-family: var(--interSemiBold);
-  width: 258px;
+  width: 272px;
+  justify-self: center;
 }
 
 .error {
@@ -98,6 +99,34 @@
   border-radius: 100%;
   margin-right: 5px;
 }
+
+@media (min-width: 370px) {
+  .section {
+    width: 320px;
+  }
+  .cep, .calcFreight {
+    width: 310px;
+  }
+}
+
+@media (min-width: 475px) {
+  .section {
+    width: 370px;
+  }
+  .cep, .calcFreight {
+    width: 360px;
+  }
+}
+
+@media (min-width: 580px) {
+  .section {
+    width: 380px;
+  }
+  .cep, .calcFreight {
+    width: 370px;
+  }
+}
+
 
 @media (hover: hover) { 
   .calcFreight:hover, .arrow img:hover {

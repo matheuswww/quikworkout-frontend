@@ -32,15 +32,3 @@
   width: 276px;
   margin-left: 12px;
 }
-
-@media (hover: hover) { 
-  .button:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
-}
-
-.button:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
-}

@@ -234,6 +234,20 @@
   right: -3px;
 }
 
+.alert {
+  margin-top: 12px;
+  color: #c9c96c;
+  font-family: 'inter-SemiBold';
+  font-size: .9rem;
+  padding: 5px;
+  min-width: 300px;
+  grid-column: span 2;
+}
+
+.lowOpacity {
+  opacity: .5;
+}
+
 .ldsRing div:nth-child(1) {
   animation-delay: -0.45s;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import styles from './products.module.css'
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
@@ -31,6 +31,10 @@ export default function Products({clothing, totalPrice, freight, responseError}:
     if(totalPrice.includes(",")) {
       val2 = totalPrice.replace(",",".")
     }
+    if(Number(totalPrice) >= 200) {
+      setTotalPriceWithFreight(totalPrice)
+      return
+    }
     let total = Number(val2)+Number(val)
     if(!isNaN(total)) {
       setTotalPriceWithFreight(total.toString())
@@ -54,28 +58,31 @@ export default function Products({clothing, totalPrice, freight, responseError}:
     <section className={`${styles.section}`}>
       <div className={`${productsForm && styles.displayNone}`}>
         <p className={styles.price}>Preço total: R${totalPrice}</p>
-        {!totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
+        {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
         <button style={{marginLeft: "12px",marginTop: "22px"}} type="submit" className={styles.button}>Finalizar compra</button>
         { <p className={styles.error}>{responseError}</p>}
         {clothing.map((infos) => {
           return (
             <div className={`${styles.clothing}`} key={infos.roupa_id+infos.cor+infos.tamanho}>
-              <ClothingImg src={infos.imagem} alt={infos.alt} width={75} height={85}/>
-              <div className={styles.values}>
+              <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} className={`${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}/>
+              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Nome: </p>
                 <p className={styles.value}>{infos.nome}</p>
               </div>
-              <div className={styles.values}>
+              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Cor: </p>
                 <p className={styles.value}>{infos.cor}</p>
               </div>
-              <div className={styles.values}>
+              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Quantidade: </p>
                 <p className={styles.value}>{infos.quantidade}</p>
               </div>
-              <div className={styles.values}>
+              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Preço: </p>
                 <p className={styles.value}>R${formatPrice(infos.preco)}</p>
+              </div>
+              <div className={`${styles.values}`}>
+                {(infos.excedeEstoque || !infos.disponivel) && <p className={styles.alert}>{infos.excedeEstoque ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${infos.quantidadeDisponivel}`}</p>}
               </div>
             </div>
           )

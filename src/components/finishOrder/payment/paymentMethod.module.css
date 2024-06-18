@@ -9,12 +9,13 @@
   display: grid;
   justify-content: center;
   height: 60px;
-  width: 258px;
+  width: 272px;
   border-radius: 5px;
   display: grid;
   grid-template-columns: 70px 38px;
   justify-self: center;
   align-items: center;
+  margin-left: 10px;
   border: 1px solid #969696;
 }
 
@@ -31,6 +32,33 @@
 
 .displayNone {
   display: none;
+}
+
+@media (min-width: 370px) {
+  .container {
+    width: 320px;
+  }
+  .paymentMethod {
+    width: 310px;
+  }
+}
+
+@media (min-width: 475px) {
+  .container {
+    width: 370px;
+  }
+  .paymentMethod {
+    width: 358px;
+  }
+}
+
+@media (min-width: 580px) {
+  .container {
+    width: 380px;
+  }
+  .paymentMethod {
+    width: 368px;
+  }
 }
 
 @media (hover: hover) { 

@@ -31,6 +31,26 @@
   margin-top: 19px;
 }
 
+
+@media (min-width: 370px) {
+  .section {
+    width: 320px;
+    justify-self: center;
+  }
+}
+
+@media (min-width: 475px) {
+  .section {
+    width: 370px;
+  }
+}
+
+@media (min-width: 580px) {
+  .section {
+    width: 380px;
+  }
+}
+
 @media (hover: hover) { 
   .arrow img:hover {
     cursor: pointer;

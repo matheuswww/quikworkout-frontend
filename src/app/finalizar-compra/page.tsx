@@ -1,5 +1,15 @@
 import FinishPurchaseForm from "@/components/finishOrder/finishOrderForm";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
+
+export const metadata:Metadata = {
+  title: "Finalizar compra",
+  description: "Finalizar compra",
+  openGraph: {
+    title: "Finalizar compra",
+    description: "Finalizar compra"
+  }
+}
 
 interface props {
   searchParams: {

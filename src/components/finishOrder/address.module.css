@@ -86,7 +86,7 @@
   color: #e4e4e4;
   margin-top: 15px;
   font-family: var(--interSemiBold);
-  width: 258px;
+  width: 268px;
   justify-self: center;
 }
 
@@ -107,6 +107,24 @@
   color: white;
 }
 
+@media (min-width: 380px) {
+  .button,.input {
+    width: 310px;
+  }
+}
+
+@media (min-width: 475px) {
+  .button,.input {
+    width: 358px;
+  }
+}
+
+@media (min-width: 580px) {
+  .button,.input {
+    width: 368px;
+  }
+}
+
 @media (hover: hover) { 
   .submit:hover {
     cursor: pointer;
@@ -115,7 +133,14 @@
 }
 
 @media (hover: hover) { 
-  .button:hover {
+  .arrow img:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+@media (hover: hover) { 
+  .arrow img:hover {
     cursor: pointer;
     background-color: var(--btnHover);
   }

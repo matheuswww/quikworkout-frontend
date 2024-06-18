@@ -19,6 +19,7 @@ interface props {
   load: boolean
   setLoad: Dispatch<boolean>
   setFreight: Dispatch<SetStateAction<string | null>>
+  totalPrice: number
 }
 
 const schema = z.object({
@@ -39,7 +40,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, clothing, setFreight }:props) {
+export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, clothing, setFreight, totalPrice }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -121,9 +122,9 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
       <div style={{display: "flex"}}>
         {
           calcFreight ? 
-          <button className={styles.arrow} id="arrowCalcFreight" onClick={(() => setCalcFreight((a) => !a))} aria-label="diminuir sessão de calculo de frete"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
+          <button className={styles.arrow} id="arrowCalcFreight" onClick={(() => setCalcFreight((a) => !a))} aria-label="diminuir sessão de cálculo de frete"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
           :
-          <button className={styles.arrow} id="arrowCalcFreight" onClick={(() => setCalcFreight((a) => !a))} aria-label="expandir sessão de calculo de frete"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
+          <button className={styles.arrow} id="arrowCalcFreight" onClick={(() => setCalcFreight((a) => !a))} aria-label="expandir sessão de cálculo de frete"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
         }
         <label className={styles.label} htmlFor="arrowCalcFreight">Cálculo de frete</label>
       </div>
@@ -147,7 +148,7 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
               <label htmlFor="R">retirar</label>
               <input type="checkbox" className={styles.checkbox} id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
             </div>
-            {data?.vlrFrete && <p className={styles.price}>R${data?.vlrFrete}</p>}
+            {data?.vlrFrete && <p className={styles.price}>{totalPrice < 200 ? `R$${data?.vlrFrete}` : "Frete grátis"}</p>}
             {data?.prazoEnt && <p className={styles.price}>Prazo de entrega: {data?.prazoEnt} dias úteis</p>}
             <button disabled={load} className={`${styles.calcFreight}`}>Calcular frete</button>
           </form>

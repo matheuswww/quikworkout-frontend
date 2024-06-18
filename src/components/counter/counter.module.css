@@ -35,10 +35,10 @@
 }
 
 
-.count{
+.count {
   display: inline;
   position: relative;
-  top: 5px;
+  top: -5px;
   padding: 0px 5px;
   color: white;
   font-family: var(--interRegular);

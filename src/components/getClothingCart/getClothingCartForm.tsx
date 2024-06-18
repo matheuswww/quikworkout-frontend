@@ -195,40 +195,41 @@ export default function GetClothingCartForm({...props}: props) {
           {data?.status == 200 && data.clothing?.map((data) => {
             return (
               <div className={styles.item} key={data.roupa_id+data.cor+data.tamanho}>
-              <p className={styles.name}>Crossfit</p>
-              <SkeletonImage src={data.imagem} alt={data.alt} className={styles.image} width={75} height={85} quality={100}/>
+              <p className={styles.name}>{data.nome}</p>
+              <SkeletonImage src={data.imagem} alt={data.alt} className={`${styles.image} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} width={75} height={85} quality={100}/>
               <div className={styles.infos}>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>preço total:&nbsp;</p>
                   <p className={styles.interRegular}>R${formatPrice(data.preco)}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>categoria:&nbsp;</p>
                   <p className={styles.interRegular}>{data.categoria}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>quanitdade:&nbsp;</p>
                   <p className={styles.interRegular}>{data.quantidade}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>genêro:&nbsp;</p>
                   <p className={styles.interRegular}>{data.sexo == "M" ? "masculino" : data.sexo == "F" ? "feminino" : "unissex"}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>cor:&nbsp;</p>
                   <p className={styles.interRegular}>{data.cor}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>material:&nbsp;</p>
                   <p className={styles.interRegular}>{data.material}</p>
                 </div>
-                <div>
+                <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>tamamanho:&nbsp;</p>
                   <p className={styles.interRegular}>{data.tamanho}</p>
                 </div>
               </div>
-              <p className={`${styles.description} ${styles.interRegular}`}>{data.descricao}</p>
-              <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} >Finalizar compra</Link>
+              <p className={`${styles.description} ${styles.interRegular} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>{data.descricao}</p>
+              <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>Finalizar compra</Link>
+              {(data.excedeEstoque || !data.disponivel) && <p className={styles.alert}>{data.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${data.quantidadeDisponivel}`}</p>}
               <button className={styles.delete} ref={deleteRef} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="remover produto de minha bolsa"><span aria-hidden="true">x</span></button>
               <button className={styles.edit} ref={editRef} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="editar produto"><Edit src="/img/edit.png" width={12} height={12} alt="editar produto"/></button>
             </div>

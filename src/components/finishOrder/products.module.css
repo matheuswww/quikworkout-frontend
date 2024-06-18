@@ -34,7 +34,7 @@
   grid-template-rows: repeat(3, auto);
   margin-left: 12px;
   border-bottom: 1px solid #454545;
-  padding-bottom: 16px;
+  padding: 10px 0px;
 }
 
 .clothing img {
@@ -46,10 +46,12 @@
 .values {
   grid-column: span 3;
   margin-top: 8px;
+  width: 173px;
+  min-width: 170px;
   margin-left: 12px;
 }
 
-.field,.value {
+.field,.value,.alert {
   margin-top: 15px;
   color: #c8c8c8;
   font-family: var(--interSemiBold);
@@ -92,6 +94,64 @@
   width: 276px;
   margin-left: 12px;
   margin-bottom: 5px;
+}
+
+.alert {
+  margin: 0px;
+  color: #c9c96c;
+  display: block;
+  min-width: 275px;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+}
+
+.lowOpacity {
+  opacity: .5;
+}
+
+
+@media (hover: hover) { 
+  .button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.button:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+@media (min-width: 380px) {
+  .button {
+    width: 310px;
+  }
+}
+
+@media (min-width: 475px) {
+  .button {
+    width: 358px;
+  }
+}
+
+@media (min-width: 580px) {
+  .button {
+    width: 368px;
+  }
+}
+
+@media (hover: hover) { 
+  .arrow img:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+@media (hover: hover) { 
+  .arrow img:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
 }
 
 @keyframes enter {

@@ -38,8 +38,7 @@ interface params {
 export default async function PayOrder(cookie: string, params: params):Promise<payOrderResponse> {
   let url = api
   url+=clothingPath+"/payOrder"
-  console.log(params);
-  
+
   try {
     let status: number = 0
     const res: ResponseErr | response | null = await fetch(url, {
