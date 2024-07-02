@@ -75,8 +75,6 @@ export default function GetClothingCartForm({...props}: props) {
           totalPrice += preco*quantidade
         })
         setTotalPrice((t) => totalPrice+t)
-        setLoad(false)
-        setNewPageLoad(false)
         if(data?.clothing && res.clothing) {
           data.clothing.push(...res.clothing)
           setData({
@@ -86,6 +84,7 @@ export default function GetClothingCartForm({...props}: props) {
         } else {
           setData(res)
         }
+        setNewPageLoad(false)
         setLoad(false)
       }())
     }
