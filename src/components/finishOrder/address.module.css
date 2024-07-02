@@ -111,11 +111,17 @@
   .button,.input {
     width: 310px;
   }
+  .error {
+    width: 310px;
+  }
 }
 
 @media (min-width: 475px) {
   .button,.input {
     width: 358px;
+  }
+  .error {
+    width: 368px;
   }
 }
 
@@ -141,6 +147,13 @@
 
 @media (hover: hover) { 
   .arrow img:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+@media (hover: hover) { 
+  .button:hover {
     cursor: pointer;
     background-color: var(--btnHover);
   }

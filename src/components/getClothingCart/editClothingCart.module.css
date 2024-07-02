@@ -11,7 +11,7 @@
   border-radius: 10px;
   z-index: 999;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 58px 45px 45px 65px;
+  grid-template-rows: 65px 45px 45px 45px 65px;
   opacity: 0;
   display: none;
 }

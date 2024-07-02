@@ -10,11 +10,13 @@ import PopupError from '../popupError/popupError'
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import formatPrice from '@/funcs/formatPrice'
+import { getOrderDetailResponse } from '@/api/clothing/getOrderDetail'
 
 interface props {
   setDelivery: Dispatch<SetStateAction<"E" | "X" | "R">>
   delivery: "E" | "X" | "R"
-  clothing: dataGetClothingCart[]
+  clothing: dataGetClothingCart[] | null | undefined
+  clothingRetryPayment: getOrderDetailResponse | null
   end: boolean
   load: boolean
   setLoad: Dispatch<boolean>
@@ -40,7 +42,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, clothing, setFreight, totalPrice }:props) {
+export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, clothing, setFreight, totalPrice, clothingRetryPayment }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -60,6 +62,18 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
       let clothingIds: string[] = []
       let productQuantity: number[] = []
       if(clothing) {
+        clothing.map(({roupa_id,quantidade}) => {
+          clothingIds.push(roupa_id)
+          productQuantity.push(quantidade)
+        })
+      }
+      if(clothingRetryPayment?.data && typeof clothingRetryPayment?.data == "object" && "pedido" in clothingRetryPayment?.data) {
+        clothingRetryPayment.data.pedido.roupa.map(({id,quantidade}) => {
+          clothingIds.push(id)
+          productQuantity.push(quantidade)
+        })
+      }
+      if(clothing || clothingRetryPayment) {
         if(values.cep.includes("-")) {
           values.cep = values.cep.replace("-","")
         }
@@ -68,10 +82,6 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
           setError("cep inválido")
           return
         }
-        clothing.map(({roupa_id,quantidade}) => {
-          clothingIds.push(roupa_id)
-          productQuantity.push(quantidade)
-        })
         const res = await CalcFreight({
           cep: values.cep,
           quantidadeProduto: productQuantity,

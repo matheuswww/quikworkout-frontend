@@ -117,19 +117,19 @@
 }
 
 @media (min-width: 370px) {
-  .button,.form input {
+  .button,.form input,.error {
     width: 310px;
   }
 }
 
 @media (min-width: 475px) {
-  .button,.form input {
+  .button,.form input,.error {
     width: 358px;
   }
 }
 
 @media (min-width: 580px) {
-  .button,.form input {
+  .button,.form input,.error {
     width: 368px;
   }
 }

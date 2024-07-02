@@ -15,4 +15,30 @@
   font-size: .9rem;
   background-color: transparent;
   border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  position: relative;
+  top: -4px;
+  left: -4px;
+}
+
+.button img {
+  position: relative;
+  left: 3px;
+  top: 1px;
+}
+
+@media (hover: hover) { 
+  .button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+@media (hover: hover) { 
+  .button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
 }

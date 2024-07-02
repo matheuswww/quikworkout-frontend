@@ -4,12 +4,15 @@ export default function middleware(request: NextRequest) {
   const url = new URL(request.url)
   if(
     url.pathname == "/auth/criar-dois-fatores" ||
-    url.pathname == "/auth/entrar" ||
-    url.pathname == "/finalizar-compra"
+    url.pathname == "/auth/entrar"
   ) {
     return CheckUserProfileCookieNotExist(request)
   }
-  if(url.pathname == "/usuario/minha-bolsa") {
+  if(
+    url.pathname == "/usuario/minha-bolsa" ||
+    url.pathname == "/finalizar-compra" ||
+    url.pathname == "/usuario/meus-pedidos"
+    ) {
     return CheckUserProfileCookieExist(request)
   }
   if(url.pathname == "/auth/validar-codigo-dois-fatores") {
@@ -58,5 +61,5 @@ function ResetPasswordURL(request: NextRequest) {
 
 export const config = {
   matcher: ['/auth/criar-dois-fatores','/auth/entrar',
-  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', '/usuario/minha-bolsa']
+  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', '/usuario/minha-bolsa', '/finalizar-compra', '/usuario/meus-pedidos']
 }

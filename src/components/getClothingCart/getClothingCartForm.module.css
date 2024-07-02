@@ -66,7 +66,7 @@
 .item {
   display: grid;
   grid-template-columns: 75px 180px;
-  background: #2121213b;
+  background: #0000003b;
   padding: 10px;
   margin-top: 20px;
   align-self: center;
@@ -74,6 +74,7 @@
   justify-content: center;
   border-radius: 7px;
   position: relative;
+  border: 1px solid #797979;
 }
 
 .item a {

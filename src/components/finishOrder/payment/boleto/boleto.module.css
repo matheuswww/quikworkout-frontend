@@ -69,6 +69,20 @@
   display: none !important;
 }
 
+.form select {
+  width: 200px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: #19191d;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 7px;
+  border: none;
+  border: 2px solid #ACACAC;
+  color: white;
+  margin-top: 10px;
+}
+
 .button {
   font-size: .9rem;
   background: transparent;
@@ -84,19 +98,19 @@
 }
 
 @media (min-width: 370px) {
-  .button,.form input,.textarea {
+  .button,.form input,.textarea,.error {
     width: 310px;
   }
 }
 
 @media (min-width: 475px) {
-  .button,.form input,.textarea {
+  .button,.form input,.textarea,.error {
     width: 358px;
   }
 }
 
 @media (min-width: 580px) {
-  .button,.form input,.textarea {
+  .button,.form input,.textarea,.error {
     width: 368px;
   }
 }

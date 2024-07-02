@@ -17,14 +17,15 @@ interface props {
     clothing_id: string
     color: string
     size: string
+    retry_payment_id: string
+    paymentType: string
   }
-
 }
 
 export default function FinishPurchase({searchParams}: props) {
   const cookieInfos = cookies().get("userProfile")
-
+  
   return (
-    <FinishPurchaseForm cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size}/>
+    <FinishPurchaseForm paymentType={searchParams.paymentType} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size} retryPayment={searchParams.retry_payment_id}/>
   )
 }

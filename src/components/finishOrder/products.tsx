@@ -5,17 +5,20 @@ import ArrowDown from 'next/image'
 import { dataGetClothingCart } from "@/api/clothing/getClothingCart"
 import ClothingImg from 'next/image'
 import formatPrice from "@/funcs/formatPrice"
+import { getOrderDetailResponse } from "@/api/clothing/getOrderDetail"
 
 interface props {
-  clothing: dataGetClothingCart[]
+  clothing: dataGetClothingCart[] | null | undefined
+  retryPaymentData: getOrderDetailResponse | null
   totalPrice: string
   freight: string | null
   responseError: string | null
+  totalPriceWithFreight: string | null
+  setTotalPriceWithFreight: Dispatch<SetStateAction<string | null>>
 }
 
-export default function Products({clothing, totalPrice, freight, responseError}:props) {
+export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight}:props) {
   const [productsForm, setProductsForm] = useState<boolean>(false)
-  const [totalPriceWithFreight, setTotalPriceWithFreight] = useState<string | null>(null)
 
   useEffect(() => {
     if(freight == null) {
@@ -35,7 +38,7 @@ export default function Products({clothing, totalPrice, freight, responseError}:
       setTotalPriceWithFreight(totalPrice)
       return
     }
-    let total = Number(val2)+Number(val)
+    let total = Math.round((Number(val2)+Number(val)) * 100)/100
     if(!isNaN(total)) {
       setTotalPriceWithFreight(total.toString())
       return
@@ -60,8 +63,8 @@ export default function Products({clothing, totalPrice, freight, responseError}:
         <p className={styles.price}>Preço total: R${totalPrice}</p>
         {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
         <button style={{marginLeft: "12px",marginTop: "22px"}} type="submit" className={styles.button}>Finalizar compra</button>
-        { <p className={styles.error}>{responseError}</p>}
-        {clothing.map((infos) => {
+        { <p className={styles.error}>{responseError}</p> }
+        {clothing?.map((infos) => {
           return (
             <div className={`${styles.clothing}`} key={infos.roupa_id+infos.cor+infos.tamanho}>
               <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} className={`${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}/>
@@ -83,6 +86,29 @@ export default function Products({clothing, totalPrice, freight, responseError}:
               </div>
               <div className={`${styles.values}`}>
                 {(infos.excedeEstoque || !infos.disponivel) && <p className={styles.alert}>{infos.excedeEstoque ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${infos.quantidadeDisponivel}`}</p>}
+              </div>
+            </div>
+          )
+        })}
+        {retryPaymentData?.data && typeof retryPaymentData?.data == "object" && "pedido" in retryPaymentData.data && retryPaymentData.data.pedido.roupa.map((infos) => {
+          return (
+            <div className={`${styles.clothing}`} key={infos.id+infos.cor+infos.tamanho}>
+              <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} />
+              <div className={`${styles.values}`}>
+                <p className={styles.field}>Nome: </p>
+                <p className={styles.value}>{infos.nome}</p>
+              </div>
+              <div className={`${styles.values}`}>
+                <p className={styles.field}>Cor: </p>
+                <p className={styles.value}>{infos.cor}</p>
+              </div>
+              <div className={`${styles.values}`}>
+                <p className={styles.field}>Quantidade: </p>
+                <p className={styles.value}>{infos.quantidade}</p>
+              </div>
+              <div className={`${styles.values}`}>
+                <p className={styles.field}>Preço: </p>
+                <p className={styles.value}>R${formatPrice(infos.preco)}</p>
               </div>
             </div>
           )

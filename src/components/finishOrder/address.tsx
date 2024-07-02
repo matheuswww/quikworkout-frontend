@@ -86,7 +86,7 @@ export default function Address({ setAddress, address, addressRef }:props) {
       regiao: region,
       codigoRegiao: regionCode,
       rua: data.street,
-      cpfCnpj: data.cpfCnpj,
+      tax_id: data.cpfCnpj,
       servico: delivery,
     })
     setSaved(true)
@@ -124,7 +124,7 @@ export default function Address({ setAddress, address, addressRef }:props) {
           <label className={styles.label} htmlFor="neighborhood">Bairro</label>
           <input {...register("neighbordhood")} className={styles.input} placeholder="bairro" type="text" id="neighborhood"/>
           {errors.neighbordhood && <p className={styles.error}>{errors.neighbordhood.message}</p>}
-          <label className={styles.label} htmlFor="complement">Complemento(opcional)</label>
+          <label className={styles.label} htmlFor="complement">Complemento</label>
           <input {...register("complement")} className={styles.input} placeholder="complemento" type="text" id="complement"/>
           {errors.complement && <p className={styles.error}>{errors.complement.message}</p>}
           <label className={styles.label} htmlFor="city">Cidade</label>
@@ -172,8 +172,8 @@ export default function Address({ setAddress, address, addressRef }:props) {
               <p className={styles.value}>{address.telefone.DDD+address.telefone.Numero}</p>
             </div>
             <div className={styles.values}>
-              <p className={styles.field}>{address.cpfCnpj.length === 11 ? 'CPF: ' : 'CNPJ: '}</p>
-              <p className={styles.value}>{address.cpfCnpj}</p>
+              <p className={styles.field}>{address.tax_id.length === 11 ? 'CPF: ' : 'CNPJ: '}</p>
+              <p className={styles.value}>{address.tax_id}</p>
             </div>
             <div className={styles.values}>
               <p className={styles.field}>Rua: </p>
@@ -207,7 +207,7 @@ export default function Address({ setAddress, address, addressRef }:props) {
               <p className={styles.field}>Tipo de entrega: </p>
               <p className={styles.value}>{delivery == "E" ? "entrega normal" : delivery == "R" ? "retirar" : delivery == "X" && "entrega expressa"}</p>
             </div>
-            <button className={styles.button} onClick={() => setSaved(false)}>Editar endereço e contato</button>
+            <button className={styles.button} onClick={() => setSaved(false)} style={{marginLeft: "12px"}}>Editar endereço e contato</button>
           </>
         }
       </section>

@@ -19,9 +19,10 @@ interface props {
   paymentType: "card" | "credit_card" | "debit_card" | "pix" | "boleto" | null
   responseError: string | null
   paymentRef:  MutableRefObject<HTMLElement | null>
+  retryPayment: string | null
 }
 
-export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef }:props) {
+export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef,retryPayment }:props) {
   const [payment, setPayment] = useState<boolean>(true)
   
   return (
@@ -35,7 +36,7 @@ export default function Payment({ cookieName, cookieVal, setError, setLoad, load
         }
         <label htmlFor="arrowPayment" className={styles.label} >Formas de pagamento</label>
       </div>
-      <PaymentMethod responseError={responseError} card={card} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} load={load} showPayment={payment} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} />
+      <PaymentMethod retryPayment={retryPayment} responseError={responseError} card={card} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} load={load} showPayment={payment} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} />
     </section>
   )
 }

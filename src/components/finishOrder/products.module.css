@@ -94,6 +94,7 @@
   width: 276px;
   margin-left: 12px;
   margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .alert {
@@ -123,19 +124,19 @@
 }
 
 @media (min-width: 380px) {
-  .button {
+  .button,.error {
     width: 310px;
   }
 }
 
 @media (min-width: 475px) {
-  .button {
+  .button,.error {
     width: 358px;
   }
 }
 
 @media (min-width: 580px) {
-  .button {
+  .button,.error {
     width: 368px;
   }
 }
