@@ -51,6 +51,7 @@ export default function FinishPurchaseForm({...props}: props) {
   const [responsePaymentError, setResponsePaymentError] = useState<string | null>(null)
   const [responseError, setResponseError] = useState<string | null>(null)
   const [retryPayment,setRetryPayment] = useState<string | null>(null)
+  const [addressStatus, setAddressStatus] = useState<500 | null>(null)
 
   const [paymentTypeRetryPayment, setPaymentTypeRetryPayment] = useState<string | null>(null)
 
@@ -417,22 +418,22 @@ export default function FinishPurchaseForm({...props}: props) {
     <>
       {load && <SpinLoading />}
       {popupError && <PopupError handleOut={(() => setPopupError(false))} />}
-      <main className={`${styles.main} ${load && `${styles.opacity}`} ${(data?.status == 500 || data?.status == 404 || retryPaymentData?.status == 404 || retryPaymentData?.status == 500) && styles.mainHeight}`}>
-        {(((data?.status == 200 || (retryPaymentData == null && data == null)) || (retryPaymentData?.status == 200 || (retryPaymentData == null && data == null)))) && <h1 className={styles.title}>Finalizar compra</h1>}
-        {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && retryPayment)) ?
+      <main className={`${styles.main} ${load && `${styles.opacity}`} ${(data?.status == 500 || data?.status == 404 || retryPaymentData?.status == 404 || retryPaymentData?.status == 500 || addressStatus == 500) && styles.mainHeight}`}>
+        {(((data?.status == 200 || (retryPaymentData == null && data == null)) || (retryPaymentData?.status == 200 || (retryPaymentData == null && data == null))) && addressStatus != 500) && <h1 className={styles.title}>Finalizar compra</h1>}
+        {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && retryPayment)) && addressStatus != 500 ?
           <>
             {!retryPaymentData?.data && <CalcFreightForm clothingRetryPayment={retryPaymentData} totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data?.clothing} setDelivery={setDelivery} delivery={delivery} />}
             <Payment retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
-            {(!retryPayment || props.paymentType == "BOLETO") && <Address addressRef={addressRef} setAddress={setAddress} address={address}/>}
+            {(!retryPayment || props.paymentType == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
             <form onSubmit={handleSubmit}>
               <Products setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={formatPrice(totalPrice)} />
             </form> 
           </>
         : load && <p className={styles.load}>carregando...</p>}
-        {(data?.status == 500 || retryPaymentData?.status == 500) &&
+        {(data?.status == 500 || retryPaymentData?.status == 500 || addressStatus == 500) &&
           <p className={styles.serverError}>Parece que houve um erro! Tente recarregar a página</p>
         }
-        {(data?.status == 404 || retryPaymentData?.status == 404) && 
+        {((data?.status == 404 || retryPaymentData?.status == 404) && addressStatus != 500) && 
         <div>
           <p className={styles.notFound} style={{marginTop: "25px"}}>{props.paymentType && props.retryPayment ? "pedido não encontrado" : "Nenhum pedido foi encontrado"}</p>
           <Link style={{marginLeft: "10px"}} href={`${props.paymentType && props.retryPayment ? "/usuario/minha-bolsa" : "/"}`}className={styles.seeClothing}>{props.paymentType && props.retryPayment ? "Ver carrinho" : "Ver roupas"}</Link>

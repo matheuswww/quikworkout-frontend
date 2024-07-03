@@ -2,27 +2,28 @@ import { api } from "../path"
 import { userPath } from "./userPath"
 
 export interface getAdressResponse {
-  data: data | null
+  data: address[] | null
   status: statusgetAdress
 }
 
 type statusgetAdress = 200 | 404 | 500 | 401
 
-interface data {
-  nome: string
-  email: string
-  twoAuthEmail: string
-  twoAuthTelefone: string
-  telefone: string
-  verificado: boolean
+export interface getAddressData {
+  rua: string
+  numeroResidencia: string
+  complemento: string
+  bairro: string
+  cidade: string
+  codigoRegiao: string
+  cep: string
 }
 
-export default async function GetAdress(cookie: string):Promise<getAdressResponse> {
+export default async function GetAddress(cookie: string):Promise<getAdressResponse> {
   let url = api
-  url+="/"+userPath+"/getAdress"
+  url+="/"+userPath+"/getAddress"
   try {
     let status:number = 0
-    const res: data | null = await fetch(url, {
+    const res = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,12 +33,21 @@ export default async function GetAdress(cookie: string):Promise<getAdressRespons
       cache: "no-cache",
     }).then(res => {
       status = res.status
-      return res.json()
+      if(status == 200) {
+        return res.json()
+      }
     })
-    if (status === 404 || status === 500 || status === 401 || status === 200) {
+    
+    if(status === 404 || status === 500 || status === 401) {
+      return {
+        data: null,
+        status: status
+      }
+    }
+    if(status == 200) {
       return {
         data: res,
-        status
+        status: 200
       }
     }
     return {
@@ -45,7 +55,7 @@ export default async function GetAdress(cookie: string):Promise<getAdressRespons
       status: 500
     }
   } catch(err) {
-    console.error("error trying getAdress:", err);
+    console.error("error trying getAddress:", err);
     return {
       data: null,
       status: 500

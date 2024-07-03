@@ -107,18 +107,63 @@
   color: white;
 }
 
+.addressSaved {
+  display: grid;
+  width: 270px;
+  margin-left: 12px;
+  margin-top: 12px;
+  border: 1px solid #969696;
+  padding: 10px 0px;
+  border-radius: 5px;
+}
+
+.otherAddress {
+  font-size: .9rem;
+  background: transparent;
+  border: 1px solid #969696;
+  height: 38px;
+  border-radius: 5px;
+  text-align: center;
+  color: #e4e4e4;
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+  width: 270px;
+  justify-self: center;
+  margin-left: 12px;
+}
+
+.selectAddress {
+  font-size: .9rem;
+  background: transparent;
+  border: 1px solid #969696;
+  height: 38px;
+  border-radius: 5px;
+  text-align: center;
+  color: #e4e4e4;
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+  width: 250px;
+  justify-self: center;
+}
+
 @media (min-width: 380px) {
-  .button,.input {
+  .button,.input,.addressSaved,.error {
     width: 310px;
   }
-  .error {
+  .selectAddress {
+    width: 290px;
+  }
+  .otherAddress {
     width: 310px;
   }
 }
 
 @media (min-width: 475px) {
-  .button,.input {
+  .button,.input,.addressSaved,.otherAddress {
     width: 358px;
+  }
+  .selectAddress {
+    width: 330px;
   }
   .error {
     width: 368px;
@@ -128,6 +173,15 @@
 @media (min-width: 580px) {
   .button,.input {
     width: 368px;
+  }
+  .addressSaved {
+    width: 368px;
+  }
+  .otherAddress {
+    width: 368px;
+  }
+  .selectAddress {
+    width: 335px;
   }
 }
 
@@ -153,13 +207,13 @@
 }
 
 @media (hover: hover) { 
-  .button:hover {
+  .button:hover,.selectAddress:hover,.otherAddress:hover {
     cursor: pointer;
     background-color: var(--btnHover);
   }
 }
 
-.button:active {
+.button:active,.selectAddress:active,.otherAddress:active {
   cursor: pointer;
   background-color: var(--btnClicked);
 }
