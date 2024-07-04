@@ -47,6 +47,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -35%);
   width: 300px;
   height: max-content;
   flex-direction: column;
@@ -54,7 +55,6 @@
   border-radius: 5px;
   z-index: 1000;
   opacity: 0;
-  transform: translate(-50%, -35%);
 }
 
 .selectModal.active {

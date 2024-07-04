@@ -16,6 +16,11 @@ import Sizes from "../sizes/sizes"
 import { ChangeColor, ModalColor } from "../modalColor/modalColor"
 import Shop from 'next/image'
 import formatPrice from "@/funcs/formatPrice"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import CalcFreight, { calcFreightData } from "@/api/clothing/calcFreight"
+import handleModalColorClick from "@/funcs/handleModalColorClick"
 
 interface props {
   id: string
@@ -23,7 +28,31 @@ interface props {
   cookieVal: string | undefined
 }
 
+const schema = z.object({
+  cep: z.string().min(8, "cep inválido").max(9, "cep inválido"),
+}).refine((fields) => {
+  let cepNumber = fields.cep
+  if(fields.cep.includes("-")){
+    cepNumber = fields.cep.replace("-","")
+  }
+  if(isNaN(Number(cepNumber))) {
+    return false
+  }
+  return true
+}, {
+  path: [ 'cep' ],
+  message: "cep inválido"
+})
+
+type FormProps = z.infer<typeof schema>
+
 export default function Clothing({...props}: props) {
+  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+    resolver: zodResolver(schema)
+  })
+
   const router = useRouter()
   const [data,setData] = useState<getClothingByIdResponse | null>(null)
   const [load, setLoad] = useState<boolean>(false)
@@ -38,8 +67,13 @@ export default function Clothing({...props}: props) {
   const indexImages = useRef<HTMLUListElement | null>(null)
   const buttonToOpenModalRef = useRef<HTMLButtonElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
-
-  async function handleSubmit(event: SyntheticEvent) {
+  const [error, setError] = useState<string | null>(null)
+  const [delivery, setDelivery] = useState<"E" | "X" | "R">("E")
+  const [freightData, setFreightData] = useState<calcFreightData | null>(null)
+  const calcFreightRef = useRef<HTMLFormElement | null>(null)
+  const buttonToOpenModalFreight = useRef<HTMLButtonElement | null>(null)
+  
+  async function handleSubmitAddToCart(event: SyntheticEvent, callback?: Function) {
     event.preventDefault()
     setPopUpError(false)
     setLoad(true)
@@ -63,16 +97,107 @@ export default function Clothing({...props}: props) {
     }
     if(res == 500) {
       setPopUpError(true)
+      setLoad(false)
+      return
     }
-    if(res == "quantidade excede o stock" || res == "roupa ou inventário não encontrado") {   
+ 
+    if(res == "quantidade excede o stock" || res == "roupa ou inventário não encontrado" || res == "quantidade adicionada ao carrinho excede o stock") {   
+      
       setData(null)                   
       setSize("p")
       setColor(null)
       setMainColor(null)
       setCount(1)
       setPopUpError(true)
+      setLoad(false)
+      return
+    }
+    if(callback) {
+      callback()
+      return
     }
     setLoad(false)
+  }
+
+  async function handleSubmitCalcFreight(formData: FormProps) {
+    if(data?.clothing?.id && count) {
+      setLoad(true)
+      const res = await CalcFreight({
+        cep: formData.cep,
+        quantidadeProduto: [count],
+        roupa: [data?.clothing?.id],
+        servico: delivery
+      })
+      if(res.status == 500) {
+        setPopUpError(true)
+        setLoad(false)
+        setFreightData(null)
+        return
+      }
+      if(res.data == "cep de destino inválido") {
+        setError(res.data)
+        setLoad(false)
+        setFreightData(null)
+        return
+      }
+      if(res.data == "frete não disponível") {
+        setError("frete não disponível para este endereço e tipo de entrega")
+        setLoad(false)
+        setFreightData(null)
+        return
+      }
+      if(res.data == "peso maxímo atingido") {
+        setError("tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega")
+        setLoad(false)
+        setFreightData(null)
+        return
+      }
+      if(res.data == "roupa não encontrada") {
+        setError("parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa")
+        setLoad(false)
+        setFreightData(null)
+        return
+      }
+      if(res.data?.vlrFrete) {
+        setFreightData(res.data)
+      }
+      setLoad(false)
+    }
+  }
+
+  function handleCalcFreightClick() {
+    const main = document.body.querySelector("main")
+    let section = main instanceof HTMLElement && main.lastChild
+    if (section instanceof HTMLElement && buttonToOpenModalFreight.current instanceof HTMLElement && calcFreightRef.current instanceof HTMLElement) {
+      section.style.opacity = ".1"
+      calcFreightRef.current.style.display = "flex"
+      setTimeout(() => {  
+        calcFreightRef.current instanceof HTMLElement && calcFreightRef.current.classList.add(styles.active)
+      });
+      calcFreightRef.current.focus()
+      calcFreightRef.current.tabIndex = 0
+      buttonToOpenModalFreight.current.style.pointerEvents = "none"
+    }
+    document.addEventListener("click", handleCloseModal)
+    function handleCloseModal(event: Event) {
+      if(event.target instanceof HTMLElement && calcFreightRef.current?.contains(event.target)) {
+        return
+      }
+      if (calcFreightRef.current instanceof HTMLElement && calcFreightRef.current instanceof HTMLElement) {
+        calcFreightRef.current.focus()
+        calcFreightRef.current.classList.remove(styles.active)
+      }
+      setTimeout(() => {
+        if(calcFreightRef.current instanceof HTMLElement && buttonToOpenModalFreight.current instanceof HTMLElement) {          
+          buttonToOpenModalFreight.current.style.pointerEvents = "initial"
+          calcFreightRef.current.style.display = "none"
+        }
+       }, 500)
+      if(section instanceof HTMLElement) {
+        section.style.opacity = "1"
+      }
+      document.removeEventListener("click", handleCloseModal)
+    }
   }
 
   function handleCount(event: SyntheticEvent) {
@@ -88,6 +213,12 @@ export default function Clothing({...props}: props) {
     } else if (count - 1 > 0) {
       setCount((count) => count = count - 1)
     } 
+  }
+
+  function handleBuy(event: SyntheticEvent) {
+    handleSubmitAddToCart(event, () => {
+      router.push("/finalizar-compra")
+    })
   }
 
   useEffect(() => {
@@ -145,6 +276,26 @@ export default function Clothing({...props}: props) {
      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       <main className={`${styles.main} ${load && styles.opacity}`}>
         <ModalColor inventario={data?.clothing?.inventario} mainColor={mainColor} modalRef={modalRef} setColor={setColor} />
+        <form className={styles.calcFreightForm} onSubmit={handleSubmit(handleSubmitCalcFreight)} ref={calcFreightRef}>
+            <label htmlFor="cep">Digite seu cep</label>
+            <input {...register("cep")} type="text" id="cep" className={styles.cep} placeholder="digite seu cep aqui"/>
+            {error ? <p className={styles.error}>{error}</p> : errors.cep && <p className={styles.error}>{errors.cep.message}</p>}
+            <div style={{marginTop: "5px"}}>
+              <label htmlFor="E">entrega normal</label>
+              <input className={styles.checkbox} type="checkbox" id="E" value="E" onChange={() => setDelivery("E")} checked={delivery === "E"}/>
+            </div>
+            <div>
+              <label htmlFor="X">entrega expressa</label>
+              <input className={styles.checkbox} type="checkbox" id="X" value="X" onChange={() => setDelivery("X")} checked={delivery === "X"}/>
+            </div>
+            <div>
+              <label htmlFor="R">retirar</label>
+              <input className={styles.checkbox} type="checkbox" id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
+            </div>
+            {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
+            {freightData?.prazoEnt && <p className={styles.freightPrice}>Prazo de entrega: {freightData.prazoEnt} dias úteis</p>}
+            <button type="submit" disabled={load} className={styles.calcFreightButton}>Calcular frete</button>
+        </form>
         <section>
         {data?.status == 404 && notFound()}
         <ul className={`${styles.indexImages} ${data?.clothing && styles.load}`} ref={indexImages} aria-hidden="true">
@@ -179,7 +330,7 @@ export default function Clothing({...props}: props) {
             </ul>
             </div>
             {!data?.clothing && <div className={stylesLoad.images} aria-label="carregando conteúdo" tabIndex={0}><Skeleton/></div>}
-            {data?.clothing ? <form className={styles.infos} onSubmit={handleSubmit}>
+            {data?.clothing ? <form className={styles.infos} onSubmit={(event) => handleSubmitAddToCart(event)}>
               <p className={styles.name} aria-label="nome da roupa">{data.clothing.nome}</p>
               <p className={styles.price} aria-label="preço da roupa">R${formatPrice(data.clothing.preco)}</p>
               <p className={styles.description} aria-label="descrição da roupa">{data.clothing.descricao}</p>
@@ -207,7 +358,20 @@ export default function Clothing({...props}: props) {
                   <p>cores</p>
                   <ChangeColor buttonToOpenModalRef={buttonToOpenModalRef} color={color} modalRef={modalRef} />
                 </div>
-                <button className={styles.addPurchase}><Shop src={"/img/shop.png"} alt="" width={14} height={17} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}/><p aria-hidden="true">adicionar a bolsa</p></button>
+                <div className={styles.freight}>
+                  <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={handleCalcFreightClick}>Calcular frete</button>
+                  {freightData && data &&
+                    <>
+                        <div className={styles.freightPrice}>
+                          <p className={styles.freightPrice}>Frete: R${formatPrice(freightData.vlrFrete)}</p>
+                          <p className={styles.freightPrice}>Preço total: R${formatPrice((Math.round(data.clothing.preco+freightData.vlrFrete)*100)/100)}</p>
+                          <p>Prazo de entrega: 2 dia úteis</p>
+                        </div>
+                    </>
+                }
+                </div>
+                <button className={`${styles.button} ${styles.buy}`} type="button" onClick={handleBuy}><p>Comprar</p></button>
+                <button className={`${styles.button}`}><Shop src={"/img/shop.png"} alt="" width={14} height={17} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}/><p aria-hidden="true">Adicionar a bolsa</p></button>
               </form>
             : <div className={stylesLoad.infos} aria-label="carregando conteúdo" tabIndex={0}>
               <Skeleton className={stylesLoad.name}/>

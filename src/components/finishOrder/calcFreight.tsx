@@ -158,7 +158,7 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
               <label htmlFor="R">retirar</label>
               <input type="checkbox" className={styles.checkbox} id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
             </div>
-            {data?.vlrFrete && <p className={styles.price}>{totalPrice < 200 ? `R$${data?.vlrFrete}` : "Frete grátis"}</p>}
+            {data?.vlrFrete && <p className={styles.price}>{totalPrice < 200 ? `R$${formatPrice(data.vlrFrete)}` : "Frete grátis"}</p>}
             {data?.prazoEnt && <p className={styles.price}>Prazo de entrega: {data?.prazoEnt} dias úteis</p>}
             <button disabled={load} className={`${styles.calcFreight}`}>Calcular frete</button>
           </form>
