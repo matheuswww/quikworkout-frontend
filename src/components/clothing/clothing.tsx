@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import CalcFreight, { calcFreightData } from "@/api/clothing/calcFreight"
 import handleModalColorClick from "@/funcs/handleModalColorClick"
+import handleModalClick from "@/funcs/handleModalClick"
 
 interface props {
   id: string
@@ -72,6 +73,7 @@ export default function Clothing({...props}: props) {
   const [freightData, setFreightData] = useState<calcFreightData | null>(null)
   const calcFreightRef = useRef<HTMLFormElement | null>(null)
   const buttonToOpenModalFreight = useRef<HTMLButtonElement | null>(null)
+  const closeRef = useRef<HTMLButtonElement | null>(null)
   
   async function handleSubmitAddToCart(event: SyntheticEvent, callback?: Function) {
     event.preventDefault()
@@ -162,41 +164,6 @@ export default function Clothing({...props}: props) {
         setFreightData(res.data)
       }
       setLoad(false)
-    }
-  }
-
-  function handleCalcFreightClick() {
-    const main = document.body.querySelector("main")
-    let section = main instanceof HTMLElement && main.lastChild
-    if (section instanceof HTMLElement && buttonToOpenModalFreight.current instanceof HTMLElement && calcFreightRef.current instanceof HTMLElement) {
-      section.style.opacity = ".1"
-      calcFreightRef.current.style.display = "flex"
-      setTimeout(() => {  
-        calcFreightRef.current instanceof HTMLElement && calcFreightRef.current.classList.add(styles.active)
-      });
-      calcFreightRef.current.focus()
-      calcFreightRef.current.tabIndex = 0
-      buttonToOpenModalFreight.current.style.pointerEvents = "none"
-    }
-    document.addEventListener("click", handleCloseModal)
-    function handleCloseModal(event: Event) {
-      if(event.target instanceof HTMLElement && calcFreightRef.current?.contains(event.target)) {
-        return
-      }
-      if (calcFreightRef.current instanceof HTMLElement && calcFreightRef.current instanceof HTMLElement) {
-        calcFreightRef.current.focus()
-        calcFreightRef.current.classList.remove(styles.active)
-      }
-      setTimeout(() => {
-        if(calcFreightRef.current instanceof HTMLElement && buttonToOpenModalFreight.current instanceof HTMLElement) {          
-          buttonToOpenModalFreight.current.style.pointerEvents = "initial"
-          calcFreightRef.current.style.display = "none"
-        }
-       }, 500)
-      if(section instanceof HTMLElement) {
-        section.style.opacity = "1"
-      }
-      document.removeEventListener("click", handleCloseModal)
     }
   }
 
@@ -294,7 +261,7 @@ export default function Clothing({...props}: props) {
             </div>
             {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
             {freightData?.prazoEnt && <p className={styles.freightPrice}>Prazo de entrega: {freightData.prazoEnt} dias úteis</p>}
-            <button type="submit" disabled={load} className={styles.calcFreightButton}>Calcular frete</button>
+            <button type="submit" disabled={load} className={styles.calcFreightButton} ref={closeRef}>Calcular frete</button>
         </form>
         <section>
         {data?.status == 404 && notFound()}
@@ -359,7 +326,7 @@ export default function Clothing({...props}: props) {
                   <ChangeColor buttonToOpenModalRef={buttonToOpenModalRef} color={color} modalRef={modalRef} />
                 </div>
                 <div className={styles.freight}>
-                  <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={handleCalcFreightClick}>Calcular frete</button>
+                  <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={() => handleModalClick(calcFreightRef, buttonToOpenModalFreight, closeRef, styles.active, "flex")}>Calcular frete</button>
                   {freightData && data &&
                     <>
                         <div className={styles.freightPrice}>

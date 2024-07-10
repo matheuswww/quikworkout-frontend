@@ -9,13 +9,7 @@ export interface getAdressResponse {
 type statusgetAdress = 200 | 404 | 500 | 401
 
 export interface getAddressData {
-  rua: string
-  numeroResidencia: string
-  complemento: string
-  bairro: string
-  cidade: string
-  codigoRegiao: string
-  cep: string
+cc
 }
 
 export default async function GetAddress(cookie: string):Promise<getAdressResponse> {

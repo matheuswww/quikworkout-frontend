@@ -3,16 +3,16 @@ import { useEffect, useState } from 'react'
 import Password from './password'
 import styles from './sendCreateTwoAuthCodeForm.module.css'
 import { z } from 'zod'
-import ValidateEmailAndPhoneNumber from '@/funcs/validateEmailAndPhoneNumber'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SendCreateTwoAuthCode, { sendCreateTwoAuthCodeResponse } from '@/api/auth/sendCreateTwoAuthCode'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import { useRouter } from 'next/navigation'
-import GetUser from '@/api/auth/getUser'
 import { deleteCookie } from '@/action/deleteCookie'
 import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
+import GetUser from '@/api/user/getUser'
+import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
 
 interface props {
   cookieName: string | undefined
@@ -22,9 +22,11 @@ interface props {
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
   password: z.string(),
-}).refine((fields) => ValidateEmailAndPhoneNumber(fields.emailOrPhoneNumber), {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone incorreto"
+}).refine((fields) => {
+  if(fields.emailOrPhoneNumber.includes("@")) {
+    return ValidateEmail(fields.emailOrPhoneNumber)
+  }
+  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
 })
 
 type FormProps = z.infer<typeof schema>

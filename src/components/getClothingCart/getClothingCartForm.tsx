@@ -39,8 +39,6 @@ export default function GetClothingCartForm({...props}: props) {
   const [clothing, setClothing] = useState<clothingCart | null>(null)
   const [popupError, setPopupError] = useState<boolean>(false)
   const [refresh,setRefresh] = useState<boolean>(false)
-  const deleteRef = useRef<HTMLButtonElement | null>(null)
-  const editRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
     if(!end) {
@@ -177,8 +175,8 @@ export default function GetClothingCartForm({...props}: props) {
     <>
      {popupError && <PopupError handleOut={() => setPopupError(false)} />}
      {load && <SpinLoading />}
-     {<EditClothingCartForm setRefresh={setRefresh} cookieName={props.cookieName} cookieVal={props.cookieVal} setLoad={setLoad} setPopupError={setPopupError} clothing={clothing} buttonToOpen={editRef.current} open={openEditClothingCart} setOpen={setEditClothingCart}  />}
-     {<DeleteClothingCart setPopupError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} clothing={clothing} open={openDeleteClothingCart} setOpen={setDeleteClothingCart} buttonToOpen={deleteRef.current} />}
+     {<EditClothingCartForm setRefresh={setRefresh} cookieName={props.cookieName} cookieVal={props.cookieVal} setLoad={setLoad} setPopupError={setPopupError} clothing={clothing} open={openEditClothingCart} setOpen={setEditClothingCart}  />}
+     {<DeleteClothingCart setPopupError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} clothing={clothing} open={openDeleteClothingCart} setOpen={setDeleteClothingCart} />}
       <main className={`${styles.main} ${data?.status == 404 && styles.mainNotFound} ${(load || openDeleteClothingCart || openEditClothingCart) && styles.opacity} ${data?.status == 404 || data?.status == 500 && styles.centralize}`}>
         <section className={styles.section}>
           {data?.status != 500 && data?.status != 404 && <>
@@ -229,8 +227,8 @@ export default function GetClothingCartForm({...props}: props) {
               <p className={`${styles.description} ${styles.interRegular} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>{data.descricao}</p>
               <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>Finalizar compra</Link>
               {(data.excedeEstoque || !data.disponivel) && <p className={styles.alert}>{data.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${data.quantidadeDisponivel}`}</p>}
-              <button className={styles.delete} ref={deleteRef} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="remover produto de minha bolsa"><span aria-hidden="true">x</span></button>
-              <button className={styles.edit} ref={editRef} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="editar produto"><Edit src="/img/edit.png" width={12} height={12} alt="editar produto"/></button>
+              <button className={styles.delete} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="remover produto de minha bolsa"><span aria-hidden="true">x</span></button>
+              <button className={styles.edit} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade)} aria-label="editar produto"><Edit src="/img/edit.png" width={12} height={12} alt="editar produto"/></button>
             </div>
             )
           })}

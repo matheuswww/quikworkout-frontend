@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export default function middleware(request: NextRequest) {
   const url = new URL(request.url)
   if(
-    url.pathname == "/auth/criar-dois-fatores" ||
     url.pathname == "/auth/entrar"
   ) {
     return CheckUserProfileCookieNotExist(request)
@@ -11,7 +10,9 @@ export default function middleware(request: NextRequest) {
   if(
     url.pathname == "/usuario/minha-bolsa" ||
     url.pathname == "/finalizar-compra" ||
-    url.pathname == "/usuario/meus-pedidos"
+    url.pathname == "/usuario/meus-pedidos" ||
+    url.pathname == "/usuario/minha-conta" ||
+    url.pathname == "/auth/criar-dois-fatores"
     ) {
     return CheckUserProfileCookieExist(request)
   }
@@ -36,7 +37,7 @@ function CheckUserProfileCookieExist(request: NextRequest) {
   if(cookie) {
     return NextResponse.next()
   }
-  return NextResponse.redirect(request.nextUrl.origin+"/")
+  return NextResponse.redirect(request.nextUrl.origin+"/auth/entrar")
 }
 
 function CheckTwoAuthCodeURL(request: NextRequest) {
@@ -61,5 +62,7 @@ function ResetPasswordURL(request: NextRequest) {
 
 export const config = {
   matcher: ['/auth/criar-dois-fatores','/auth/entrar',
-  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', '/usuario/minha-bolsa', '/finalizar-compra', '/usuario/meus-pedidos']
+  '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', 
+  '/usuario/minha-bolsa', '/finalizar-compra', 
+  '/usuario/meus-pedidos','/usuario/minha-conta']
 }

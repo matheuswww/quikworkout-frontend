@@ -32,11 +32,19 @@ export default async function GetUser(cookie: string):Promise<getUserResponse> {
       cache: "no-cache",
     }).then(res => {
       status = res.status
-      return res.json()
+      if(status == 200) {
+        return res.json()
+      }
     })
-    if (status === 404 || status === 500 || status === 401 || status === 200) {
+    if(status === 200) {
       return {
         data: res,
+        status
+      }
+    }
+    if (status === 404 || status === 500 || status === 401) {
+      return {
+        data: null,
         status
       }
     }
