@@ -2,19 +2,24 @@
 import { useEffect, useState } from 'react'
 import styles from './sendForgotPasswordCodeForm.module.css'
 import { z } from 'zod'
-import ValidateEmailAndPhoneNumber from '@/funcs/validateEmailAndPhoneNumber'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import SendForgotPasswordCode, { sendForgotPasswordCodeResponse } from '@/api/auth/forgotPassword'
 import CheckForgotPasswordCodeForm from './checkForgotPasswordCodeForm'
+import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
-}).refine((fields) => ValidateEmailAndPhoneNumber(fields.emailOrPhoneNumber), {
+}).refine((fields) => {
+  if(fields.emailOrPhoneNumber.includes("@")) {
+    return ValidateEmail(fields.emailOrPhoneNumber)
+  }
+  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+}, {
   path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone incorreto"
+  message: "email ou telefone inválido"
 })
 
 type FormProps = z.infer<typeof schema>
