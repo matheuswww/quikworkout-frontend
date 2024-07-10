@@ -105,7 +105,8 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
       codigoRegiao: address.codigoRegiao,
       complemento: address.complemento,
       numeroResidencia: address.numeroResidencia,
-      rua: address.rua
+      rua: address.rua,
+      regiao: address.regiao
     })
   }
 
@@ -147,7 +148,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
       const cookie = cookieName+"="+cookieVal
       setLoad(true)
       const res = await DeleteAddress(cookie,{
-        bairro: deleteAddress?.bairro,
+        bairro: deleteAddress.bairro,
         cep: deleteAddress?.cep,
         cidade: deleteAddress?.cidade,
         codigoRegiao: deleteAddress?.codigoRegiao,

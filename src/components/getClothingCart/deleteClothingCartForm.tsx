@@ -23,12 +23,12 @@ export default function DeleteClothingCartForm({open, setOpen, buttonToOpen, clo
 
   useEffect(() => {
     if(open) {
-      window.addEventListener("click", close)
       if(form.current instanceof HTMLElement) {
         form.current.focus()
         form.current.style.display = "initial"
       }
       setTimeout(() => {
+        window.addEventListener("click", close)
         if(form.current instanceof HTMLFormElement) {
           form.current.classList.add(styles.active)
          }

@@ -12,6 +12,7 @@
   z-index: 999;
   opacity: 0;
   display: none;
+  border: 1px solid #797979;
 }
 
 .container.active {
