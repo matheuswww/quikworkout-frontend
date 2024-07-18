@@ -6,9 +6,20 @@
   transition: .5s;
 }
 
+.section {
+  background: #0a0a0a;
+  padding: 35px;
+  padding-top: 0px;
+  border-radius: 10px;
+  margin-top: 30px;
+}
+
 .mainNotFound {
   justify-content: center;
-  height: 100vh;
+}
+
+.mainNotFound section {
+  background-color: transparent;
 }
 
 .opacity {
@@ -17,11 +28,20 @@
 }
 
 .centralize {
-  height: 100vh;
+  justify-content: center;
+}
+
+.centralize section {
   width: 100%;
   display: flex;
   justify-content: center;
+  background: none;
   align-items: center;
+  background-color: transparent;
+}
+
+.centralize section p {
+  font-size: 1.5rem;
 }
 
 .finishOrder {
@@ -48,7 +68,7 @@
 }
 
 .totalPrice {
-  margin-top: 35px;
+  margin-top: 25px;
 }
 
 .freight {
@@ -58,9 +78,8 @@
 .title {
   color: #dbdbdb;
   font-family: var(--interRegular);
-  font-size: 2rem;
-  margin-top: 25px;
-  margin-bottom: 30px;
+  font-size: 1.5rem;
+  margin-top: 30px;
 }
 
 .item {
@@ -74,7 +93,6 @@
   justify-content: center;
   border-radius: 7px;
   position: relative;
-  border: 1px solid #797979;
 }
 
 .item a {
@@ -341,9 +359,6 @@
   .name {
     font-size: 1.2rem;
   }
-  .title {
-    font-size: 2rem;
-  }
   .loading {
     width: 595px;
   }
@@ -364,9 +379,36 @@
   }
 }
 
+@media (max-width: 355px) {
+  .item {
+    width: 278px;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
 @media (max-width: 415px) {
+  .centralize section p {
+    font-size: 1.2rem;
+  }
   .mainNotFound section p {
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 490px) {
+  .section {
+    padding: 18px;
+  }
+  .title {
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 800px) {
+  .section {
+    margin-top: 60px;
   }
 }
 

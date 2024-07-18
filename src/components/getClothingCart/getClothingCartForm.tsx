@@ -12,6 +12,7 @@ import DeleteClothingCart from './deleteClothingCartForm'
 import PopupError from '../popupError/popupError'
 import EditClothingCartForm from './editClothingCartForm'
 import formatPrice from '@/funcs/formatPrice'
+import Menu from '../menu/menu'
 
 interface props {
   cookieName?: string
@@ -176,6 +177,9 @@ export default function GetClothingCartForm({...props}: props) {
   
   return (
     <>
+    <header>
+      <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
+    </header>
      {popupError && <PopupError handleOut={() => setPopupError(false)} />}
      {load && <SpinLoading />}
      {<EditClothingCartForm setRefresh={setRefresh} cookieName={props.cookieName} cookieVal={props.cookieVal} setLoad={setLoad} setPopupError={setPopupError} clothing={clothing} buttonToOpen={editRef.current} open={openEditClothingCart} setOpen={setEditClothingCart}  />}

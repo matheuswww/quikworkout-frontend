@@ -20,8 +20,8 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import CalcFreight, { calcFreightData } from "@/api/clothing/calcFreight"
-import handleModalColorClick from "@/funcs/handleModalColorClick"
 import handleModalClick from "@/funcs/handleModalClick"
+import Menu from "../menu/menu"
 
 interface props {
   id: string
@@ -239,6 +239,9 @@ export default function Clothing({...props}: props) {
 
   return (
     <>
+     <header className={styles.header}>
+        <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
+      </header>
      {load && <SpinLoading />}
      {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
       <main className={`${styles.main} ${load && styles.opacity}`}>

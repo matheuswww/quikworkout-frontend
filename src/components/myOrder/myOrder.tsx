@@ -13,6 +13,7 @@ import PopupError from "../popupError/popupError"
 import formatPrice from "@/funcs/formatPrice"
 import QRCODE from "next/image"
 import ClothingImg from "next/image"
+import Menu from "../menu/menu"
 
 interface props {
   cookieName?: string
@@ -27,7 +28,7 @@ interface payment {
 
 export default function MyOrder({cookieName,cookieVal}:props) {
   const router = useRouter()
-  const [status, setStaus] = useState<200 | 500 | 404 | 401 | null>(null)
+  const [status, setStaus] = useState<200 | 500 | 404 | 401 | 400 | null>(null)
   const [popupError, setPopupError] = useState<boolean>(false)
   const [load, setLoad] = useState<boolean>(true)
   const [paymentInfo, setPaymentInfo] = useState<payment[]>([])
@@ -54,7 +55,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         }
         
         const res = await GetOrder(cookie, cursor)
-        
+    
         if(getOrder && res.status == 404) {
           setEnd(true)
           setLoad(false)
@@ -257,6 +258,9 @@ export default function MyOrder({cookieName,cookieVal}:props) {
 
   return (
    <>
+    <header>
+      <Menu cookieName={cookieName} cookieVal={cookieVal} />
+    </header>
    {popupError && <PopupError handleOut={() => setPopupError(false)} />}
    {load && <SpinLoading />}
     <main className={`${styles.main} ${load && styles.opacity}`}>
@@ -279,7 +283,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                   <p>ID do pedido: </p>
                   <p>{infos.pedido_id.substring(5)}</p>
                 </div>
-                {paymentInfo[i].pix && paymentInfo[i].pix?.dataExpiracao == "expirada" && 
+                {paymentInfo[i] && paymentInfo[i].pix && paymentInfo[i].pix?.dataExpiracao == "expirada" && 
                   <p className={styles.alert}>Seu qr code para pagamento pix foi expirado,gere outro</p>
                 }
                 {infos.status_pagamento != "pago" &&

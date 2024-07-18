@@ -87,7 +87,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
     if(prevTime) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
-        localStorage.removeItem("timeSendRemoveTwoAuthCode")
+        localStorage.removeItem("timeSendRemovewwwwwwTwoAuthCode")
         router.push("/auth/entrar")
       }
     } else {

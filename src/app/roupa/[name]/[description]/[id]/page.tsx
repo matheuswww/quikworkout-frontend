@@ -1,4 +1,5 @@
 import Clothing from "@/components/clothing/clothing"
+import Footer from "@/components/footer/footer"
 import { Metadata } from "next"
 import { cookies } from "next/headers"
 
@@ -31,6 +32,9 @@ export default function Product({...props}: clothingProps) {
   const cookieInfos = cookies().get("userProfile")
   
   return (
-    <Clothing id={props.params.id} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value}/>
+    <>
+      <Clothing id={props.params.id} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value}/>
+      <Footer />
+    </>
   )
 }

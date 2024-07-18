@@ -12,6 +12,7 @@ import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import { useRouter } from 'next/navigation'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
@@ -34,6 +35,7 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function SignupForm() {
+  const router = useRouter()
   const [status, setStatus] = useState<StatusSignup | null>(null)
   const [isEmail, setIsEmail] = useState<boolean>(true)
   const [load,setLoad] = useState<boolean>(false)
@@ -57,6 +59,10 @@ export default function SignupForm() {
       nome: data.name,
       senha: data.password,
     })
+    if(status == 201) {
+      router.push("/")
+      return
+    }
     setStatus(status)
     setLoad(false)
   }

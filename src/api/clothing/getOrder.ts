@@ -2,7 +2,7 @@ import { api } from "../path"
 import { ResponseErr } from "../responseErr"
 import { clothingPath } from "./clothingPath"
 
-type statusCode = 404 | 200 | 500 | 401
+type statusCode = 404 | 200 | 500 | 401 | 400
 
 type responseErrors = "cookie inválido" | "contato não verificado"
 
@@ -28,14 +28,14 @@ export default async function GetOrder(cookie: string, cursor?: string):Promise<
       cache: "no-store"
     }).then(res => res)
     let status:statusCode
-    if (res.status === 200 || res.status === 404 || res.status === 401 || res.status === 500) {
+    if (res.status === 200 || res.status === 404 || res.status === 401 || res.status === 500 || res.status == 400) {
       status = res.status
     } else {
       status = 500
     }
     let data: getOrder[] | ResponseErr | null = null
 
-    if (status == 200 || status == 401) {
+    if (status == 200 || status == 401 || status == 400) {
       data = await res.json()     
     }
 

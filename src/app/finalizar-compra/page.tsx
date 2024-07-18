@@ -1,4 +1,5 @@
 import FinishPurchaseForm from "@/components/finishOrder/finishOrderForm";
+import Footer from "@/components/footer/footer";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 
@@ -26,6 +27,9 @@ export default function FinishPurchase({searchParams}: props) {
   const cookieInfos = cookies().get("userProfile")
   
   return (
-    <FinishPurchaseForm paymentType={searchParams.paymentType} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size} retryPayment={searchParams.retry_payment_id}/>
+    <>
+      <FinishPurchaseForm paymentType={searchParams.paymentType} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size} retryPayment={searchParams.retry_payment_id}/>
+      <Footer />
+    </>
   )
 }

@@ -81,7 +81,7 @@
   .indexImages {
     width: 75px;
     height: 420px;
-    margin-top: 4px;
+    margin-top: -25px;
   }
 
   .name {
@@ -116,5 +116,6 @@
 
   .indexImages {
     height: 473px;
+    margin: 0px;
   }
 }

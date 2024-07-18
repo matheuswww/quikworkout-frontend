@@ -1,15 +1,26 @@
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: .5s;
+}
+
 .section {
   display: grid;
   justify-content: center;
-  padding: 0px 15px;
+  background: #0a0a0a;
+  padding: 35px;
+  padding-top: 0px;
+  border-radius: 10px;
+  margin-top: 30px;
 }
 
 .title {
   color: #dbdbdb;
   font-family: var(--interRegular);
-  font-size: 2rem;
-  margin-top: 25px;
-  margin-bottom: 15px;
+  font-size: 1.5rem;
+  margin-top: 30px; 
 }
 
 .loading {
@@ -155,6 +166,12 @@
 .center {
   height: 100vh;
   align-content: center;
+  transition: 0s;
+  background-color: transparent;
+}
+
+.center p {
+  font-size: 1.5rem;
 }
 
 .form div span {
@@ -275,11 +292,36 @@
   background-color: var(--btnClicked);
 }
 
-@media (min-width: 420px) {
+@media (max-width: 520px) {
   .section {
-    padding: 0px;
+    padding: 15px;
+    padding-bottom: 35px;
   }
-  .changePassword {
-    width: 380px;
+  .title {
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 465px) {
+  .section {
+    width: 420px;
+  }
+}
+
+@media (max-width: 435px) {
+  .section {
+    width: 345px;
+  }
+}
+
+@media (max-width: 355px) {
+  .section {
+    width: 315px;
+  }
+}
+
+@media (max-width: 800px) {
+  .section {
+    margin-top: 60px;
   }
 }

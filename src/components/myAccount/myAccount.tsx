@@ -18,6 +18,7 @@ import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import GetAddress, { getAddressData } from "@/api/user/getAddress"
 import DeleteAddress from "@/api/user/deleteAddress"
+import Menu from "../menu/menu"
 
 const schema = z.object({
   password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
@@ -166,9 +167,12 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
 
   return (
     <>
+      <header>
+        <Menu cookieName={cookieName} cookieVal={cookieVal} />
+      </header>
       {load && <SpinLoading />}
       {popupError && <PopupError handleOut={() => setPopupError(false)}/>}
-      <main className={`${load && styles.lowOpacity}`}>
+      <main className={`${load && styles.lowOpacity} ${styles.main}`}>
         <form className={`${styles.form}`} ref={modalRef} tabIndex={0} onSubmit={handleSubmit(handleForm)}>
           <div>
             <label htmlFor="current_password">Senha atual</label>
@@ -190,7 +194,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
           <button aria-label="fechar" type="button" className={styles.close} ref={closeRefDeleteAddress}><span aria-hidden="true">x</span></button>
         </form>
         {
-        <section className={`${styles.section} ${data?.status == 500 && styles.center}`}>
+        <section className={`${styles.section} ${(data?.status == 500 || data?.status == 404) && styles.center}`}>
           {data?.status == 200 && data.data ?
           <>
           <h1 className={styles.title}>Minha conta</h1>

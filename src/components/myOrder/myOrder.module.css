@@ -1,11 +1,30 @@
 .main,.section{
   display: grid;
   justify-content: center;
+  transition: .5s;
+}
+
+.section {
+  margin-top: 30px;
+  background: #0a0a0a;
+  padding: 35px;
+  padding-top: 0px;
+  border-radius: 10px;
+  margin-top: 30px;
+  height: max-content;
 }
 
 .sectionHeight {
-  height: 100vh;
+  display: flex;
   align-items: center;
+  background-color: transparent;
+  transition: 0s;
+  height: 100%;
+}
+
+.sectionHeight p {
+  font-size: 1.5rem;
+  margin-top: 0px;
 }
 
 .values {
@@ -34,7 +53,7 @@
   width: 285px;
   font-family: var(--interRegular);
   font-size: 1.5rem;
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 .serverError,.notFound {
@@ -76,7 +95,7 @@
   background: #0000003b;
   padding: 10px;
   width: 295px;
-  margin-top: 20px;
+  margin-top: 25px;
   border: 1px solid #797979;
   border-radius: 5px;
 }
@@ -276,6 +295,36 @@
   }
   .title {
     width: 360px;
+  }
+}
+
+@media (max-width: 445px) {
+  .section {
+    padding: 15px;
+  }
+  .title {
+    margin-top: 15px
+  }
+  .sectionHeight p {
+    font-size: 1.2rem;
+    margin-top: 0px;
+  } 
+}
+
+@media (max-width: 335px) {
+  .section {
+    padding: 18px;
+    width: 310px;
+    padding-bottom: 15px;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .section {
+    margin-top: 60px;
   }
 }
 

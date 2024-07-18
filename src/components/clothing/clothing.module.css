@@ -1,8 +1,7 @@
 .main {
-  height: 100vh;
   width: 100%;
   background-image: linear-gradient(270deg, #000000, #19191d);
-  display: flex;
+  display: grid;
   align-items: center;
   justify-content: center;
 }
@@ -12,10 +11,12 @@
 }
 
 .main section {
-  width: 100%;
   display: grid;
-  margin-top: 15px;
+  margin-top: 60px;
   transition: .5s;
+  background: #0a0a0a;
+  padding: 15px 30px;
+  border-radius: 10px;
 }
 
 .activeButton {
@@ -346,6 +347,7 @@
   border-radius: 5px;
   padding: 18px;
   z-index: 999;
+  border: 1px solid #797979;
 }
 
 .calcFreightForm.active {
@@ -429,10 +431,6 @@
   .infos {
     grid-template-columns: 170px 155px;
   }
-
-  .main section {
-    margin-top: 50px;
-  }
 }
 
 @media (min-width: 500px) {
@@ -444,7 +442,6 @@
   .clothing {
     width: 360px;
     height: 495px;
-    margin-top: 30px;
   }
 
   .button {
@@ -490,6 +487,8 @@
     justify-content: center;
     align-items: center;
     width: 780px;
+    padding: 15px 5px;
+    margin-top: 0px;
   }
 }
 
@@ -530,6 +529,12 @@
   .main section {
     width: 915px;
     margin-top: 0px;
+  }
+}
+
+@media (max-width: 380px) {
+  .main section {
+    padding: 5px 5px;
   }
 }
 

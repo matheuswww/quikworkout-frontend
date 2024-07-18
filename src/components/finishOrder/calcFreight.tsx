@@ -20,6 +20,8 @@ interface props {
   end: boolean
   load: boolean
   setLoad: Dispatch<boolean>
+  setPopupError: Dispatch<SetStateAction<boolean>>
+  popupError: boolean
   setFreight: Dispatch<SetStateAction<string | null>>
   totalPrice: number
 }
@@ -42,7 +44,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, clothing, setFreight, totalPrice, clothingRetryPayment }:props) {
+export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, setPopupError, popupError, clothing, setFreight, totalPrice, clothingRetryPayment }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -52,7 +54,6 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
   const [calcFreight, setCalcFreight] = useState<boolean>(true)
   const [data, setData] = useState<calcFreightData | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [popupError, setPopupError] = useState<boolean>(false)
 
   async function handleForm(values: FormProps) {
     if(end) {
@@ -141,7 +142,6 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
       {
         calcFreight &&
         <>
-          { popupError && <PopupError handleOut={() => setPopupError(false)}/>}
           <form className={styles.form} onSubmit={handleSubmit(handleForm)} >
             <label htmlFor="cep">Digite seu cep</label>
             <input {...register("cep")} type="text" id="cep" className={styles.cep} placeholder="digite seu cep aqui"/>
