@@ -18,8 +18,6 @@ interface props {
 }
 
 export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight}:props) {
-  const [productsForm, setProductsForm] = useState<boolean>(false)
-
   useEffect(() => {
     if(freight == null) {
       setTotalPriceWithFreight(null)
@@ -49,17 +47,8 @@ export default function Products({clothing, totalPrice, freight, responseError, 
 
   return (
     <>
-      <div style={{display: "flex"}}>
-      {
-        !productsForm ? 
-        <button className={styles.arrow} type="button" id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="diminuir sessão de revisão de produtos"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
-        :
-        <button className={styles.arrow} type="button" id="arrowProducts" onClick={(() => setProductsForm((a) => !a))} aria-label="expandir sessão de revisão de produto"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
-      }
-      <label className={styles.label} style={{marginTop: "18px"}} htmlFor="arrowProducts">Revisar produtos</label>
-    </div>
     <section className={`${styles.section}`}>
-      <div className={`${productsForm && styles.displayNone}`}>
+      <div>
         <p className={styles.price}>Preço total: R${totalPrice}</p>
         {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
         <button style={{marginLeft: "12px",marginTop: "22px"}} type="submit" className={styles.button}>Finalizar compra</button>

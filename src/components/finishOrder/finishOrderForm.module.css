@@ -2,7 +2,6 @@
   width: 100%;
   display: grid;
   justify-content: center;
-  align-items: center;
 }
 
 .container {
@@ -10,6 +9,7 @@
   padding: 35px;
   margin-top: 30px;
   border-radius: 10px;
+  height: max-content;
 }
 
 .load {
@@ -26,11 +26,16 @@
 }
 
 .mainHeight {
-  height: 100vh;
+  align-items: center;
+  height: auto;
 }
 
 .mainHeight div {
   background-color: transparent;
+}
+
+.mainHeight div p {
+  font-size: 1.5rem;
 }
 
 .title {
@@ -111,9 +116,15 @@
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 345px) {
   .container {
     padding: 20px 6px;
+  }
+}
+
+@media (max-width: 700px) {
+  .mainHeight div p {
+    font-size: 1.2rem;
   }
 }
 

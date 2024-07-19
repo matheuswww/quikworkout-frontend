@@ -160,7 +160,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
         <label className={styles.label} style={{marginTop: "18px"}} htmlFor="arrowAddress">Endereço e contato</label>
       </div>
       <section className={`${styles.section}`} ref={addressRef}>
-            {addressSaved && 
+            {addressForm && 
             <>
             {addressSaved?.map((infos,i) => {
               return (

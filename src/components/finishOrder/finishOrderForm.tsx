@@ -90,7 +90,16 @@ export default function FinishPurchaseForm({...props}: props) {
           return
         }
         
-        if(props.retryPayment == undefined || (props.paymentType != "CARTAO_CREDITO" && props.paymentType != "CARTAO_DEBITO" && props.paymentType != "BOLETO" && props.paymentType != "PIX")) {   
+        if(props.retryPayment == undefined || (props.paymentType != "CARTAO_CREDITO" && props.paymentType != "CARTAO_DEBITO" && props.paymentType != "BOLETO" && props.paymentType != "PIX")) {
+          if(props.clothing_id == undefined || props.color == undefined || props.size == undefined) {
+            setEnd(true)
+            setLoad(false)
+            setData({
+              clothing: null,
+              status: 404
+            })
+            return
+          }
           var cursor: string | undefined
           if(data?.clothing) {
             const lastIndex = data.clothing.length
@@ -99,9 +108,13 @@ export default function FinishPurchaseForm({...props}: props) {
             }
           }
           const res = await GetClothingCart(cookie, cursor, props.clothing_id, props.color, props.size)
-          if(data?.clothing && res.status == 404) {
+          if(res.status == 404) {
             setEnd(true)
             setLoad(false)
+            setData({
+              clothing: null,
+              status: 404
+            })
             return
           }
           if(res.status === 401) {
@@ -459,7 +472,7 @@ export default function FinishPurchaseForm({...props}: props) {
           }
           {((data?.status == 404 || retryPaymentData?.status == 404) && addressStatus != 500) && 
           <div>
-            <p className={styles.notFound} style={{marginTop: "25px"}}>{props.paymentType && props.retryPayment ? "pedido não encontrado" : "Nenhum pedido foi encontrado"}</p>
+            <p className={styles.notFound} style={{marginTop: "25px"}}>{"Pedido não encontrado"}</p>
             <Link style={{marginLeft: "10px"}} href={`${props.paymentType && props.retryPayment ? "/usuario/minha-bolsa" : "/"}`}className={styles.seeClothing}>{props.paymentType && props.retryPayment ? "Ver carrinho" : "Ver roupas"}</Link>
           </div>
           }
