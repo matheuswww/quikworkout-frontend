@@ -339,7 +339,7 @@
   opacity: 0;
   flex-direction: column;
   transition: .5s;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -35%);
@@ -408,6 +408,9 @@
   width: 276px;
 }
 
+.buttonOpacity {
+  opacity: .5;
+}
 
 @media (min-width: 400px) {
   .images {
@@ -534,7 +537,7 @@
 
 @media (max-width: 380px) {
   .main section {
-    padding: 5px 5px;
+    padding: 15px 5px;
   }
 }
 

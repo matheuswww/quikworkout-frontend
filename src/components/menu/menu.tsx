@@ -75,13 +75,15 @@ export default function Menu(props:props) {
  return (
     <>
       <div className={styles.container}>
-        <Logo 
-          src="/img/logo.png"
-          alt="logo da quik workout"
-          width={140}
-          height={50}
-          className={styles.logo}
-        />
+        <Link href="/">
+          <Logo 
+            src="/img/logo.png"
+            alt="logo da quikworkout"
+            width={140}
+            height={50}
+            className={styles.logo}
+          />
+        </Link>
         <nav tabIndex={0} className={`${styles.content} ${menu && styles.active}`} ref={menuRef} arial-aria-label="menu" >
           {
             props.cookieName && props.cookieVal ?

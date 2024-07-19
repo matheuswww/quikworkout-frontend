@@ -1,12 +1,12 @@
 .container {
   visibility: hidden;
   align-items: center;
-  position: absolute;
-  top: 75px;
+  position: fixed;
+  top: 50px;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #b62525f0;
-  width: 295px;
+  width: 300px;
   border-radius: 10px;
   height: 70px;
   display: flex;
@@ -18,7 +18,7 @@
 .container p {
   color: white;
   text-align: center;
-  font-size: 1rem;
+  font-size: .9rem;
   font-family: 'inter-SemiBold';
 }
 
@@ -29,7 +29,7 @@
   border: none;
   position: absolute;
   right: -10px;
-  top: -5px;
+  top: -11px;
   background: #fd3d3d;
   color: white;
   border: 1px solid white;

@@ -40,7 +40,6 @@ export default function GetClothingCartForm({...props}: props) {
   const [clothing, setClothing] = useState<clothingCart | null>(null)
   const [popupError, setPopupError] = useState<boolean>(false)
   const [refresh,setRefresh] = useState<boolean>(false)
-  const buttonToOpenDeleteRef = useRef<HTMLButtonElement | null>(null)
   const deleteRef = useRef<HTMLButtonElement | null>(null)
   const editRef = useRef<HTMLButtonElement | null>(null)
 

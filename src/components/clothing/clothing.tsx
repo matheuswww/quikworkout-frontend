@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import CalcFreight, { calcFreightData } from "@/api/clothing/calcFreight"
 import handleModalClick from "@/funcs/handleModalClick"
 import Menu from "../menu/menu"
+import Success from "./success"
 
 interface props {
   id: string
@@ -58,6 +59,7 @@ export default function Clothing({...props}: props) {
   const [data,setData] = useState<getClothingByIdResponse | null>(null)
   const [load, setLoad] = useState<boolean>(false)
   const [popUpError, setPopUpError] = useState<boolean>(false)
+  const [popupErrorMsg, setPopupErrorMsg] = useState<string | undefined>(undefined)
   const [count,setCount] = useState<number>(1)
   const [size,setSize] = useState<"p" | "m" | "g" | "gg">("p")
   const [color,setColor] = useState<string | null>(null)
@@ -71,12 +73,14 @@ export default function Clothing({...props}: props) {
   const [error, setError] = useState<string | null>(null)
   const [delivery, setDelivery] = useState<"E" | "X" | "R">("E")
   const [freightData, setFreightData] = useState<calcFreightData | null>(null)
+  const [success, setSuccess] = useState<boolean>(false)
   const calcFreightRef = useRef<HTMLFormElement | null>(null)
   const buttonToOpenModalFreight = useRef<HTMLButtonElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
   
   async function handleSubmitAddToCart(event: SyntheticEvent, callback?: Function) {
     event.preventDefault()
+    setPopupErrorMsg(undefined)
     setPopUpError(false)
     setLoad(true)
     if(props.cookieName == undefined || props.cookieVal == undefined) {
@@ -93,6 +97,7 @@ export default function Clothing({...props}: props) {
       roupa_id: props.id,
       tamanho: size
     })
+    
     if(res == 401) {
       router.push("/auth/entrar")
       return
@@ -102,22 +107,31 @@ export default function Clothing({...props}: props) {
       setLoad(false)
       return
     }
- 
-    if(res == "quantidade excede o stock" || res == "roupa ou inventário não encontrado" || res == "quantidade adicionada ao carrinho excede o stock") {   
-      
+    if(res == "quantidade adicionada ao carrinho excede o stock") {
+      setPopUpError(true)
+      setPopupErrorMsg("quantidade adicionada indisponível para produto já possuido em sua bolsa,tente outro tamanho ou cor")
+      setLoad(false)
+      return
+    }
+    if(res == "roupa ou inventário não encontrado" || res == "quantidade excede o stock") {
       setData(null)                   
       setSize("p")
       setColor(null)
       setMainColor(null)
       setCount(1)
       setPopUpError(true)
+      setPopupErrorMsg("")
       setLoad(false)
+      if(res == "quantidade excede o stock") {
+        setPopupErrorMsg("estoque indisponível,tente novamente pois o estoque foi atualizado")
+      }
       return
     }
     if(callback) {
       callback()
       return
     }
+    setSuccess(true)
     setLoad(false)
   }
 
@@ -243,8 +257,9 @@ export default function Clothing({...props}: props) {
         <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
       </header>
      {load && <SpinLoading />}
-     {popUpError && <PopupError handleOut={(() => setPopUpError(false))} />}
+     {popUpError && <PopupError msg={popupErrorMsg} handleOut={(() => setPopUpError(false))} />}
       <main className={`${styles.main} ${load && styles.opacity}`}>
+        <Success setSuccess={setSuccess} success={success} />
         <ModalColor inventario={data?.clothing?.inventario} mainColor={mainColor} modalRef={modalRef} setColor={setColor} />
         <form className={styles.calcFreightForm} onSubmit={handleSubmit(handleSubmitCalcFreight)} ref={calcFreightRef}>
             <label htmlFor="cep">Digite seu cep</label>
@@ -340,8 +355,8 @@ export default function Clothing({...props}: props) {
                     </>
                 }
                 </div>
-                <button className={`${styles.button} ${styles.buy}`} type="button" onClick={handleBuy}><p>Comprar</p></button>
-                <button className={`${styles.button}`}><Shop src={"/img/shop.png"} alt="" width={14} height={17} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}/><p aria-hidden="true">Adicionar a bolsa</p></button>
+                <button className={`${styles.button} ${styles.buy} ${success && styles.buttonOpacity}`} disabled={load || success} type="button" onClick={handleBuy}><p>Comprar</p></button>
+                <button className={`${styles.button} ${success && styles.buttonOpacity}`} disabled={load || success}><Shop src={"/img/shop.png"} alt="imagem de uma bolsa" width={14} height={17} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}/><p aria-hidden="true">Adicionar a bolsa</p></button>
               </form>
             : <div className={stylesLoad.infos} aria-label="carregando conteúdo" tabIndex={0}>
               <Skeleton className={stylesLoad.name}/>

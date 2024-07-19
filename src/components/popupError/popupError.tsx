@@ -4,9 +4,10 @@ import styles from  './popupError.module.css'
 interface props {
   className?: string
   handleOut: MouseEventHandler<HTMLButtonElement>
+  msg?: string
 }
 
-export default function PopupError({className, handleOut}:props) {
+export default function PopupError({className, handleOut, msg}:props) {
 
   useEffect(() => {
     document.body.focus()
@@ -14,7 +15,7 @@ export default function PopupError({className, handleOut}:props) {
 
   return (
     <div className={`${styles.container} ${className && className} ${styles.active}`}>
-      <p tabIndex={0}>Oops! Parece que houve um erro, tente novamente</p>
+      <p tabIndex={0}>{msg ? msg : "Oops! Parece que houve um erro, tente novamente"}</p>
       <button tabIndex={0} aria-label="fechar" onClick={handleOut}><span aria-hidden="true">x</span></button>
     </div>
   )
