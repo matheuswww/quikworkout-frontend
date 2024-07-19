@@ -34,8 +34,6 @@ function CheckUserProfileCookieNotExist(request: NextRequest) {
 
 function CheckUserProfileCookieExist(request: NextRequest) {
   const cookie = request.cookies.get("userProfile")
-  console.log(cookie);
-  
   if(cookie) {
     return NextResponse.next()
   }

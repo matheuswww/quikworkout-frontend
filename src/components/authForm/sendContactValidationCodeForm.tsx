@@ -68,7 +68,6 @@ export default function SendContactValidationCodeForm({...props}: props) {
 
   async function handleSubmnit(event: SyntheticEvent) {
     event.preventDefault();
-    setData(null)
     const res = await sendContactValidationCode(cookie)
     if (res == 401) {
       await deleteCookie("userProfile")
@@ -91,6 +90,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
       router.push("/")
       return
     }
+    setData(null)
     localStorage.setItem("timeSendContactValidationCode", new Date().getTime().toString())
   }
     
@@ -107,7 +107,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
                 <>
                 <h1>{props.welcome ? "Estamos quase lá!" : "Validação de contato"}</h1>
                 {load ? <p>Carregando...</p> : 
-                data?.data && 'email' in data.data ? 
+                data?.data && 'email' in data.data ?
                   <p>Clique aqui para enviarmos um código de verificação para seu email</p>
                   :
                   <p>Clique aqui para enviarmos um código de verificação para seu telefone</p>

@@ -119,12 +119,14 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
   }
 
   function close(event: MouseEvent) {
-    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) && event.target.contains(buttonToOpen) || closeRef.current?.contains(event.target))) {
+    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) && event.target.contains(buttonToOpen) || closeRef.current?.contains(event.target)) && buttonRef.current instanceof HTMLButtonElement) {
+      buttonRef.current.style.pointerEvents = "none"
       document.removeEventListener("click", close)
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active)
         setTimeout(() => {
-          form.current instanceof HTMLElement && (form.current.style.display = "none")
+          form.current instanceof HTMLElement && (form.current.style.pointerEvents = "initial")
+          buttonRef.current instanceof HTMLButtonElement && (buttonRef.current.disabled = false)
         }, 500);
        }
        setOpen(false)
@@ -134,7 +136,9 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
   useEffect(() => {
     if(open && clothing) {
       if(clothing.clothing_id) {
-        document.addEventListener("click", close)
+        setTimeout(() => {
+          document.addEventListener("click", close)
+        }, 500);
         if(form.current instanceof HTMLElement) {
           form.current.focus()
           form.current.style.display = "grid"

@@ -54,10 +54,10 @@ export default function SigninForm() {
     })
     if(typeof res == "object") {
       if(!res.twoAuth) {
-        router.push("/")
+        window.location.href = "/"
         return
       }
-      router.push("/auth/validar-codigo-dois-fatores")
+      window.location.href = "/auth/validar-codigo-dois-fatores"
       return
     }
     if(res == "contato não cadastrado" || res == "senha errada") {

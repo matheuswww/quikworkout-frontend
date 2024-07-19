@@ -29,6 +29,8 @@ export default function DeleteClothingCartForm({open, setOpen, buttonToOpen, clo
       }
       setTimeout(() => {
         window.addEventListener("click", close)
+      }, 500);
+      setTimeout(() => {
         if(form.current instanceof HTMLFormElement) {
           form.current.classList.add(styles.active)
          }
@@ -37,12 +39,14 @@ export default function DeleteClothingCartForm({open, setOpen, buttonToOpen, clo
   },[open])
   
   function close(event: MouseEvent) {
-    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) && event.target.contains(buttonToOpen) || closeRef.current?.contains(event.target))) {
+    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) && event.target.contains(buttonToOpen) || closeRef.current?.contains(event.target)) && buttonToOpen instanceof HTMLElement) {
       window.removeEventListener("click", close)
+      buttonToOpen.style.pointerEvents = "none"
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active) 
         setTimeout(() => {
           form.current instanceof HTMLElement && (form.current.style.display = "none")
+          buttonToOpen.style.pointerEvents = "initial"
         }, 500);
        }
        setOpen(false)

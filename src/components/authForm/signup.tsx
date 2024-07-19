@@ -60,7 +60,7 @@ export default function SignupForm() {
       senha: data.password,
     })
     if(status == 201) {
-      router.push("/")
+      window.location.href = "/auth/validar-contato"
       return
     }
     setStatus(status)
