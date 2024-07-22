@@ -8,7 +8,6 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
-import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
 import CheckRemoveTwoAuthCode from '@/api/auth/checkRemoveTwoAuthCode'
 
@@ -24,7 +23,6 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
-  const router = useRouter()
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,19 +41,20 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
       codigo: data.code
     })
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
-      router.push("/auth/criar-dois-fatores")
+      await deleteCookie("userProfile")
+      window.location.href = "/auth/criar-dois-fatores"
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendRemoveTwoAuthCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     }
     if (res == 401){
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendRemoveTwoAuthCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     } else if (res != 200) {
       if(typeof res == "string") {
@@ -66,7 +65,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
       setLoad(false)
     } else {
       localStorage.removeItem("timeSendRemoveTwoAuthCode")
-      router.push("/")
+      window.location.href = "/"
       return
     }
   }
@@ -88,7 +87,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
         localStorage.removeItem("timeSendRemovewwwwwwTwoAuthCode")
-        router.push("/auth/entrar")
+        window.location.href = "/auth/entrar"
       }
     } else {
       elapsedTime = 60

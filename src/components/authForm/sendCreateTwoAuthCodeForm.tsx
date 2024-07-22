@@ -5,7 +5,7 @@ import styles from './sendCreateTwoAuthCodeForm.module.css'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import SendCreateTwoAuthCode, { sendCreateTwoAuthCodeResponse } from '@/api/auth/sendCreateTwoAuthCode'
+import SendCreateTwoAuthCode from '@/api/auth/sendCreateTwoAuthCode'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import { useRouter } from 'next/navigation'
@@ -21,12 +21,15 @@ interface props {
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
-  password: z.string(),
+  password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
 }).refine((fields) => {
   if(fields.emailOrPhoneNumber.includes("@")) {
     return ValidateEmail(fields.emailOrPhoneNumber)
   }
   return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+}, {
+  path: [ 'emailOrPhoneNumber' ],
+  message: "email ou telefone inválido"
 })
 
 type FormProps = z.infer<typeof schema>
@@ -138,11 +141,10 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
               <h1>Criar autenticação de dois fatores</h1>
               <label htmlFor="emailOrPhoneNumber">E-mail ou telefone de dois fatores</label>
               <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-              {error != "senha errada" && error != null && <p className={styles.error}>{error}</p>}
               {errors.emailOrPhoneNumber?.message && <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p>}
               <label htmlFor="password">Sua senha</label>
               <Password {...register("password")} id="password" placeholder="senha"/>
-              {error == "senha errada" && error != null && <p className={styles.error}>{error}</p>}
+              {error == "senha errada" && !errors.emailOrPhoneNumber?.message && <p className={styles.error}>{error}</p>}
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>

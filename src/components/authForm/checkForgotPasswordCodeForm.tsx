@@ -23,7 +23,6 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function CheckForgotPasswordCodeForm({...props}:props) {
-  const router = useRouter()
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkForgotPasswordCodeResponse | null>(null)
@@ -42,24 +41,25 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       codigo: data.code
     })
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
-      router.push("/auth/esqueci-minha-senha")
+      await deleteCookie("userAuthResetPass")
+      window.location.href = "/auth/esqueci-minha-senha"
       return
     }
     if(res == "usuário já possui autenticação de dois fatores") {
       localStorage.removeItem("timeSendForgotPasswordCode")
-      router.push("/")
+      window.location.href = "/"
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
       await deleteCookie("userAuthResetPass")
       localStorage.removeItem("timeSendForgotPasswordCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     }
     if (res == 401){
       await deleteCookie("userAuthResetPass")
       localStorage.removeItem("timeSendForgotPasswordCode")
-      router.push("/auth/esqueci-minha-senha")
+      window.location.href = "/auth/esqueci-minha-senha"
       return
     } else if (res != 200) {
       if(typeof res == "string") {
@@ -71,7 +71,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
     } else {
       localStorage.removeItem("timeSendForgotPasswordCode")
       localStorage.setItem("timeResetPassword", new Date().getTime().toString())
-      router.push("/auth/resetar-senha")
+      window.location.href = "/auth/resetar-senha"
       return
     }
   }
@@ -93,7 +93,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
         localStorage.removeItem("timeSendForgotPasswordCode")
-        router.push("/auth/esqueci-minha-senha")
+        window.location.href = "/auth/esqueci-minha-senha"
       }
     } else {
       elapsedTime = 60

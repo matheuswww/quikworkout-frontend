@@ -25,7 +25,6 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function CheckContactValidationCodeForm({...props}:props) {
-  const router = useRouter()
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkContactValidationCodeResponse | null>(null)
@@ -46,11 +45,12 @@ export default function CheckContactValidationCodeForm({...props}:props) {
     if (res == "usuário verificado porém não foi possível criar uma sessão" || res == 401) {
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendContactValidationCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     }
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
-      router.push("/auth/validar-contato")
+      await deleteCookie("userProfile")
+      window.location.href = "/auth/validar-contato"
       return
     }
     if(res != 200 && res != "usuário já verificado") {
@@ -62,7 +62,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
       setLoad(false)
     } else {
       localStorage.removeItem("timeSendContactValidationCode")
-      router.push("/")
+      window.location.href = "/"
       return
     }
   }
@@ -84,7 +84,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
         localStorage.removeItem("timeSendContactValidationCode")
-        router.push("/auth/validar-contato")
+        window.location.href = "/auth/validar-contato"
       }
     } else {
       elapsedTime = 60

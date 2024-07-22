@@ -1,9 +1,15 @@
 
-import { Viewport } from 'next'
+import { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const viewport: Viewport = {
   userScalable: false
+}
+
+export const metadata:Metadata = {
+  icons: {
+    icon: "/img/favicon.ico"
+  }
 }
 
 export default function RootLayout({

@@ -24,7 +24,6 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function CheckCreateTwoAuthCodeForm({...props}:props) {
-  const router = useRouter()
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkCreateTwoAuthCodeResponse | null>(null)
@@ -43,24 +42,25 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       codigo: data.code
     })
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
-      router.push("/auth/criar-dois-fatores")
+      await deleteCookie("userProfile")
+      window.location.href = "/auth/criar-dois-fatores"
       return
     }
     if(res == "usuário já possui autenticação de dois fatores") {
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/")
+      window.location.href = "/"
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     }
     if (res == 401){
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/auth/criar-dois-fatores")
+      window.location.href = "/auth/criar-dois-fatores"
       return
     } else if (res != 200) {
       if(typeof res == "string") {
@@ -71,7 +71,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       setLoad(false)
     } else {
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/")
+      window.location.href = "/"
       return
     }
   }
@@ -93,7 +93,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
         localStorage.removeItem("timeSendCreateTwoAuthCode")
-        router.push("/auth/criar-dois-fatores")
+        window.location.href = "/auth/criar-dois-fatores"
       }
     } else {
       elapsedTime = 60

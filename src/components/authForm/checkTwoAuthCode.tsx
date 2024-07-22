@@ -23,7 +23,6 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function CheckTwoAuthCodeForm({...props}: props) {
-  const router = useRouter()
   const cookie = props.cookieName+"="+props.cookieVal
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
@@ -43,22 +42,23 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
       codigo: data.code
     })
     if(res == "usuário não possui autenticação de dois fatores") {
-      router.push("/auth/entrar")
+      await deleteCookie("userTwoAuth")
+      window.location.href = "/auth/entrar"
       return
     }
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido"  || res == "código expirado") {
-      router.push("/auth/validar-codigo-dois-fatores")
+      window.location.href = "/auth/validar-codigo-dois-fatores"
       return
     }
     if(res == "código valido porém não foi possivel criar uma sessão") {
       await deleteCookie("userTwoAuth")
       localStorage.removeItem("timeSendCreateTwoAuthCode")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     }
     if (res == 401){
       await deleteCookie("userTwoAuth")
-      router.push("/auth/entrar")
+      window.location.href = "/auth/entrar"
       return
     } else if (res != 200) {
       if(typeof res == "string") {
@@ -68,7 +68,7 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
       }
       setLoad(false)
     } else {
-      router.push("/")
+      window.location.href = "/"
     }
   }
 
