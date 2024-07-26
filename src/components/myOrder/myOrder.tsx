@@ -14,6 +14,7 @@ import formatPrice from "@/funcs/formatPrice"
 import QRCODE from "next/image"
 import ClothingImg from "next/image"
 import Menu from "../menu/menu"
+import handleArrowClick from "@/funcs/handleArrowClick"
 
 interface props {
   cookieName?: string
@@ -152,37 +153,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
     return currentDate > dueDateObj
   }
 
-  function handleArrowClick(index: number, type: string) {
-    const arrowUp = document.querySelector("#arrowUp_"+type+"_"+index)
-    const arrowDown = document.querySelector("#arrowDown_"+type+"_"+index)
-    const item = document.querySelector("#item_"+type+"_"+index)
-
-    if(arrowDown instanceof HTMLElement && arrowUp instanceof HTMLElement) {
-      if(arrowDown.classList.contains(styles.displayNone)) {
-        arrowDown.classList.remove(styles.displayNone)
-        if(item instanceof HTMLElement) {
-          item.classList.add(styles.displayNone)
-        }
-      } else {
-        arrowDown.classList.add(styles.displayNone)
-        if(item instanceof HTMLElement) {
-          item.classList.remove(styles.displayNone)
-        }
-      }
-      if(arrowUp.classList.contains(styles.displayNone)) {
-        arrowUp.classList.remove(styles.displayNone)
-        if(item instanceof HTMLElement) {
-          item.classList.add(styles.displayNone)
-        }
-      } else {
-        arrowUp.classList.add(styles.displayNone)
-        if(item instanceof HTMLElement) {
-          item.classList.remove(styles.displayNone)
-        }
-      }
-    }
-  }
-
   async function getOrderDetail(tipoPagamento: string, pedido_id: string): Promise<getOrderDetailResponse | null> {
     if(cookieName == undefined || cookieVal == undefined) {
       router.push("/auth/entrar")
@@ -226,7 +196,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
       return
     }    
     if((paymentInfo[index].card || paymentInfo[index].boleto || paymentInfo[index].pix )) {
-      handleArrowClick(index, type) 
+      handleArrowClick(index, type, styles.displayNone) 
       return
     }
     const res = await getOrderDetail(tipoPagamento, pedido_id)
@@ -243,7 +213,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         return pi
       })
       setTimeout(() => {
-        handleArrowClick(index, type) 
+        handleArrowClick(index, type, styles.displayNone) 
       });
     }
   }
@@ -334,9 +304,9 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 }
               </>
             <div className={styles.addressInfo}>
-              <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "address")}>Informações de endereço e contato</button>
-              <Expand src="/img/arrowUp.png" alt="expandir informações de endereço e contato" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "address")} id={`arrowUp_address_${i}`} />
-              <Expand src="/img/arrowDown.png" alt="diminuir informações de endereço e contato" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "address")} id={`arrowDown_address_${i}`}/>
+              <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "address", styles.displayNone)}>Informações de endereço e contato</button>
+              <Expand src="/img/arrowUp.png" alt="expandir informações de endereço e contato" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "address", styles.displayNone)} id={`arrowUp_address_${i}`} />
+              <Expand src="/img/arrowDown.png" alt="diminuir informações de endereço e contato" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "address", styles.displayNone)} id={`arrowDown_address_${i}`}/>
             </div>
             {
                 <div id={`item_address_${i}`} className={`${styles.displayNone} ${styles.address}`}>

@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import CalcFreight, { calcFreightData } from "@/api/clothing/calcFreight"
 import handleModalClick from "@/funcs/handleModalClick"
 import Menu from "../menu/menu"
-import Success from "./success"
+import Success from "../successs/success"
 
 interface props {
   id: string
@@ -259,7 +259,7 @@ export default function Clothing({...props}: props) {
      {load && <SpinLoading />}
      {popUpError && <PopupError msg={popupErrorMsg} handleOut={(() => setPopUpError(false))} />}
       <main className={`${styles.main} ${load && styles.opacity}`}>
-        <Success setSuccess={setSuccess} success={success} />
+        <Success msg="Adicionado com successo" setSuccess={setSuccess} success={success} />
         <ModalColor inventario={data?.clothing?.inventario} mainColor={mainColor} modalRef={modalRef} setColor={setColor} />
         <form className={styles.calcFreightForm} onSubmit={handleSubmit(handleSubmitCalcFreight)} ref={calcFreightRef}>
             <label htmlFor="cep">Digite seu cep</label>

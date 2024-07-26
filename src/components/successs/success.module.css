@@ -12,7 +12,7 @@
   transform: translate(-50%, -55px);
   z-index: 999;
   justify-content: center;
-  align-items: inherit;
+  align-items: center;
 }
 
 .container.active {

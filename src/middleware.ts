@@ -22,6 +22,17 @@ export default function middleware(request: NextRequest) {
   if(url.pathname == "/auth/resetar-senha") {
     return ResetPasswordURL(request)
   }
+  if(url.pathname == "/manager-quikworkout/criar-roupa") {
+    return CheckAdminProfileExist(request)
+  }
+}
+
+function CheckAdminProfileExist(request: NextRequest) {
+  const cookie = request.cookies.get("adminProfile")
+  if(cookie) {
+    return NextResponse.next()
+  }
+  return NextResponse.redirect(request.nextUrl.origin+"/manager-quikworkout/auth")
 }
 
 function CheckUserProfileCookieNotExist(request: NextRequest) {
@@ -64,5 +75,6 @@ export const config = {
   matcher: ['/auth/criar-dois-fatores','/auth/entrar',
   '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', 
   '/usuario/minha-bolsa', '/finalizar-compra', 
-  '/usuario/meus-pedidos','/usuario/minha-conta']
+  '/usuario/meus-pedidos','/usuario/minha-conta',
+  '/manager-quikworkout/criar-roupa']
 }

@@ -42,9 +42,9 @@ export default async function AllCollections({searchParams}:props) {
               if(index == 0) {
                 return(
                 
-                  <div className={styles.firstCard}>
+                  <div className={styles.firstCard} key={clothing.id}>
                      <FilterButton />
-                     <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} style={{display: "block"}} key={clothing.id} className={styles.card}>
+                     <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} style={{display: "block"}} className={styles.card}>
                       <SkeletonImage src={clothing.inventario[0].images[0]} alt={clothing.inventario[0].imgDesc} width={225} height={300} className={styles.clothing} />
                       <div className={styles.clothingInfos}>
                         <p className={styles.name}>{clothing.nome}</p>

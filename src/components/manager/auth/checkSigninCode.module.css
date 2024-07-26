@@ -1,0 +1,128 @@
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main.load {
+  opacity: .1;
+}
+
+
+.form {
+  display: grid;
+  justify-content: center;
+  background-color: transparent;
+  padding: 15px;
+  border-radius: 4px;
+  height: max-content;
+}
+
+.form input {
+  margin-top: 15px;
+  padding: 5px;
+  padding-left: 0px;
+  width: 292px;
+  outline: none;
+  border: none;
+  font-family: var(--interSemiBold);
+  color: #c8c8c8;
+  background-color: transparent;
+  border-radius: 0px;
+  border-bottom: 1px solid white;
+  font-size: 1rem;
+}
+
+.form label {
+  margin-top: 15px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: 1rem;
+}
+
+.form h1 {
+  font-weight: lighter;
+  text-align: start;
+  font-family: var(--interSemiBold);
+  font-size: 2rem;
+  color: #c8c8c8;
+}
+
+.error {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-family: 'inter-SemiBold';
+  color: #ec5656;
+  width: 250px;
+}
+
+.form a {
+  margin-top: 10px;
+  text-decoration: none;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  color: #c8c8c8;
+  width: max-content;
+  max-width: 229px;
+}
+
+.form button {
+  margin-top: 5px;
+  height: 40px;
+  width: 250px;
+  border: none;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-color: transparent;
+  font-family: var(--interSemiBold);
+  color: #c8c8c8;
+  transform: translateY(20px);
+  border: 1px solid white;
+  border-radius: 4px;
+  width: 292px;
+}
+
+.form input[type=number]::-webkit-inner-spin-button, 
+.form input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.loading {
+  opacity: .5;
+  cursor: wait !important;
+}
+
+@media (hover: hover) { 
+  .form button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.form button:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+
+@media (max-height: 170px) {
+  .form {
+    height: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .form button, .form input {
+    width: 100%;
+  }
+}
+
+.lowOpacity {
+  transition: .5s;
+  opacity: .1;
+  pointer-events: none;
+}

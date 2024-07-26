@@ -5,9 +5,10 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react"
 interface props {
   setSuccess: Dispatch<SetStateAction<boolean>>
   success: boolean
+  msg: string
 }
 
-export default function Success({setSuccess, success}:props) {
+export default function Success({setSuccess, success, msg}:props) {
   const divRef = useRef<HTMLDivElement | null>(null)
   
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function Success({setSuccess, success}:props) {
 
   return (
     <div tabIndex={0} className={styles.container} ref={divRef}>
-    <p>Adicionado com successo</p>
+    <p>{msg}</p>
   </div>
   )
 }
