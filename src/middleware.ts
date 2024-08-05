@@ -22,7 +22,7 @@ export default function middleware(request: NextRequest) {
   if(url.pathname == "/auth/resetar-senha") {
     return ResetPasswordURL(request)
   }
-  if(url.pathname == "/manager-quikworkout/criar-roupa") {
+  if(url.pathname == "/manager-quikworkout/criar-roupa" || url.pathname == "/manager-quikworkout/roupas") {
     return CheckAdminProfileExist(request)
   }
 }

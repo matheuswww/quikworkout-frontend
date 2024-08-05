@@ -1,15 +1,15 @@
 "use client"
 
 import styles from "./createClothing.module.css"
-import { Dispatch, MutableRefObject, SetStateAction } from "react"
+import { Dispatch, MutableRefObject, SetStateAction, useState } from "react"
 import { inventory } from "./createClothing"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ImageResponse } from "next/server"
 
 interface props {
   setInventory: Dispatch<SetStateAction<inventory[] | null>>
+  inventory: inventory[] | null
   modalRef: MutableRefObject<HTMLFormElement | null>
   closeRef: MutableRefObject<HTMLButtonElement | null>
 }
@@ -53,14 +53,28 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function Inventory({setInventory, closeRef, modalRef}:props) {
+export default function Inventory({setInventory, inventory, closeRef, modalRef}:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     resolver: zodResolver(schema)
   })
+  const [error, setError] = useState<string | null>(null)
 
   function handleForm(data: FormProps) {
+    const seenColors = new Set()
+    let error:boolean = false
+    seenColors.add(data.cor)
+    inventory?.map((i) => {
+      if(seenColors.has(i.cor)) {
+        setError("as cores em um inventário devem ter nomes diferentes")
+        error = true
+      }
+      seenColors.add(i.cor)
+    })
+    if(error) {
+      return
+    }
     const p = Number(data.p)
     const m = Number(data.m)
     const g = Number(data.g)
@@ -126,6 +140,7 @@ export default function Inventory({setInventory, closeRef, modalRef}:props) {
         <label htmlFor="imgFile">Imagens</label>
         <input {...register("file")} id="imgFile" type="file" multiple/>
         {errors.file?.message && typeof errors.file.message == "string" && <p className={styles.error}>{errors.file.message}</p>}
+        {error && <p className={styles.error}>{error}</p>}
         <button type="submit" className={`${styles.button} ${styles.saveInventoryButton}`}>Salvar inventário</button>
         <button type="button" className={`${styles.close}`} ref={closeRef}><span aria-hidden="true">x</span></button>
       </form>

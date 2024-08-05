@@ -1,0 +1,264 @@
+.form {
+  display: grid;
+  margin-top: 15px;
+  transition: .5s;
+  background: #27272780;
+  padding: 15px 7px;
+  border-radius: 10px;
+  border: 1px solid #484242;
+  position: relative;
+  width: 302px;
+}
+
+.clothing {
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.slide {
+  height: 99%;
+  display: inline-flex;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+}
+
+.images {
+  -webkit-tap-highlight-color: transparent;
+  width: 290px;
+  overflow: hidden;
+  background: transparent;
+  justify-self: center;
+  text-align: center;
+  position: relative;
+  animation: enter .5s forwards;
+}
+
+.index {
+  position: absolute;
+  background-color: #2e2e2ec4;
+  right: 50%;
+  transform: translate(50%);
+  width: max-content;
+  padding: 6px;
+  bottom: 40px;
+  height: 24px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.index span {
+  display: block;
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #a8a8a8;
+  margin: 0px 5px;
+}
+
+.index span.active {
+  background-color: white;
+}
+
+.product {
+  height: 100%;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.inventory,.clothing {
+  display: flex;
+  flex-direction: column;
+}
+
+.displayNone {
+  display: none;
+}
+
+.show {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.buttonExpand {
+  margin-top: 15px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  background-color: transparent;
+  display: flex;
+  border: none;
+  cursor: pointer;
+}
+
+.expand {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin-top: 11px;
+}
+
+.item {
+  margin-left: 5px;
+}
+
+.form input {
+  padding: 8px;
+  outline: none;
+  border: none;
+  margin-top: 5px;
+  font-family: var(--interSemiBold);
+  color: #c8c8c8;
+  background-color: transparent;
+  border-radius: 0px;
+  border-bottom: 1px solid white;
+}
+
+.form label {
+  margin-top: 15px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+}
+
+.p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem; 
+}
+
+.checkbox {
+  margin-top: 10px;
+}
+
+.checkbox label {
+  margin-right: 5px;
+}
+
+.checkbox input {
+  margin-right: 5px;
+}
+
+.close {
+  border-radius: 50px;
+  width: 30px;
+  height: 27px;
+  border: none;
+  position: absolute;
+  right: -10px;
+  top: -5px;
+  background: #373737;
+  color: white;
+  border: 1px solid white;
+  font-size: 1.1rem;
+}
+
+.deleteClothing {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: .5s;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%);
+  width: 300px;
+  height: 145px;
+  background-color: #19191df7;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 999;
+  opacity: 0;
+  display: none;
+  border: 1px solid #797979;
+}
+
+.deleteClothing p {
+  color: #dbdbdb;
+  font-family: 'inter-SemiBold';
+  margin: 10px;
+  text-align: center;
+}
+
+.deleteButton {
+  color: white;
+  text-decoration: none;
+  font-size: .9rem;
+  background: transparent;
+  padding: 10px;
+  font-family: 'inter-Regular';
+  border-radius: 5px;
+  grid-column: span 2;
+  width: 100%;
+  display: block;
+  margin-top: 35px;
+  border: 1px solid white;
+}
+
+.deleteClothing.active {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.submit {
+  font-size: .9rem;
+  background: transparent;
+  border: 1px solid #969696;
+  height: 38px;
+  border-radius: 5px;
+  text-align: center;
+  color: #e4e4e4;
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+}
+
+.error {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-family: 'inter-SemiBold';
+  color: #ec5656;
+  margin-left: 5px;
+}
+
+.buttonOpacity {
+  opacity: .5;
+}
+
+@media (hover: hover) {
+  .button:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+
+  .expand:hover {
+    cursor: pointer;
+    background-color: var(--btnHover);
+  }
+}
+
+.button:active {
+  cursor: pointer;
+  background-color: var(--btnClicked);
+}
+
+@media (min-width: 415px) {
+  .form {
+    width: 390px;
+  }
+}
+
+@media (min-width: 525px) {
+  .clothing {
+    width: 375px;
+  }
+  .images {
+    width: 350px;
+  }
+}

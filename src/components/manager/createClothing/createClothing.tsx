@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation"
 import PopupError from "@/components/popupError/popupError"
 import Success from "@/components/successs/success"
 
-
 interface props {
   cookieName?: string
   cookieVal?: string
@@ -140,7 +139,7 @@ export default function CreateClothingForm({...props}:props) {
       {load && <SpinLoading />}
       <Success setSuccess={setSuccess} success={success} msg="Criado com sucesso"/>
       <main className={`${styles.main} ${load && styles.opacity}`}>
-        <Inventory setInventory={setInventory} closeRef={buttonCloseRef} modalRef={modalRef} />
+        <Inventory setInventory={setInventory} closeRef={buttonCloseRef} modalRef={modalRef} inventory={inventory} />
         <section className={styles.section}>
           <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
             <h1>Criar roupa</h1>
@@ -172,10 +171,10 @@ export default function CreateClothingForm({...props}:props) {
               inventory?.map((i,index) => {
                 return (
                   <div key={i.cor+index}>
-                    <div className={styles.show}>
+                      <div className={styles.show}>
                       <button className={styles.buttonExpand} type="button" onClick={() => handleArrowClick(index, "inventory", styles.displayNone)}>Ver inventário {index + 1}</button>
                       <Image src="/img/arrowUp.png" alt={`expandir ver inventário ${index}`} width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(index, "inventory", styles.displayNone)} id={`arrowUp_inventory_${index}`} />
-                      <Image src="/img/arrowDown.png" alt={`expandir ver inventário ${index}`} width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(index, "inventory", styles.displayNone)} id={`arrowDown_inventory_${index}`}/>
+                      <Image src="/img/arrowDown.png" alt={`diminuir ver inventário ${index}`} width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(index, "inventory", styles.displayNone)} id={`arrowDown_inventory_${index}`}/>
                       </div>
                       <div className={`${styles.displayNone} ${styles.inventoryItem}`} id={`item_inventory_${index}`}>
                       <label>inventário principal</label>

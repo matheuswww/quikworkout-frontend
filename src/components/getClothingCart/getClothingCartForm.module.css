@@ -288,6 +288,10 @@
   }
 }
 
+.linkDisabled {
+  pointer-events: none;
+}
+
 @media (min-width: 445px) {
   .item {
     grid-template-columns: 125px 225px;

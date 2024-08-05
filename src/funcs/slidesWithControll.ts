@@ -5,11 +5,8 @@ interface Dist {
   movePosition: number
 }
 
-let item = 0
-let dist: Dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 }
-let index: HTMLElement | null = null
-
-export function slideWithControl(
+//the copy of function is a workaround,maybe a day i fix this bug,is a scope problem,js is a trash,or react,idk,but i hate this lang
+export function slidesWithControll(
   slide: HTMLElement,
   wrapper: HTMLElement,
   thumbs: NodeListOf<ChildNode> | undefined,
@@ -17,6 +14,9 @@ export function slideWithControl(
   activeIndexClass: string,
   activeThumbClass: string,
   ) {
+  let item = 0
+  let dist: Dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 }
+  let index: HTMLElement | null = null
   let itemWidth = slide.children[0] instanceof HTMLElement ? slide.children[0].offsetWidth : 0
   let middleOfItem = itemWidth / 2
   window.addEventListener("resize", () => {
