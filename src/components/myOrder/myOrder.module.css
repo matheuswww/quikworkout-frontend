@@ -187,15 +187,13 @@
   font-size: .9rem;
 }
 
-.displayNone {
-  display: none;
-}
-
 .clothingInfo {
   display: flex;
 }
 
 .clothing {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: 5px;
 }
 
@@ -218,6 +216,10 @@
 
 .show {
   opacity: 0;
+}
+
+.displayNone {
+  display: none;
 }
 
 .ldsRing,

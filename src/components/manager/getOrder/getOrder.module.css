@@ -1,0 +1,26 @@
+.main {
+  width: 100%;
+  background-image: linear-gradient(270deg, #000000, #19191d);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.main.opacity {
+  opacity: .1;
+}
+
+.main section {
+  background: #0a0a0a;
+  padding: 5px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-radius: 10px;
+  height: max-content;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: 316px;
+  opacity: 1 !important;
+}

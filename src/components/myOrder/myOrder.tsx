@@ -264,7 +264,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 }
                 <div className={styles.values}>
                   <p>Preço: </p>
-                  <p>{formatPrice(infos.precoTotal)}</p>
+                  <p>R${formatPrice(infos.precoTotal)}</p>
                 </div>
                 <div className={styles.values}>
                   <p>Frete: </p>
@@ -473,33 +473,35 @@ export default function MyOrder({cookieName,cookieVal}:props) {
               </div>
             }
             <div className={styles.clothingInfo}>
-              <button className={styles.buttonExpand} onClick={() => handlePaymentInfoClick(i,"clothing", infos.pedido_id, infos.tipo_pagamento)}>Roupas</button>
-              <Expand src="/img/arrowUp.png" alt="expandir informações das roupas do pedido" width={30} height={30} className={styles.expand} onClick={() => handlePaymentInfoClick(i,"clothing", infos.pedido_id, infos.tipo_pagamento)} id={`arrowUp_clothing_${i}`} />
-              <Expand src="/img/arrowDown.png" alt="diminuir informações das roupas do pedido" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handlePaymentInfoClick(i,"clothing", infos.pedido_id, infos.tipo_pagamento)} id={`arrowDown_clothing_${i}`} />
+              <button className={styles.buttonExpand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)}>Roupas</button>
+              <Expand src="/img/arrowUp.png" alt="expandir informações das roupas do pedido" width={30} height={30} className={styles.expand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} id={`arrowUp_clothing_${i}`} />
+              <Expand src="/img/arrowDown.png" alt="diminuir informações das roupas do pedido" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} id={`arrowDown_clothing_${i}`} />
             </div>
+            <div id={`item_clothing_${i}`} className={`${styles.clothing} ${styles.displayNone}`} >
             {infos.roupa.map((clothing) => {
-              return (
-              <div id={`item_clothing_${i}`} className={`${styles.clothing} ${styles.displayNone}`} key={clothing.id+clothing.cor+clothing.tamanho}>
-                <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
-                <div className={`${styles.values}`}>
-                  <p className={styles.field}>Nome: </p>
-                  <p className={styles.value}>{clothing.nome}</p>
-                </div>
-                <div className={`${styles.values}`}>
-                  <p className={styles.field}>Cor: </p>
-                  <p className={styles.value}>{clothing.cor}</p>
-                </div>
-                <div className={`${styles.values}`}>
-                  <p className={styles.field}>Quantidade: </p>
-                  <p className={styles.value}>{clothing.quantidade}</p>
-                </div>
-                <div className={`${styles.values}`}>
-                  <p className={styles.field}>Preço: </p>
-                  <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
-                </div>
-              </div>
-            )
+                return (
+                  <div key={clothing.id+clothing.tamanho+clothing.cor}>
+                    <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
+                    <div className={`${styles.values}`}>
+                      <p className={styles.field}>Nome: </p>
+                      <p className={styles.value}>{clothing.nome}</p>
+                    </div>
+                    <div className={`${styles.values}`}>
+                      <p className={styles.field}>Cor: </p>
+                      <p className={styles.value}>{clothing.cor}</p>
+                    </div>
+                    <div className={`${styles.values}`}>
+                      <p className={styles.field}>Quantidade: </p>
+                      <p className={styles.value}>{clothing.quantidade}</p>
+                    </div>
+                    <div className={`${styles.values}`}>
+                      <p className={styles.field}>Preço: </p>
+                      <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                    </div>
+                  </div>
+              )
             })}
+            </div>
             {infos.tipo_pagamento == "PIX" && (checkPix(infos.criadoEm, 60*4) && infos.status_pagamento == "pagamento não solicitado") && 
               <div>
                 <p className={styles.error}>Pix expirado</p>

@@ -89,9 +89,10 @@ export default function FinishPurchaseForm({...props}: props) {
           router.push("/auth/validar-contato")
           return
         }
-        
+
         if(props.retryPayment == undefined || (props.paymentType != "CARTAO_CREDITO" && props.paymentType != "CARTAO_DEBITO" && props.paymentType != "BOLETO" && props.paymentType != "PIX")) {
-          if(props.clothing_id == undefined || props.color == undefined || props.size == undefined) {
+          if((props.clothing_id == undefined || props.color == undefined || props.size == undefined) && props.page != undefined && isNaN(props.page)) {
+            console.log("ldkjfkl")
             setEnd(true)
             setLoad(false)
             setData({
@@ -101,13 +102,19 @@ export default function FinishPurchaseForm({...props}: props) {
             return
           }
           var cursor: string | undefined
+          
           if(data?.clothing) {
             const lastIndex = data.clothing.length
             if(lastIndex && lastIndex - 1 >= 0 && data.clothing) {
               cursor = data.clothing[lastIndex - 1].criado_em
             }
           }
+          
           const res = await GetClothingCart(cookie, cursor, props.clothing_id, props.color, props.size)
+          
+          setRequests((r) => r+=1)
+          
+          
           if(res.status == 404) {
             setEnd(true)
             setLoad(false)
@@ -122,16 +129,7 @@ export default function FinishPurchaseForm({...props}: props) {
             router.push("/auth/entrar")
             return
           }
-          if(data?.clothing && res.clothing) {
-            data.clothing.push(...res.clothing)
-            setData({
-              clothing: data.clothing,
-              status: 200
-            })
-          } else {
-            setData(res)
-          }
-          setRequests((r) => r++)
+          
           if((props.page == undefined && res.status == 200) && res.clothing) {
             setTotalPrice(res.clothing[0].preco * res.clothing[0].quantidade)
             setData({
@@ -140,12 +138,22 @@ export default function FinishPurchaseForm({...props}: props) {
               ],
               status: res.status
             })
-          } else {
-            let totalPrice = 0
+            setEnd(true)
+          } else if (res.status == 200 && res.clothing) {
+            let tp = 0
             res.clothing?.map(({preco,quantidade}) => {
-              totalPrice += preco*quantidade
+              tp += preco*quantidade
             })
-            setTotalPrice((t) => totalPrice+t)
+            setTotalPrice((t) => totalPrice == 0 ? tp : tp+t)
+            if(data?.clothing && res.clothing) {
+              data.clothing.push(...res.clothing)
+              setData({
+                clothing: data.clothing,
+                status: 200
+              })
+            } else {
+              setData(res)
+            }
           }
           setLoad(false)
           } else {
@@ -161,6 +169,7 @@ export default function FinishPurchaseForm({...props}: props) {
             const id = "ORDE_"+props.retryPayment
 
             const res = await GetOrderDetail(cookie, id, paymentType)
+            
             
             if(res.status == 200 && res.data && typeof res.data == "object") {
               if(res.data.informacoesPagamento.mensagem == "SUCESSO") {
@@ -210,6 +219,12 @@ export default function FinishPurchaseForm({...props}: props) {
       }())
     }
   },[data])
+
+  useEffect(() => {
+    if(props.page && !isNaN(props.page) && requests > Number(props.page)) {
+      setEnd(true)
+    }
+  }, [requests])
 
   async function calcFreight(): Promise<number | null> {
     if(data && data.clothing && address) {
