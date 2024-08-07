@@ -3,7 +3,7 @@ export default function handleArrowClick(index: number, type: string, displayNon
   const arrowDown = document.querySelector("#arrowDown_"+type+"_"+index)
   const item = document.querySelector("#item_"+type+"_"+index)
   if(arrowDown instanceof HTMLElement && arrowUp instanceof HTMLElement) {
-    if(arrowDown.classList.contains(displayNone)) {
+    if(arrowDown.classList.contains(displayNone)) {     
       arrowDown.classList.remove(displayNone)
       if(item instanceof HTMLElement) {
         item.classList.add(displayNone)

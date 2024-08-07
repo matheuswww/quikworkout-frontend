@@ -52,7 +52,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           const lastIndex = getOrder.length
           if(lastIndex && lastIndex - 1 >= 0 && getOrder) {
             cursor = getOrder[lastIndex - 1].criadoEm
-          }3
+          }
         }
         
         const res = await GetOrder(cookie, cursor)

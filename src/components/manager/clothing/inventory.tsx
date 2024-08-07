@@ -61,16 +61,16 @@ export default function Inventory({inventory,index,indexInventory,inventoryLengt
       <input type="text" id={"color"+index+indexInventory} defaultValue={inventory.cor} {...register("cor")} />
       {errors.cor?.message && <p className={styles.error}>{errors.cor.message}</p>}
       <label htmlFor={"P"+index+indexInventory}>P</label>
-      <input type="text" defaultValue={inventory.p ? inventory.p : undefined} id={"P"+index+indexInventory} {...register("p")}/>
+      <input type="number" defaultValue={inventory.p ? inventory.p : undefined} id={"P"+index+indexInventory} {...register("p")}/>
       {errors.p?.message && <p className={styles.error}>{errors.p.message}</p>}
       <label htmlFor={"M"+index+indexInventory}>M</label>
-      <input type="text" defaultValue={inventory.m ? inventory.m : undefined} id={"M"+index+indexInventory} {...register("m")}/>
+      <input type="number" defaultValue={inventory.m ? inventory.m : undefined} id={"M"+index+indexInventory} {...register("m")}/>
       {errors.m?.message && <p className={styles.error}>{errors.m.message}</p>}
       <label htmlFor={"G"+index+indexInventory}>G</label>
-      <input type="text" defaultValue={inventory.g ? inventory.g : undefined} id={"G"+index+indexInventory} {...register("g")}/>
+      <input type="number" defaultValue={inventory.g ? inventory.g : undefined} id={"G"+index+indexInventory} {...register("g")}/>
       {errors.g?.message && <p className={styles.error}>{errors.g.message}</p>}
       <label htmlFor={"GG"+index+indexInventory}>GG</label>
-      <input type="text" defaultValue={inventory.gg ? inventory.gg : undefined} {...register("gg")} id={"GG"+index+indexInventory}/>
+      <input type="number" defaultValue={inventory.gg ? inventory.gg : undefined} {...register("gg")} id={"GG"+index+indexInventory}/>
       {errors.gg?.message && <p className={styles.error}>{errors.gg.message}</p>}
     </div>
   )
