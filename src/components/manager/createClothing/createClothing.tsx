@@ -14,6 +14,7 @@ import CreateClothing from "@/api/manager/clothing/createClothing"
 import { useRouter } from "next/navigation"
 import PopupError from "@/components/popupError/popupError"
 import Success from "@/components/successs/success"
+import Menu from "../menu/menu"
 
 interface props {
   cookieName?: string
@@ -135,6 +136,7 @@ export default function CreateClothingForm({...props}:props) {
 
   return (
     <>
+      <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
       {popupError && <PopupError handleOut={() => setPopupError(false)} />}
       {load && <SpinLoading />}
       <Success setSuccess={setSuccess} success={success} msg="Criado com sucesso"/>

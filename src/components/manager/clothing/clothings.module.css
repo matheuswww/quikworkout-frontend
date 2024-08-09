@@ -13,9 +13,8 @@
   width: 100%;
   background-image: linear-gradient(270deg, #000000, #19191d);
   display: grid;
-  align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 75px;
 }
 
 .main.opacity {
@@ -132,6 +131,12 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 950px) {
+  .main {
+    margin-top: 45px;
   }
 }
 

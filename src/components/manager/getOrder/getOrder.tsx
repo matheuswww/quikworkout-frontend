@@ -13,6 +13,7 @@ import handleArrowClick from "@/funcs/handleArrowClick"
 import handleModalClick from "@/funcs/handleModalClick"
 import Filter from "./filter"
 import UpdateTrackingCodeForm from "./updateTrackingCode"
+import Menu from "../menu/menu"
 
 interface props {
   cookieName?: string
@@ -111,6 +112,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
       {load && <SpinLoading />}
       <UpdateTrackingCodeForm setData={setData} error={error} setResponseError={setResponseError} setPopupError={setPopupError} order_id={orderId} setOrderId={setOrderId} setLoad={setLoad} cookieName={cookieName} cookieVal={cookieVal} closeRef={closeTrackingCodeRef} modalRef={trackingCodeRef} />
       <Filter load={load} closeRef={closeFilterRef} modalRef={filterRef} setLoad={setLoad}/>
+      <Menu cookieName={cookieName} cookieVal={cookieVal} />
       <main className={`${styles.main} ${load && styles.opacity} ${data?.status == 500 && styles.mainError}`}>
         <section>
           {data?.status == 500 && <p>Ooops! Parece que houve um erro,tente recarregar a página</p>}

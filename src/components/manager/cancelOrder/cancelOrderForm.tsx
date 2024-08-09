@@ -15,6 +15,7 @@ import Image  from "next/image"
 import formatPrice from "@/funcs/formatPrice"
 import CancelPayment from "@/api/manager/profile/cancelPayment"
 import CancelShippingForm from "./cancelShipping"
+import Menu from "../menu/menu"
 
 const schema = z.object({
   id: z.string().min(41, "id inválido").max(41, "id inválido")
@@ -102,6 +103,7 @@ export default function CancelOrderForm({cookieName,cookieVal}:props) {
     <>
       {load && <SpinLoading />}
       {popupError && <PopupError handleOut={() => setPopupError(false)} />}
+      <Menu cookieName={cookieName} cookieVal={cookieVal} />
       <main className={`${styles.main} ${load && styles.opacity}`}>
         <section>
           <h1 className={styles.title}>Cancelar pedido</h1>

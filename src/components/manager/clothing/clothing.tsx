@@ -16,6 +16,7 @@ import { deleteCookie } from "@/action/deleteCookie"
 import UpdateClothing, { updateClothingParams } from "@/api/manager/clothing/updateClothing"
 import UpdateClothingInventory, { updateClothingInventoryParams, updateInventory } from "@/api/manager/clothing/updateClothingInventory"
 import Inventory from "./inventory"
+import Menu from "../menu/menu"
 
 interface props {
   data: clothing

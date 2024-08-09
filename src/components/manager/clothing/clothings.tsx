@@ -9,6 +9,7 @@ import styles from "./clothings.module.css"
 import PopupError from "@/components/popupError/popupError"
 import Success from "@/components/successs/success"
 import Link from "next/link"
+import Menu from "../menu/menu"
 
 interface props {
   cookieName?: string
@@ -87,6 +88,7 @@ export default function Clothings({...props}: props) {
 
   return (
     <>
+      <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
       {popupError && <PopupError handleOut={() => setPopupError(false)} />}
       {load && <SpinLoading />}
       <Success setSuccess={setSuccess} success={success} msg="Criado com sucesso"/>
