@@ -37,6 +37,8 @@ interface orders {
   servico: string
   cpfCnpj: string
   frete: number
+  codigoRastreio: string
+  cancelamento: string
   precoTotal: number
   volume: volume[]
   roupa: clothing[]
@@ -53,16 +55,19 @@ interface clothing {
   imagem: string
 }
 
-export default async function GetOrder(cookie: string, cursor?: string, atualizado?: string):Promise<getOrderAdmin> {
+export default async function GetOrder(cookie: string, cursor?: string, atualizado?: string, id?: string):Promise<getOrderAdmin> {
   let url = api+pathManager+managerClothing+"/getOrder"
-  if(cursor || atualizado) {
+  if(cursor || atualizado || id) {
     url += "?"
   }
   if(cursor) {
     url+="cursor="+cursor+"&"
   }
   if(atualizado) {
-    url+="atualizadoEm="+atualizado
+    url+="atualizadoEm="+atualizado+"&"
+  }
+  if(id) {
+    url+="id="+id
   }
   try {
     const res = await fetch(url, {

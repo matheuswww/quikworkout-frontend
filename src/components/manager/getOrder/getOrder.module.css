@@ -345,3 +345,9 @@
   cursor: pointer;
   background-color: var(--btnClicked);
 }
+
+@media (min-width: 435px) {
+  .main section {
+    width: 416px;
+  }
+}
