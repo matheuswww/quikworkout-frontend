@@ -1,7 +1,7 @@
 import { api } from "../path"
 import { clothingPath } from "./clothingPath"
 
-type statusCode = 200 | 404 | 500
+type statusCode = 200 | 404 | 500 | 401
 
 export interface getClothingByIdResponse {
   status: statusCode
@@ -42,7 +42,7 @@ export default async function GetClothing(id: string):Promise<getClothingByIdRes
       cache: "no-store"
     }).then(res => res)
     let status:statusCode
-    if (res.status === 200 || res.status === 404 || res.status === 500) {
+    if (res.status === 200 || res.status === 404 || res.status === 500 || res.status == 401) {
       status = res.status
     } else {
       status = 500

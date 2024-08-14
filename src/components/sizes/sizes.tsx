@@ -3,8 +3,8 @@ import styles from './sizes.module.css'
 import { inventario } from '@/api/clothing/getClothing'
 
 interface props {
-  setSize: React.Dispatch<React.SetStateAction<"p" | "m" | "g" | "gg">>
-  size: "p" | "m" | "g" | "gg"
+  setSize: React.Dispatch<React.SetStateAction<"p" | "m" | "g" | "gg" | "">>
+  size: "p" | "m" | "g" | "gg" | ""
   inventory: sizesParams[] | undefined
   color: string | null
 }

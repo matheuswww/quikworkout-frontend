@@ -8,23 +8,25 @@ import { clothingCart } from './getClothingCartForm'
 import EditClothingCart from '@/api/clothing/editClothingCart'
 import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
+import { getClothingCartResponse } from '@/api/clothing/getClothingCart'
 
 interface props {
+  setClothingData: Dispatch<SetStateAction<getClothingCartResponse | null>>
   clothing: clothingCart | null
   setPopupError: Dispatch<SetStateAction<boolean>>
   setLoad: Dispatch<SetStateAction<boolean>>
+  load: boolean
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  buttonToOpen: HTMLButtonElement | null
   cookieName: string | undefined
   cookieVal: string | undefined
   setRefresh: Dispatch<SetStateAction<boolean>>
 }
 
-export default function EditClothingCartForm({clothing, setPopupError, setLoad, open, setOpen, buttonToOpen, cookieName, cookieVal, setRefresh}:props) {
+export default function EditClothingCartForm({clothing, setClothingData, setPopupError, setLoad, open, setOpen, cookieName, cookieVal, setRefresh, load}:props) {
   const router = useRouter()
   const [data, setData] = useState<getClothingByIdResponse | null>(null)
-  const [size, setSize] = useState<"p" | "m" | "g" | "gg">("p")
+  const [size, setSize] = useState<"p" | "m" | "g" | "gg" | "">("p")
   const [color, setColor] = useState<string | null>(null)
   const [mainColor, setMainColor] = useState<string | null>(null)
   const [count ,setCount] = useState<number>(1)
@@ -37,6 +39,9 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
     if (event.currentTarget.id == "more") {
       (data?.clothing?.inventario.map((inventory) => {
         if (inventory.cor == color) {
+          if (size == "") {
+            return
+          }
           if (inventory[size] <= count) {
             setCount(inventory[size] - 1)
           }
@@ -82,7 +87,6 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
         router.push("/auth/entrar")
         return
       }
-      setLoad(false)
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active) 
       }
@@ -99,15 +103,10 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
         setOpen(false)
         return
       }
-      document.body.style.pointerEvents = "none"
-      setOpen(false)
       window.location.reload()
-      return
+      closeRef.current instanceof HTMLButtonElement && closeRef.current.click()
+      setOpen(false)
     }
-    if(form.current instanceof HTMLFormElement) {
-      form.current.classList.remove(styles.active) 
-    }
-    setPopupError(true)
   }
 
   function handleEnterModalColor() {
@@ -119,36 +118,23 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
   }
 
   function close(event: MouseEvent) {
-    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) && event.target.contains(buttonToOpen) || closeRef.current?.contains(event.target)) && buttonRef.current instanceof HTMLButtonElement) {
-      buttonRef.current.style.pointerEvents = "none"
-      document.removeEventListener("click", close)
+    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) || closeRef.current?.contains(event.target))) {
+      window.removeEventListener("click", close)
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active)
         setTimeout(() => {
-          form.current instanceof HTMLElement && (form.current.style.pointerEvents = "initial")
-          buttonRef.current instanceof HTMLButtonElement && (buttonRef.current.disabled = false)
+          form.current instanceof HTMLElement && (form.current.style.display = "none")
+          setOpen(false)
         }, 500);
        }
-       setOpen(false)
     }
   }
 
   useEffect(() => {
     if(open && clothing) {
       if(clothing.clothing_id) {
-        setTimeout(() => {
-          document.addEventListener("click", close)
-        }, 500);
-        if(form.current instanceof HTMLElement) {
-          form.current.focus()
-          form.current.style.display = "grid"
-        }
-        setTimeout(() => {
-          if(form.current instanceof HTMLFormElement) {
-            form.current.classList.add(styles.active) 
-           }
-        });
         (async function() {
+          setLoad(true)
           const res = await GetClothing(clothing.clothing_id)
           res.clothing?.inventario.map(({cor, corPrincipal}) => {
             if (clothing.color == cor) {
@@ -158,21 +144,55 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
               setMainColor(cor)
             }
           })
-          setData(res)
+          if(res.status == 401) {
+            await deleteCookie("userProfile")
+            router.push("/auth/entrar")
+            return
+          }
           if(res.status == 500) {
             setPopupError(true)
+            setLoad(false)
+            setOpen(false)
+            return
           }
-          setLoad(false)
+          if(res.status == 404) {
+            window.location.reload()
+            return
+          }
+          setData(res)
           setCount(clothing.quantidade)
           setSize(clothing.size)
+          setLoad(false)
         }())
       }
     }
   },[open])
 
   useEffect(() => {
+    if(data) {
+      if(open) {
+        if(form.current instanceof HTMLElement) {
+          form.current.focus()
+          form.current.style.display = "grid"
+        }
+        setTimeout(() => {
+          window.addEventListener("click", close)
+        }, 500);
+        setTimeout(() => {
+          if(form.current instanceof HTMLFormElement) {
+            form.current.classList.add(styles.active)
+           }
+        },100);
+      }
+    } 
+  },[data])
+
+  useEffect(() => {
     data?.clothing?.inventario.map((inventory) => {
       if (inventory.cor == color) {
+        if (size == "") {
+          return
+        }
         if (inventory[size] <= count) {
           setCount(inventory[size])
         }
@@ -184,7 +204,7 @@ export default function EditClothingCartForm({clothing, setPopupError, setLoad, 
   return (
     <>
      <ModalColor color="rgb(8 8 8)" inventario={data?.clothing?.inventario} mainColor={mainColor} modalRef={modalRef} setColor={setColor} />
-      <form className={`${styles.container}`} ref={form} onSubmit={handleSubmit}>
+      <form className={`${styles.container}`} id={`${load && styles.formOpacity}`} ref={form} onSubmit={handleSubmit}>
         <p className={styles.p}>Edição de carrinho</p>
         <div>
           {color != null && data?.clothing?.inventario.map(({p, m, g, gg, cor}) => {
