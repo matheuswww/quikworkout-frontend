@@ -1,5 +1,5 @@
 'use client'
-import GetClothing, { getClothingByIdResponse } from "@/api/clothing/getClothing"
+import GetClothing, { getClothingByIdResponse, inventario } from "@/api/clothing/getClothing"
 import SkeletonImage from "@/components/skeletonImage/skeletonImage"
 import styles from './clothing.module.css'
 import stylesLoad from './clothingLoad.module.css'
@@ -61,7 +61,7 @@ export default function Clothing({...props}: props) {
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [popupErrorMsg, setPopupErrorMsg] = useState<string | undefined>(undefined)
   const [count,setCount] = useState<number>(1)
-  const [size,setSize] = useState<"p" | "m" | "g" | "gg">("p")
+  const [size,setSize] = useState<"p" | "m" | "g" | "gg" | "">("")
   const [color,setColor] = useState<string | null>(null)
   const [mainColor,setMainColor] = useState<string | null>(null)
   const [windowWidth,setWindowWidth] = useState<boolean>(false)
@@ -182,6 +182,9 @@ export default function Clothing({...props}: props) {
   }
 
   function handleCount(event: SyntheticEvent) {
+    if(size == "") {
+      return
+    }
     if (event.currentTarget.id == "more") {
       (data?.clothing?.inventario.map((inventory) => {
         if (inventory.cor == color) {
@@ -198,24 +201,39 @@ export default function Clothing({...props}: props) {
 
   function handleBuy(event: SyntheticEvent) {
     handleSubmitAddToCart(event, () => {
-      router.push("/finalizar-compra")
+      router.push("/finalizar-compra?clothing_id="+data?.clothing?.id+"&color="+color+"&size="+size)
     })
+  }
+
+  function selectSize(inventory: inventario) {
+    if(inventory.p != 0) {
+      setSize("p")
+    } else if (inventory.m != 0) {
+      setSize("m")
+    } else if (inventory.g != 0) {
+      setSize("g")
+    } else if (inventory.gg != 0) {
+      setSize("gg")
+    }
   }
 
   useEffect(() => {
     if(data == null) {
       (async function() {
+        setLoad(true)
         const res = await GetClothing(props.id)
-        res.clothing?.inventario.map(({corPrincipal, cor}) => {
-          if (corPrincipal && color == null) {
-            setColor(cor)
-            setMainColor(cor)
+        res.clothing?.inventario.map(({...inventory}) => {
+          if (inventory.corPrincipal && color == null) {
+            setColor(inventory.cor)
+            setMainColor(inventory.cor)
+            selectSize(inventory)
           }
         })
         setData(res);
         if(res.status === 500) {
           setPopUpError(true)
         }
+        setLoad(false)
         window.innerWidth >= 800 && setWindowWidth(true)
         window.addEventListener("resize", () => {
           if (window.innerWidth >= 800 && indexImages.current?.firstChild == null) {
@@ -232,24 +250,33 @@ export default function Clothing({...props}: props) {
     if (
       slide.current instanceof HTMLUListElement &&
       images.current instanceof HTMLDivElement &&
-      color != null
+      color != null && size !=  ""
     ) {
       if (images.current.lastChild instanceof HTMLDivElement) {
         images.current.removeChild(images.current.lastChild)
       }
+      data?.clothing?.inventario.map((inventory) => {
+        if (inventory.cor == color) {
+          if (inventory[size] <= count) {
+            selectSize(inventory)
+          }}
+      })
       slideWithControl(slide.current, images.current, indexImages.current?.childNodes, styles.index, styles.active, styles.activeThumb)
     }
   },[color])
 
   useEffect(() => {
+    if(size == "") {
+      return
+    }
+
     data?.clothing?.inventario.map((inventory) => {
       if (inventory.cor == color) {
         if (inventory[size] <= count) {
           setCount(inventory[size])
-        }
-      }
+        }}
     })
-  },[size, color])
+  },[size])
 
   return (
     <>
@@ -349,7 +376,6 @@ export default function Clothing({...props}: props) {
                     <>
                         <div className={styles.freightPrice}>
                           <p className={styles.freightPrice}>Frete: R${formatPrice(freightData.vlrFrete)}</p>
-                          <p className={styles.freightPrice}>Preço total: R${formatPrice((Math.round(data.clothing.preco+freightData.vlrFrete)*100)/100)}</p>
                           <p>Prazo de entrega: 2 dia úteis</p>
                         </div>
                     </>

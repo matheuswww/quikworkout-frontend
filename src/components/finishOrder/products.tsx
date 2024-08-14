@@ -1,7 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import styles from './products.module.css'
-import ArrowUp from 'next/image'
-import ArrowDown from 'next/image'
 import { dataGetClothingCart } from "@/api/clothing/getClothingCart"
 import ClothingImg from 'next/image'
 import formatPrice from "@/funcs/formatPrice"
@@ -33,12 +31,12 @@ export default function Products({clothing, totalPrice, freight, responseError, 
       val2 = totalPrice.replace(",",".")
     }
     if(Number(totalPrice) >= 200) {
-      setTotalPriceWithFreight(totalPrice)
+      setTotalPriceWithFreight(formatPrice(Number(totalPrice)))
       return
     }
     let total = Math.round((Number(val2)+Number(val)) * 100)/100
     if(!isNaN(total)) {
-      setTotalPriceWithFreight(total.toString())
+      setTotalPriceWithFreight(formatPrice(total))
       return
     }
     

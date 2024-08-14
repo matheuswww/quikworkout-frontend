@@ -8,7 +8,6 @@
 .allCollections {
   display: grid;
   justify-content: center;
-  width: 100vw;
   max-width: 1020px;
   margin-top: 50px;
   min-height: 665px;

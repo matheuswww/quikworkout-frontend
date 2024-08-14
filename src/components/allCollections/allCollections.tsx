@@ -37,33 +37,39 @@ export default async function AllCollections({searchParams}:props) {
               if (clothing.inventario[0].images == null) {
                 return null
               }
-              const images = clothing.inventario.find((item) => item.corPrincipal)?.images
+              let indexInventory: number = 0
+              const images = clothing.inventario.find((item,i) => {
+                indexInventory = i
+                return item.corPrincipal
+              })?.images
               const image = images?.length ? btoa(images[0]) : ""
-              if(index == 0) {
+              if(images) {
+                if(index == 0) {
+                  return(
+                  
+                    <div className={styles.firstCard} key={clothing.id}>
+                       <FilterButton />
+                       <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} style={{display: "block"}} className={styles.card}>
+                        <SkeletonImage src={images[0]} alt={clothing.inventario[indexInventory].imgDesc} width={225} height={300} className={styles.clothing} />
+                        <div className={styles.clothingInfos}>
+                          <p className={styles.name}>{clothing.nome}</p>
+                          <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
+                        </div>
+                      </Link>
+                    </div>
+               
+                  )
+                }
                 return(
-                
-                  <div className={styles.firstCard} key={clothing.id}>
-                     <FilterButton />
-                     <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} style={{display: "block"}} className={styles.card}>
-                      <SkeletonImage src={clothing.inventario[0].images[0]} alt={clothing.inventario[0].imgDesc} width={225} height={300} className={styles.clothing} />
-                      <div className={styles.clothingInfos}>
-                        <p className={styles.name}>{clothing.nome}</p>
-                        <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
-                      </div>
-                    </Link>
-                  </div>
-             
+                  <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} key={clothing.id} className={styles.card}>
+                    <SkeletonImage src={images[0]} alt={clothing.inventario[indexInventory].imgDesc} width={225} height={300} className={styles.clothing} />
+                    <div className={styles.clothingInfos}>
+                      <p className={styles.name}>{clothing.nome}</p>
+                      <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
+                    </div>
+                  </Link>
                 )
               }
-              return(
-                <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} key={clothing.id} className={styles.card}>
-                  <SkeletonImage src={clothing.inventario[0].images[0]} alt={clothing.inventario[0].imgDesc} width={225} height={300} className={styles.clothing} />
-                  <div className={styles.clothingInfos}>
-                    <p className={styles.name}>{clothing.nome}</p>
-                    <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
-                  </div>
-                </Link>
-              )
             }
           ) : <div className={styles.notFound}><p>Nenhuma roupa foi encontrada</p></div> : <p className={styles.error}>Oops, parece que houve um erro, tente recarregar a página</p>}
         </div>

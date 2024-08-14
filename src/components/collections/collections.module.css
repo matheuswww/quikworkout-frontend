@@ -12,7 +12,6 @@
 }
 
 .collections {
-  width: 100vw;
   max-width: 1000px;
   height: max-content;
   display: grid;
