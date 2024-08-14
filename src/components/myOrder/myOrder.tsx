@@ -242,17 +242,17 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           return (
               <div className={`${styles.item}`} key={infos.pedido_id}>
                 <>
-                {
-                  infos.motivoCancelamentoEnvio && infos.motivoCancelamentoEnvio != "" && 
-                  <div className={`${styles.values} ${styles.infos}`}>
-                    <p>Motivo do cancelamento: </p>
-                    <p>{infos.motivoCancelamentoEnvio}</p>
-                  </div>
-                }
                 <div className={styles.values}>
                   <p>ID do pedido: </p>
                   <p>{infos.pedido_id.substring(5)}</p>
                 </div>
+                {
+                  infos.motivoCancelamentoEnvio && infos.motivoCancelamentoEnvio != "" && 
+                  <div className={`${styles.values}`}>
+                    <p>Motivo do cancelamento: </p>
+                    <p>{infos.motivoCancelamentoEnvio}</p>
+                  </div>
+                }
                 {paymentInfo[i] && paymentInfo[i].pix && paymentInfo[i].pix?.dataExpiracao == "expirada" && 
                   <p className={styles.alert}>Seu qr code para pagamento pix foi expirado,gere outro</p>
                 }
@@ -264,11 +264,15 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 }
                 <div className={styles.values}>
                   <p>Preço: </p>
-                  <p>R${formatPrice(infos.precoTotal)}</p>
+                  <p>R${formatPrice(Math.round((infos.precoTotal - infos.frete) * 100)/100)}</p>
                 </div>
                 <div className={styles.values}>
                   <p>Frete: </p>
-                  <p>{formatPrice(infos.frete)}</p>
+                  <p>{infos.frete == 0 ? "grátis" : `R$${formatPrice(infos.frete)}`}</p>
+                </div>
+                <div className={styles.values}>
+                  <p>Total: </p>
+                  <p>{formatPrice(infos.precoTotal)}</p>
                 </div>
                 {infos.status_pagamento == "pagamento não solicitado" && paymentInfo[i].pix && paymentInfo[i].pix?.qrcode && paymentInfo[i].pix?.dataExpiracao == "não expirada" &&
                   <div className={`${styles.values} ${styles.infos} ${styles.qrcode}`}>

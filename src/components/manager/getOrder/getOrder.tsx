@@ -61,7 +61,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
         
         const res = await GetOrder(cookie, cursor, updated)
-
+        
         if(res.status == 401) {
           router.push("/manager-quikworkout/auth")
           return
@@ -121,7 +121,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             <h1 className={styles.title}>Pedidos</h1>
             <button className={styles.button} onClick={() => handleModalClick(filterRef, buttonToOpenModalRefFilter, closeFilterRef, styles.active, "flex")} ref={buttonToOpenModalRefFilter}>Filtrar</button>
             {data?.order?.pedidosRestantes != undefined && <p className={styles.p}>{data.order.pedidosRestantes == 0 ? "Todos os pedidos foram carregados" : `Pedidos não carregados: ${data.order.pedidosRestantes}`}</p>}
-            {(data?.status == 404 || data?.order?.pedidosRestantes == 0) && <p className={`${styles.p}`}>Nenhum pedido foi encontrado</p>}
+            {((data?.status == 404 || data?.order?.pedidosRestantes == 0) && !data.order?.pedido) && <p className={`${styles.p}`}>Nenhum pedido foi encontrado</p>}
             {load && !data && <p className={styles.p}>carregando pedidos aguarde...</p>}
           </div>
           }

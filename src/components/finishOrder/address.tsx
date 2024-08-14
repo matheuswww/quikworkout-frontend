@@ -197,7 +197,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
                 </div>
               )
             })}
-            <button className={styles.otherAddress} onClick={handleOtherAddressClick}>Selecionar outro endereço</button>
+            {addressSaved && <button className={styles.otherAddress} onClick={handleOtherAddressClick}>Selecionar outro endereço</button>}
           </>
           }
           {

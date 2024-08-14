@@ -1,9 +1,7 @@
-import { number } from "zod"
-
 export default function formatPrice(price:number):string {
   let numberAfterQuote = price.toString().split(".")[1]
   let priceString = price.toString()
-  if(numberAfterQuote == "") {
+  if(numberAfterQuote == "" || !priceString.includes(".")) {
     return priceString += ",00"
   }
   if(numberAfterQuote) {
