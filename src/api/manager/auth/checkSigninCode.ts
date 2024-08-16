@@ -10,10 +10,12 @@ export type checkSigninCode =
   "cookie inválido" |
   "código valido porém não foi possivel criar uma sessão" |
   "você não possui um código registrado" |
+  "recaptcha inválido" |
   500 | 200 | 401
 
 interface params {
   codigo: string
+  token: string
 }
 
 export default async function CheckSigninCode(cookie: string, params: params):Promise<checkSigninCode> {
@@ -41,7 +43,7 @@ export default async function CheckSigninCode(cookie: string, params: params):Pr
       return status
     }
     let msg: checkSigninCode | null = null
-    if(res.message == "maximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "código valido porém não foi possivel criar uma sessão" || res.message == "código inválido" || res.message == "você não possui um código registrado") {
+    if(res.message == "maximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "código valido porém não foi possivel criar uma sessão" || res.message == "código inválido" || res.message == "você não possui um código registrado" || res.message == "recaptcha inválido") {
       msg = res.message
     }
     if(msg != null) {

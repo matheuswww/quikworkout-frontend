@@ -6,11 +6,13 @@ import { pathManager } from "../pathManager"
 export type sendSigninCode = 
   "código gerado porém não foi possivel gerar sua sessão" |
   "email ou senha incorretos" |
+  "recaptcha inválido" |
   500 | 200
 
 interface params {
   email: string
   senha: string
+  token: string
 }
 
 export default async function SendSigninCode(params: params):Promise<sendSigninCode> {
@@ -36,7 +38,7 @@ export default async function SendSigninCode(params: params):Promise<sendSigninC
       return status
     }
     let msg: sendSigninCode | null = null
-    if(res?.message == "código gerado porém não foi possivel gerar sua sessão" || res?.message == "email ou senha incorretos") {
+    if(res?.message == "código gerado porém não foi possivel gerar sua sessão" || res?.message == "email ou senha incorretos" || res?.message == "recaptcha inválido") {
       msg = res?.message
     }
     if(msg != null) {

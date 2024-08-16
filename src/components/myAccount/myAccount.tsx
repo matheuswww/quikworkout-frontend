@@ -73,7 +73,6 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
         return
       }
       setData(res)
-      setLoad(false)
     }())
   }, [])
 

@@ -4,7 +4,9 @@ import styles from "./checkSigninCode.module.css"
 import { deleteCookie } from "@/action/deleteCookie"
 import CheckSigninCode, { checkSigninCode } from "@/api/manager/auth/checkSigninCode"
 import PopupError from "@/components/popupError/popupError"
+import Recaptcha from "@/components/recaptcha/recaptcha"
 import SpinLoading from "@/components/spinLoading/spinLoading"
+import RecaptchaForm from "@/funcs/recaptchaForm"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { SyntheticEvent, useEffect, useState } from "react"
@@ -26,6 +28,7 @@ export default function CheckSigninCodeForm({...props}:props) {
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkSigninCode | null>(null)
   const [popUpError, setPopUpError] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -34,12 +37,24 @@ export default function CheckSigninCodeForm({...props}:props) {
 
   async function handleForm(data: FormProps) {
     setPopUpError(false)
+    setRecaptchaError(null)
     setError(null)
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     setLoad(true)    
     const res = await CheckSigninCode(props.cookie, {
-      codigo: data.code
+      codigo: data.code,
+      token: token
     })
-    
+    if (res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      setLoad(false)
+      //@ts-ignore
+      window.grecaptcha.reset()
+      return
+    }
     if(res == "você não possui um código registrado" || res == "maximo de tentativas atingido" || res == "código expirado") {
       await deleteCookie("adminAuth")
       window.location.href = "/manager-quikworkout/auth"
@@ -80,6 +95,7 @@ export default function CheckSigninCodeForm({...props}:props) {
   }
 
   useEffect(() => {
+    setLoad(false)
     const prevTime = Number(localStorage.getItem("timeSendSigninCode"))
     const currentTIme = new Date().getTime()
     let elapsedTime: number = 0
@@ -110,7 +126,9 @@ export default function CheckSigninCodeForm({...props}:props) {
           <h1>Verifique seu email</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
+          {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
           <Link onClick={handleClick} href="/manager-quikworkout/auth">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <Recaptcha className={styles.recaptcha} />
           <button disabled={load ? true : false} type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
         </form>
       </main>
