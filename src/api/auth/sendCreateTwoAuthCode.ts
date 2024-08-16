@@ -10,12 +10,14 @@ export type sendCreateTwoAuthCodeResponse =
   "usuário não é verificado" |
   "seu código foi gerado porem não foi possivel criar uma sessão" |
   "senha errada" |
+  "recaptcha inválido" |
   500 | 200 | 401
 
 interface params {
   email: string
   telefone: string
   senha: string
+  token: string
 }
 
 export default async function SendCreateTwoAuthCode(cookie: string, params: params):Promise<sendCreateTwoAuthCodeResponse> {
@@ -41,7 +43,7 @@ export default async function SendCreateTwoAuthCode(cookie: string, params: para
       return status
     }
     let msg: sendCreateTwoAuthCodeResponse | null = null
-    if(res?.message == "contato já utilizado para autenticação" || res?.message == "usuário já possui autenticação de dois fatores" || res?.message == "este email já é utilizado para sua autenticação" || res?.message == "este telefone já é utilizado para sua autenticação" || res?.message == "usuário não é verificado" || res?.message == "senha errada" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão") {
+    if(res?.message == "contato já utilizado para autenticação" || res?.message == "usuário já possui autenticação de dois fatores" || res?.message == "este email já é utilizado para sua autenticação" || res?.message == "este telefone já é utilizado para sua autenticação" || res?.message == "usuário não é verificado" || res?.message == "senha errada" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão" || res?.message == "recaptcha inválido") {
       msg = res?.message
     }
     if(msg != null) {

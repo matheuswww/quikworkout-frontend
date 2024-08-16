@@ -6,11 +6,13 @@ export type changePassword =
   "cookie inválido" |
   "senha errada" |
   "as senhas são as mesmas" |
+  "recaptcha inválido" |
   500 | 200 | 401
 
 interface params {
   senhaNova: string
   senhaAntiga: string
+  token: string
 }
 
 export default async function ChangePassword(cookie: string,params: params):Promise<changePassword> {
@@ -36,7 +38,7 @@ export default async function ChangePassword(cookie: string,params: params):Prom
       return status
     }
     let msg: changePassword | null = null
-    if(res.message == "cookie inválido" || res.message == "senha errada" || res.message == "as senhas são as mesmas") {
+    if(res.message == "cookie inválido" || res.message == "senha errada" || res.message == "as senhas são as mesmas" || res.message == "recaptcha inválido") {
       msg = res.message
     }
     if(msg != null) {

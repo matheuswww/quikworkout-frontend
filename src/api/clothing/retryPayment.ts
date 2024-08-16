@@ -3,7 +3,7 @@ import { ResponseErr } from "../responseErr"
 import { clothingPath } from "./clothingPath"
 import { boleto, card, clothing, responseErrorsRetryPayment, responseErrorsRetryPaymentType } from "./payOrderInterfaces"
 
-export type payOrderResponse = responseErrorsRetryPaymentType | response | 500
+export type payOrderResponse = responseErrorsRetryPaymentType | response | "recaptcha inválido" | 500
 
 interface response {
   pedido_id: string
@@ -17,6 +17,7 @@ interface params {
   novoTipoPagamento: string
   cartao: card | null
   boleto: boleto | null
+  token: string
 }
 
 export default async function RetryPayment(cookie: string, params: params):Promise<payOrderResponse> {
@@ -41,6 +42,9 @@ export default async function RetryPayment(cookie: string, params: params):Promi
       if(res && 'pedido_id' in res) {
         return res
       }
+    }
+    if(res && 'message' in res && res.message == "recaptcha inválido") {
+      return res.message
     }
     if (res && 'message' in res && res.message) {
       if (responseErrorsRetryPayment.includes(res.message as responseErrorsRetryPaymentType)) {

@@ -20,6 +20,7 @@ import RetryPayment from '@/api/clothing/retryPayment'
 import GetOrderDetail, { getOrderDetailResponse } from '@/api/clothing/getOrderDetail'
 import Menu from '../menu/menu'
 import GetUser from '@/api/user/getUser'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
   cookieName?: string
@@ -56,6 +57,7 @@ export default function FinishPurchaseForm({...props}: props) {
   const [addressStatus, setAddressStatus] = useState<500 | null>(null)
 
   const [paymentTypeRetryPayment, setPaymentTypeRetryPayment] = useState<string | null>(null)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
   const addressRef = useRef<HTMLElement | null>(null)
   const paymentRef = useRef<HTMLElement | null>(null)
@@ -266,11 +268,15 @@ export default function FinishPurchaseForm({...props}: props) {
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
+    setRecaptchaError(null)
     setResponseError(null)
     setPopupError(false)
     setResponsePaymentError(null)
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     const cookie = props.cookieName+"="+props.cookieVal
-    
     if(!retryPayment) {
     const clothing: clothing[] = []
     data?.clothing && data.clothing.map((infos) => {
@@ -332,9 +338,14 @@ export default function FinishPurchaseForm({...props}: props) {
           cartao: card,
           roupa: clothing,
           telefone: address.telefone,
-          tipoPagamento: paymentType == "debit_card" ? "CARTAO_DEBITO" : paymentType == "credit_card" ? "CARTAO_CREDITO" : paymentType == "boleto" ? "BOLETO" : "PIX"
+          tipoPagamento: paymentType == "debit_card" ? "CARTAO_DEBITO" : paymentType == "credit_card" ? "CARTAO_CREDITO" : paymentType == "boleto" ? "BOLETO" : "PIX",
+          token: token
         })
-        
+        if (typeof res == "string" && res == "recaptcha inválido") {
+          setRecaptchaError(res)
+          //@ts-ignore
+          window.grecaptcha.reset()
+        }
         if(props.cookieName == undefined || props.cookieVal == undefined) {
           router.push("/auth/entrar")
           return
@@ -417,9 +428,14 @@ export default function FinishPurchaseForm({...props}: props) {
         pedido_id: "ORDE_"+props.retryPayment,
         precoTotal: retryPaymentData.data.pedido.precoTotal,
         roupa: clothing,
-        tipoPagamento: props.paymentType
+        tipoPagamento: props.paymentType,
+        token: token
       })
-      
+      if (typeof res == "string" && res == "recaptcha inválido") {
+        setRecaptchaError(res)
+        //@ts-ignore
+        window.grecaptcha.reset()
+      }
       if(props.cookieName == undefined || props.cookieVal == undefined) {
         router.push("/auth/entrar")
         return
@@ -478,7 +494,7 @@ export default function FinishPurchaseForm({...props}: props) {
               <Payment retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
               {(!retryPayment || props.paymentType == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
               <form onSubmit={handleSubmit}>
-                <Products setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
+                <Products recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
               </form> 
             </>
           : load && <p className={styles.load}>carregando...</p>}

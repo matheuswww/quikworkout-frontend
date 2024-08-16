@@ -13,6 +13,8 @@ import { deleteCookie } from '@/action/deleteCookie'
 import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
 import GetUser from '@/api/user/getUser'
 import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
   cookieName: string | undefined
@@ -42,6 +44,7 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
   const [isEmail, setIsEmail] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -93,18 +96,29 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
   },[next])
 
   async function handleForm(data: FormProps) {
+    setRecaptchaError(null)
     setError(null)
     let isNum: boolean = true
     if(isNaN(Number(data.emailOrPhoneNumber))) {
       isNum = false
       setIsEmail(true)
     }
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     setLoad(true)
     const res = await SendCreateTwoAuthCode(cookie, {
       email: !isNum ? data.emailOrPhoneNumber : "",
       telefone: isNum ? data.emailOrPhoneNumber : "",
-      senha: data.password
+      senha: data.password,
+      token: token
     })
+    if (res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      //@ts-ignore
+      window.grecaptcha.reset()
+    }
     if(res == "seu código foi gerado porem não foi possivel criar uma sessão") {
       router.push("/auth/entrar")
     }
@@ -144,13 +158,16 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
               {errors.emailOrPhoneNumber?.message && <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p>}
               <label htmlFor="password">Sua senha</label>
               <Password {...register("password")} id="password" placeholder="senha"/>
-              {error == "senha errada" && !errors.emailOrPhoneNumber?.message && <p className={styles.error}>{error}</p>}
+              {errors.password?.message ? <p className={styles.error}>{errors.password.message}</p> : error == "senha inválida" && <p className={styles.error}>{error}</p>}
+              {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+              <Recaptcha className={styles.recaptcha} />
+              {error && error != "senha inválida" && <p className={styles.error} style={{marginTop: "0px",marginBottom: "10px"}}>{error}</p>}
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>
         </main>
       </>
-      : <CheckCreateTwoAuthCodeForm cookie={cookie} email={isEmail ? true : false}/> }
+      : <CheckCreateTwoAuthCodeForm cookie={cookie} email={isEmail}/> }
     </>
   )
 }

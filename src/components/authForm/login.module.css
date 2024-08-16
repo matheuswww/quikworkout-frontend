@@ -11,26 +11,16 @@
   display: none;
 }
 
-.formSignin {
+.formSignup,.formSignin {
   display: grid;
   justify-content: center;
   background-color: transparent;
-  padding: 20px;
+  padding: 0px 20px;
   border-radius: 4px;
-  height: 340px;
-}
-
-.formSignup {
-  display: grid;
-  justify-content: center;
-  background-color: transparent;
-  padding: 20px;
-  border-radius: 4px;
-  height: 540px;
 }
 
 .form input {
-  padding: 8px;
+  padding: 12px 8px;
   width: 250px;
   outline: none;
   border: none;
@@ -47,6 +37,7 @@
   color: #c8c8c8;
   font-family: var(--interSemiBold);
   font-size: 1rem;
+  width: max-content;
 }
 
 .form h1 {
@@ -58,7 +49,6 @@
 }
 
 .form a {
-  margin-top: 5px;
   text-decoration: none;
   font-family: var(--interSemiBold);
   font-size: .8rem;
@@ -67,7 +57,7 @@
 }
 
 .login {
-  margin-top: 5px;
+  margin-top: 10px;
   height: 40px;
   width: 250px;
   border: none;
@@ -76,7 +66,6 @@
   background-color: transparent;
   font-family: var(--interSemiBold);
   color: #c8c8c8;
-  transform: translateY(20px);
   border: 1px solid white;
   border-radius: 4px;
 }
@@ -95,14 +84,20 @@
   pointer-events: none;
 }
 
-.noAccount {
-  position: relative;
-  top: 18px;
-}
-
 .loading {
   opacity: .5;
   cursor: wait !important;
+}
+
+.forgotPassword {
+  margin-top: 10px;
+}
+
+.recaptcha {
+  margin-top: 18px;
+  transform:scale(0.8);
+  transform-origin:0 0;
+  width: 180px;
 }
 
 @media (min-width: 360px) {
@@ -112,6 +107,16 @@
 
   .form input,.login,.error {
     width: 300px;
+  }
+
+  .recaptcha {
+    transform-origin: initial;
+    transform: scale(.9);
+    transform-origin:0 0;
+    width: initial;
+    margin-top: 0px;
+    padding-top: 18px;
+    padding-bottom: 4px;
   }
 }
 

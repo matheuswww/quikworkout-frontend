@@ -10,8 +10,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
-import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
   email: boolean
@@ -29,6 +30,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkContactValidationCodeResponse | null>(null)
   const [popUpError, setPopUpError] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -36,12 +38,25 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setRecaptchaError(null)
     setPopUpError(false)
     setError(null)
-    setLoad(true)    
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
+    setLoad(true)
     const res = await CheckContactValidationCode(props.cookie, {
-      codigo: data.code
+      codigo: data.code,
+      token: token
     })
+    if(res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      setLoad(false)
+      //@ts-ignore
+      window.grecaptcha.reset()
+      return
+    }
     if (res == "usuário verificado porém não foi possível criar uma sessão" || res == 401) {
       await deleteCookie("userProfile")
       localStorage.removeItem("timeSendContactValidationCode")
@@ -107,7 +122,9 @@ export default function CheckContactValidationCodeForm({...props}:props) {
           <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
+          {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
           <Link onClick={handleClick} href="/auth/validar-contato">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <Recaptcha className={styles.recaptcha} />
           <button type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
         </form>
       </main>

@@ -10,6 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import { deleteCookie } from '@/action/deleteCookie'
 import CheckRemoveTwoAuthCode from '@/api/auth/checkRemoveTwoAuthCode'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
   email: boolean
@@ -27,6 +29,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [popUpError, setPopUpError] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -34,11 +37,17 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
   })
 
   async function handleForm(data: FormProps) {
+    setRecaptchaError(null)
     setPopUpError(false)
     setError(null)
-    setLoad(true)    
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
+    setLoad(true)
     const res = await CheckRemoveTwoAuthCode(props.cookie, {
-      codigo: data.code
+      codigo: data.code,
+      token: token
     })
     if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
       await deleteCookie("userProfile")
@@ -110,7 +119,9 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
           <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
+          {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
           <Link onClick={handleClick} href="/auth/criar-dois-fatores">{timer <= 60 ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}` : "Enviar outro código"}</Link>
+          <Recaptcha className={styles.recaptcha} />
           <button disabled={load ? true : false} type="submit" className={`${load && styles.loading}`}>{load ? "Carregando..." : "Enviar código"}</button>
         </form>
       </main>

@@ -99,8 +99,7 @@
   border-radius: 100%;
   margin-right: 5px;
 }
-
-@media (min-width: 370px) {
+@media (min-width: 380px) {
   .section {
     width: 320px;
   }

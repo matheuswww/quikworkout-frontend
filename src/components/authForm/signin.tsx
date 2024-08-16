@@ -10,9 +10,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
-import { useRouter } from 'next/navigation'
 import Signin, { signinResponse } from '@/api/auth/signin'
 import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
@@ -30,10 +31,10 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function SigninForm() {
-  const router = useRouter()
   const [error, setError] = useState<signinResponse | null>(null)
   const [status, setStatus] = useState<number>(0)
   const [load,setLoad] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -41,16 +42,22 @@ export default function SigninForm() {
   })
 
   const handleForm = async (data: FormProps) => {
+    setRecaptchaError(null)
     setError(null)
     let isNum: boolean = false
     if(!isNaN(Number(data.emailOrPhoneNumber))) {
       isNum = true
+    }
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
     }
     setLoad(true)
     const res = await Signin({
       email: isNum ? "" : data.emailOrPhoneNumber,
       telefone: isNum ? data.emailOrPhoneNumber : "",
       senha: data.password,
+      token: token,
     })
     if(typeof res == "object") {
       if(!res.twoAuth) {
@@ -59,6 +66,11 @@ export default function SigninForm() {
       }
       window.location.href = "/auth/validar-codigo-dois-fatores"
       return
+    }
+    if (res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      //@ts-ignore
+      window.grecaptcha.reset()
     }
     if(res == "contato não cadastrado" || res == "senha errada") {
       setError(res)
@@ -78,7 +90,7 @@ export default function SigninForm() {
           <Background src="/img/background-login.jpg" alt="mulher em um barra de crossfit executando um exercício" fill loading="lazy" quality={80} className={styles.background}/>
         </div>
         <section className={styles.section}>
-          <form className={`${styles.form} ${styles.formSignin}`} onSubmit={handleSubmit(handleForm)} style={{height: "375px !important"}}>
+          <form className={`${styles.form} ${styles.formSignin}`} onSubmit={handleSubmit(handleForm)}>
             <h1>Entrar</h1>
             <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
             <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
@@ -86,9 +98,11 @@ export default function SigninForm() {
             <label htmlFor="password">Senha</label>
             <Password {...register("password")} id="password" placeholder="senha"/> 
             {error == "senha errada" && <p className={styles.error}>senha inválida</p>}
-            <Link href="/auth/esqueci-minha-senha">Esqueceu sua senha?</Link>
-            <button disabled={load ? true : false} className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "entrando, aguarde" : "entrar"}</button>
-            <Link href="/auth/cadastrar" className={styles.noAccount}>Não possui uma conta?</Link>
+            {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+            <Link href="/auth/esqueci-minha-senha" className={styles.forgotPassword}>Esqueceu sua senha?</Link>
+            <Recaptcha className={styles.recaptcha} />
+            <Link href="/auth/cadastrar">Não possui uma conta?</Link>
+            <button disabled={load ? true : false} className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "Entrando, aguarde" : "Entrar"}</button>
           </form>
         </section>
       </main>

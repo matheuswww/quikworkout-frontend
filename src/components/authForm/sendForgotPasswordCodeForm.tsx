@@ -9,6 +9,8 @@ import PopupError from '../popupError/popupError'
 import SendForgotPasswordCode, { sendForgotPasswordCodeResponse } from '@/api/auth/forgotPassword'
 import CheckForgotPasswordCodeForm from './checkForgotPasswordCodeForm'
 import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 const schema = z.object({
   emailOrPhoneNumber: z.string(),
@@ -30,6 +32,7 @@ export default function SendForgotPasswordCodeForm() {
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -61,11 +64,22 @@ export default function SendForgotPasswordCodeForm() {
       isNum = false
       setIsEmail(true)
     }
+    setRecaptchaError(null)
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     setLoad(true)
     const res = await SendForgotPasswordCode({
       email: !isNum ? data.emailOrPhoneNumber : "",
-      telefone: isNum ? data.emailOrPhoneNumber : ""
+      telefone: isNum ? data.emailOrPhoneNumber : "",
+      token: token
     })
+    if (res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      //@ts-ignore
+      window.grecaptcha.reset()
+    }
     if(res == "seu código foi gerado porem não foi possivel criar uma sessão") {
       setPopUpError(true)
     }
@@ -94,6 +108,8 @@ export default function SendForgotPasswordCodeForm() {
               <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
               <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
               {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : error && <p className={styles.error}>{error}</p>}
+              {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+              <Recaptcha className={styles.recaptcha} />
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>

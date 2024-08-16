@@ -14,6 +14,8 @@ import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
 import GetUser from '@/api/user/getUser'
 import SendRemoveTwoAuthCode from '@/api/auth/sendRemoveTwoAuthCode'
 import CheckRemoveTwoAuthCodeForm from './checkRemoveTwoAuthCode'
+import Recaptcha from '../recaptcha/recaptcha'
+import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
   cookieName: string | undefined
@@ -34,6 +36,7 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
   const [isEmail, setIsEmail] = useState<boolean>(false)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
@@ -46,7 +49,7 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
       router.push("/auth/entrar")
     } else {
       ((async function() {
-        const res = await GetUser(cookie)        
+        const res = await GetUser(cookie)                
         if((res.data && 'twoAuthEmail' in res.data && res.data.twoAuthEmail == "") && (res.data && 'twoAuthTelefone' in res.data && res.data.twoAuthTelefone == "")) {
           router.push("/")
         } else {
@@ -82,11 +85,22 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
   },[next])
 
   async function handleForm(data: FormProps) {
+    setRecaptchaError(null)
     setError(null)
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     setLoad(true)
     const res = await SendRemoveTwoAuthCode(cookie, {
-      senha: data.password
+      senha: data.password,
+      token: token
     })
+    if (res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      //@ts-ignore
+      window.grecaptcha.reset()
+    }
     if(res == "contato não cadastrado") {
       router.push("/auth/entrar")
       return
@@ -129,6 +143,8 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
               <label htmlFor="password">Sua senha</label>
               <Password {...register("password")} id="password" placeholder="senha"/>
               {errors.password ? <p className={styles.error}>{errors.password.message}</p> : error && <p className={styles.error}>{error}</p>}
+              {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+              <Recaptcha className={styles.recaptcha} />
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>

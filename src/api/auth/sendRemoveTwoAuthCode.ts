@@ -8,10 +8,12 @@ export type sendRemoveTwoAuthCodeResponse =
   "senha errada" |
   "usuário não possui autenticação de dois fatores" |
   "contato não cadastrado" |
+  "recaptcha inválido" |
   500 | 200 | 401
 
 interface params {
   senha: string
+  token: string
 }
 
 export default async function SendRemoveTwoAuthCode(cookie: string, params: params):Promise<sendRemoveTwoAuthCodeResponse> {
@@ -37,7 +39,7 @@ export default async function SendRemoveTwoAuthCode(cookie: string, params: para
       return status
     }
     let msg: sendRemoveTwoAuthCodeResponse | null = null
-    if(res?.message == "usuário não é verificado" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão" || res?.message == "senha errada" || res?.message == "usuário não possui autenticação de dois fatores" || res?.message == "contato não cadastrado") {
+    if(res?.message == "usuário não é verificado" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão" || res?.message == "senha errada" || res?.message == "usuário não possui autenticação de dois fatores" || res?.message == "contato não cadastrado" || res?.message == "recaptcha inválido") {
       msg = res?.message
     }
     if(msg != null) {

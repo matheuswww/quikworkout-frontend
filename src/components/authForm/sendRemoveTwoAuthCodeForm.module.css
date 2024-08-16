@@ -21,7 +21,6 @@
   background-color: transparent;
   padding: 20px;
   border-radius: 4px;
-  height: 200px;
 }
 
 .form input {
@@ -71,7 +70,6 @@
   background-color: transparent;
   font-family: var(--interSemiBold);
   color: #c8c8c8;
-  transform: translateY(20px);
   border: 1px solid white;
   border-radius: 4px;
 }
@@ -95,7 +93,24 @@
   cursor: wait !important;
 }
 
+.recaptcha {
+  margin-top: 18px;
+  transform:scale(0.8);
+  transform-origin:0 0;
+  width: 180px;
+}
+
 @media (min-width: 360px) {
+  .recaptcha {
+    transform-origin: initial;
+    transform: scale(.9);
+    transform-origin:0 0;
+    width: initial;
+    margin-top: 0px;
+    padding-top: 18px;
+    padding-bottom: 4px;
+  }
+
   .section {
     width: 350px;
   }

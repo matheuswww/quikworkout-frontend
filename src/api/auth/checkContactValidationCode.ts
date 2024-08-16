@@ -9,10 +9,12 @@ export type checkContactValidationCodeResponse =
   "código inválido" |
   "código expirado" |
   "você não possui um código registrado" |
+  "recaptcha inválido" |
   500 | 200 | 401
 
 interface params {
   codigo: string
+  token: string
 }
 
 export default async function CheckContactValidationCode(cookie: string, params: params):Promise<checkContactValidationCodeResponse> {
@@ -38,7 +40,7 @@ export default async function CheckContactValidationCode(cookie: string, params:
       return status
     }
     let msg: checkContactValidationCodeResponse | null = null
-    if(res.message == "usuário verificado porém não foi possível criar uma sessão" || res.message == "usuário já verificado" || res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "você não possui um código registrado") {
+    if(res.message == "usuário verificado porém não foi possível criar uma sessão" || res.message == "usuário já verificado" || res.message == "máximo de tentativas atingido" || res.message == "código inválido" || res.message == "código expirado" || res.message == "você não possui um código registrado" || res.message == "recaptcha inválido") {
       msg = res.message
     }
     if(msg != null) {

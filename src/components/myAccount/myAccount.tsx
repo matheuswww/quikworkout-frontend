@@ -19,10 +19,12 @@ import ArrowDown from 'next/image'
 import GetAddress, { getAddressData } from "@/api/user/getAddress"
 import DeleteAddress from "@/api/user/deleteAddress"
 import Menu from "../menu/menu"
+import Recaptcha from "../recaptcha/recaptcha"
+import RecaptchaForm from "@/funcs/recaptchaForm"
 
 const schema = z.object({
-  password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
-  newPassword: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres")
+  password: z.string().min(8,"Nova senha precisa ter pelo menos 8 caracteres").max(72, "A nova senha deve ter no maxímo de 72 caracteres"),
+  newPassword: z.string().min(8,"Nova senha precisa ter pelo menos 8 caracteres").max(72, "A nova senha deve ter no maxímo de 72 caracteres")
 })
 
 type FormProps = z.infer<typeof schema>
@@ -45,6 +47,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
   const modalRef = useRef<HTMLFormElement | null>(null)
   const buttonToOpenModalRef = useRef<HTMLButtonElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
   const formDeleteAddressRef = useRef<HTMLFormElement | null>(null)
   const buttonToOpenFormDeleteAddressRef = useRef<HTMLButtonElement | null>(null)
@@ -112,8 +115,13 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
   }
 
   async function handleForm(data: FormProps) {
+    setRecaptchaError(null)
     setResponseError(null)
     setPopupError(false)
+    const token = RecaptchaForm(setRecaptchaError)
+    if(token == "") {
+      return
+    }
     setLoad(true)
     if(cookieName == undefined || cookieVal == undefined) {
       router.push("/auth/entrar")
@@ -122,13 +130,23 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
     const cookie = cookieName+"="+cookieVal
     const res = await ChangePassword(cookie, {
       senhaNova: data.newPassword,
-      senhaAntiga: data.password
+      senhaAntiga: data.password,
+      token: token
     })
     if(typeof res == "number" && res == 200) {
       setChanged(true)
     }
+    if (typeof res == "string" && res == "recaptcha inválido") {
+      setRecaptchaError(res)
+      //@ts-ignore
+      window.grecaptcha.reset()
+    }
     if(typeof res == "string" && (res == "as senhas são as mesmas" || res == "senha errada")) {
-      setResponseError(res)
+      if(res == "senha errada") {
+        setResponseError("senha inválida")
+      } else {
+        setResponseError(res)
+      }
     }
     if(typeof res == "number" && res == 500) {
       setPopupError(true)
@@ -179,13 +197,15 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             <Password {...register("password")} id="current_password" placeholder="senha atual"/>
             {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
           </div>
-          <div>
+          <div className={styles.newPassword}>
             <label htmlFor="new_password">Nova senha</label>
             <Password {...register("newPassword")} id="new_password" placeholder="nova senha"/>
             {errors.newPassword?.message && <p className={styles.error}>{errors.newPassword.message}</p>}
           </div>
           {!errors.password?.message && !errors.newPassword?.message && responseError && <p className={styles.error}>{responseError}</p>}
-          <button type="submit" className={styles.button}>Confirmar</button>
+          {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+          <Recaptcha className={styles.recaptcha} />
+          <button type="submit" className={`${styles.button} ${styles.confirm}`}>Confirmar</button>
           <button aria-label="fechar" type="button" className={styles.close} ref={closeRef}><span aria-hidden="true">x</span></button>
         </form>
         <form className={styles.deleteAddress} ref={formDeleteAddressRef} onSubmit={handleDeleteAddressForm}>

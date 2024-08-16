@@ -4,6 +4,7 @@ import { dataGetClothingCart } from "@/api/clothing/getClothingCart"
 import ClothingImg from 'next/image'
 import formatPrice from "@/funcs/formatPrice"
 import { getOrderDetailResponse } from "@/api/clothing/getOrderDetail"
+import Recaptcha from "../recaptcha/recaptcha"
 
 interface props {
   clothing: dataGetClothingCart[] | null | undefined
@@ -13,9 +14,10 @@ interface props {
   responseError: string | null
   totalPriceWithFreight: string | null
   setTotalPriceWithFreight: Dispatch<SetStateAction<string | null>>
+  recaptchaError: string | null
 }
 
-export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight}:props) {
+export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight, recaptchaError}:props) {
   useEffect(() => {
     if(freight == null) {
       setTotalPriceWithFreight(null)
@@ -49,8 +51,10 @@ export default function Products({clothing, totalPrice, freight, responseError, 
       <div>
         <p className={styles.price}>Preço total: R${totalPrice}</p>
         {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
-        <button style={{marginLeft: "12px",marginTop: "22px"}} type="submit" className={styles.button}>Finalizar compra</button>
+        <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
         { <p className={styles.error}>{responseError}</p> }
+        {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+        <button style={{marginLeft: "12px",marginTop: "15px"}} type="submit" className={styles.button}>Finalizar compra</button>
         {clothing?.map((infos) => {
           return (
             <div className={`${styles.clothing}`} key={infos.roupa_id+infos.cor+infos.tamanho}>

@@ -3,7 +3,7 @@ import { ResponseErr } from "../responseErr"
 import { clothingPath } from "./clothingPath"
 import { boleto, card, clothing, phoneNumber, responseErrorsPayOrder, responseErrorsPayOrderType } from "./payOrderInterfaces"
 
-export type payOrderResponse = responseErrorsPayOrderType | response | "cookie inválido" | "contato não verificado" | 500
+export type payOrderResponse = responseErrorsPayOrderType | response | "cookie inválido" | "contato não verificado" | "recaptcha inválido" | 500
 
 interface response {
   pedido_id: string
@@ -33,6 +33,8 @@ interface params {
 
   cartao: card | null
   boleto: boleto | null
+
+  token: string
 }
 
 export default async function PayOrder(cookie: string, params: params):Promise<payOrderResponse> {
@@ -57,6 +59,9 @@ export default async function PayOrder(cookie: string, params: params):Promise<p
       if(res && 'pedido_id' in res) {
         return res
       }
+    }
+    if(res && 'message' in res && res.message == "recaptcha inválido") {
+      return res.message
     }
     if (res && 'message' in res && res.message) {
       if (responseErrorsPayOrder.includes(res.message as responseErrorsPayOrderType)) {

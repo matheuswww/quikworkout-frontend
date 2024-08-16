@@ -85,9 +85,9 @@ export default function ResetPasswordForm({...props}:props) {
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
           <h1>Resetar Senha</h1>
           <label htmlFor="passsword">Nova senha</label>
-          <Password {...register("password")} id="password" placeholder="insira sua nova senha"/> 
+          <Password {...register("password")} id="password" placeholder="insira sua nova senha"/>
           {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
-          <button disabled={load ? true : false} type="submit" className={`${load && styles.loading} ${styles.buttonForm}`}>{load ? "Carregando..." : "Alterar senha"}</button>
+          <button disabled={load ? true : false} type="submit" className={`${load && styles.loading} ${styles.buttonForm}`} style={{marginTop: "15px"}}>{load ? "Carregando..." : "Alterar senha"}</button>
         </form>
       </main>
     </>

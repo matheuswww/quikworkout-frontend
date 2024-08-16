@@ -34,7 +34,7 @@
   display: none;
 }
 
-@media (min-width: 370px) {
+@media (min-width: 380px) {
   .container {
     width: 320px;
   }

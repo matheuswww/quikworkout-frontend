@@ -6,6 +6,7 @@ interface params {
   email: string
   telefone: string
   senha: string
+  token: string
 }
 
 interface singninResponeSuccess {
@@ -15,6 +16,7 @@ interface singninResponeSuccess {
 export type signinResponse = 
   "contato não cadastrado" |
   "senha errada" |
+  "recaptcha inválido" |
   singninResponeSuccess | 500
 
 export default async function Signin(params: params):Promise<signinResponse> {
@@ -33,14 +35,14 @@ export default async function Signin(params: params):Promise<signinResponse> {
       status = res.status
       return res.json()
     })
+    if('message' in res && (res.message == "contato não cadastrado" || res.message == "senha errada" || res.message == "recaptcha inválido")) {
+      return res.message
+    }
     if('twoAuth' in res) {
       return res
     }
     if (status == 500) {
       return status
-    }
-    if('message' in res && (res.message == "contato não cadastrado" || res.message == "senha errada")) {
-      return res.message
     }
     return 500
   } catch(err) {

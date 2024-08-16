@@ -1,0 +1,25 @@
+.active {
+  animation: enter 1s forwards;
+  opacity: 0;
+}
+
+.displayNone {
+  display: none;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .8rem;
+}

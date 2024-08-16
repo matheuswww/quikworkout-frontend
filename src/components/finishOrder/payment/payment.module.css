@@ -31,14 +31,6 @@
   margin-top: 19px;
 }
 
-
-@media (min-width: 370px) {
-  .section {
-    width: 320px;
-    justify-self: center;
-  }
-}
-
 @media (min-width: 475px) {
   .section {
     width: 370px;

@@ -5,11 +5,13 @@ import { authPath } from "../user/userPath"
 export type sendForgotPasswordCodeResponse = 
   "usuário não encontrado" |
   "seu código foi gerado porem não foi possivel criar uma sessão" |
+  "recaptcha inválido" |
   500 | 200
 
 interface params {
   email: string
   telefone: string
+  token: string
 }
 
 export default async function SendForgotPasswordCode(params: params):Promise<sendForgotPasswordCodeResponse> {
@@ -34,7 +36,7 @@ export default async function SendForgotPasswordCode(params: params):Promise<sen
       return status
     }
     let msg: sendForgotPasswordCodeResponse | null = null
-    if(res?.message == "usuário não encontrado" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão") {
+    if(res?.message == "usuário não encontrado" || res?.message == "seu código foi gerado porem não foi possivel criar uma sessão" || res?.message == "recaptcha inválido") {
       msg = res?.message
     }
     if(msg != null) {
