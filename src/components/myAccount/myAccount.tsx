@@ -7,27 +7,16 @@ import GetUser, { getUserResponse } from "@/api/user/getUser"
 import { deleteCookie } from "@/action/deleteCookie"
 import styles from "./myAccount.module.css"
 import Link from "next/link"
-import Password from "../authForm/password"
 import handleModalClick from "@/funcs/handleModalClick"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import ChangePassword from "@/api/auth/changePassword"
 import PopupError from "../popupError/popupError"
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import GetAddress, { getAddressData } from "@/api/user/getAddress"
-import DeleteAddress from "@/api/user/deleteAddress"
 import Menu from "../menu/menu"
-import Recaptcha from "../recaptcha/recaptcha"
-import RecaptchaForm from "@/funcs/recaptchaForm"
-
-const schema = z.object({
-  password: z.string().min(8,"Nova senha precisa ter pelo menos 8 caracteres").max(72, "A nova senha deve ter no maxímo de 72 caracteres"),
-  newPassword: z.string().min(8,"Nova senha precisa ter pelo menos 8 caracteres").max(72, "A nova senha deve ter no maxímo de 72 caracteres")
-})
-
-type FormProps = z.infer<typeof schema>
+import Edit from "next/image"
+import ChangePasswordForm from "./changePassword"
+import DeleteAddressForm from "./deleteAddress"
+import UpdateProfileForm from "./updateProfile"
 
 interface props {
   cookieName?: string
@@ -40,23 +29,26 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
   const [data, setData] = useState<getUserResponse | null>(null)
   const [load, setLoad] = useState<boolean>(true)
   const [popupError, setPopupError] = useState<boolean>(false)
-  const [responseError, setResponseError] = useState<string | null>(null)
+
   const [changed, setChanged] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const [deleteAddress, setDeleteAddress] = useState<getAddressData | null>(null)
-  const modalRef = useRef<HTMLFormElement | null>(null)
-  const buttonToOpenModalRef = useRef<HTMLButtonElement | null>(null)
-  const closeRef = useRef<HTMLButtonElement | null>(null)
-  const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
-  const formDeleteAddressRef = useRef<HTMLFormElement | null>(null)
-  const buttonToOpenFormDeleteAddressRef = useRef<HTMLButtonElement | null>(null)
+  const [type, setType] = useState<"contact" | "name" | null>(null)
+
+  const [activeRecaptcha, setActiveRecatpcha] = useState<"updateProfile" | "changePassword" | null>(null)
+
+  const modalRefChangePassword = useRef<HTMLFormElement | null>(null)
+  const buttonToOpenModalRefChangePassword = useRef<HTMLButtonElement | null>(null)
+  const closeRefChangePassword = useRef<HTMLButtonElement | null>(null)
+
+  const modalRefDeleteAddress = useRef<HTMLFormElement | null>(null)
+  const buttonToOpenModalRefDeleteAddress = useRef<HTMLButtonElement | null>(null)
   const closeRefDeleteAddress = useRef<HTMLButtonElement | null>(null)
-  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    resolver: zodResolver(schema)
-  })
+
+  const modalRefUpdateProfile = useRef<HTMLFormElement | null>(null)
+  const buttonToOpenModalRefUpdateProfile = useRef<HTMLButtonElement | null>(null)
+  const closeRefUpdateProfile = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
     (async function() {
@@ -94,12 +86,6 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
     }())
   }, [])
 
-  useEffect(() => {
-    if(changed) {
-      closeRef.current?.click()
-    }
-  },[changed])
-
   function changeDeleteAddress(address: getAddressData) {
     setDeleteAddress({
       bairro: address.bairro,
@@ -113,105 +99,17 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
     })
   }
 
-  async function handleForm(data: FormProps) {
-    setRecaptchaError(null)
-    setResponseError(null)
-    setPopupError(false)
-    const token = RecaptchaForm(setRecaptchaError)
-    if(token == "") {
-      return
-    }
-    setLoad(true)
-    if(cookieName == undefined || cookieVal == undefined) {
-      router.push("/auth/entrar")
-      return
-    }
-    const cookie = cookieName+"="+cookieVal
-    const res = await ChangePassword(cookie, {
-      senhaNova: data.newPassword,
-      senhaAntiga: data.password,
-      token: token
-    })
-    if(typeof res == "number" && res == 200) {
-      setChanged(true)
-    }
-    if (typeof res == "string" && res == "recaptcha inválido") {
-      setRecaptchaError(res)
-      //@ts-ignore
-      window.grecaptcha.reset()
-    }
-    if(typeof res == "string" && (res == "as senhas são as mesmas" || res == "senha errada")) {
-      if(res == "senha errada") {
-        setResponseError("senha inválida")
-      } else {
-        setResponseError(res)
-      }
-    }
-    if(typeof res == "number" && res == 500) {
-      setPopupError(true)
-    }
-    if((typeof res == "number" && res == 401) || (typeof res == "string" && res == "cookie inválido")) {
-      router.push("/auth/entrar")
-      return
-    }
-    setLoad(false)
-  }
-  
-  async function handleDeleteAddressForm() {
-    if(deleteAddress) {
-      if(cookieName == undefined || cookieVal == undefined) {
-        router.push("/auth/entrar")
-        return
-      }
-      const cookie = cookieName+"="+cookieVal
-      setLoad(true)
-      const res = await DeleteAddress(cookie,{
-        bairro: deleteAddress.bairro,
-        cep: deleteAddress?.cep,
-        cidade: deleteAddress?.cidade,
-        codigoRegiao: deleteAddress?.codigoRegiao,
-        complemento: deleteAddress?.complemento,
-        numeroResidencia: deleteAddress?.numeroResidencia,
-        rua: deleteAddress?.rua
-      })
-      if(res === 401) {
-        router.push("/auth/entrar")
-        return
-      }
-      window.location.reload()
-    }
-  }
-
   return (
     <>
       <header>
         <Menu cookieName={cookieName} cookieVal={cookieVal} />
       </header>
+      {<ChangePasswordForm activeRecaptcha={activeRecaptcha} closeRef={closeRefChangePassword} modalRef={modalRefChangePassword} changed={changed} setChanged={setChanged} setLoad={setLoad} setPopupError={setPopupError} cookieName={cookieName} cookieVal={cookieVal} load={load} />}
+      {<DeleteAddressForm load={load} closeRef={closeRefDeleteAddress} deleteAddress={deleteAddress} modalRef={modalRefDeleteAddress} setLoad={setLoad} cookieName={cookieName} cookieVal={cookieVal} />}
+      {<UpdateProfileForm load={load} setData={setData} cookieName={cookieName} cookieVal={cookieVal} activeRecaptcha={activeRecaptcha} closeRef={closeRefUpdateProfile} modalRef={modalRefUpdateProfile} setLoad={setLoad} setPopupError={setPopupError} type={type} />}
       {load && <SpinLoading />}
       {popupError && <PopupError handleOut={() => setPopupError(false)}/>}
       <main className={`${load && styles.lowOpacity} ${styles.main}`}>
-        <form className={`${styles.form}`} ref={modalRef} tabIndex={0} onSubmit={handleSubmit(handleForm)}>
-          <div>
-            <label htmlFor="current_password">Senha atual</label>
-            <Password {...register("password")} id="current_password" placeholder="senha atual"/>
-            {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
-          </div>
-          <div className={styles.newPassword}>
-            <label htmlFor="new_password">Nova senha</label>
-            <Password {...register("newPassword")} id="new_password" placeholder="nova senha"/>
-            {errors.newPassword?.message && <p className={styles.error}>{errors.newPassword.message}</p>}
-          </div>
-          {!errors.password?.message && !errors.newPassword?.message && responseError && <p className={styles.error}>{responseError}</p>}
-          {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-          <Recaptcha className={styles.recaptcha} />
-          <button type="submit" className={`${styles.button} ${styles.confirm}`}>Confirmar</button>
-          <button aria-label="fechar" type="button" className={styles.close} ref={closeRef}><span aria-hidden="true">x</span></button>
-        </form>
-        <form className={styles.deleteAddress} ref={formDeleteAddressRef} onSubmit={handleDeleteAddressForm}>
-          <p>Tem certeza que deseja deletar este item?</p>
-          <button type="submit" ref={closeRefDeleteAddress} className={styles.deleteAddressButton}>Deletar</button>
-          <button aria-label="fechar" type="button" className={styles.close} ref={closeRefDeleteAddress}><span aria-hidden="true">x</span></button>
-        </form>
         {
         <section className={`${styles.section} ${(data?.status == 500 || data?.status == 404) && styles.center}`}>
           {data?.status == 200 && data.data ?
@@ -220,17 +118,32 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             <div className={styles.vals}>
               <p>Nome: </p>
               <p>{data.data.nome}</p>
+              <button className={`${styles.edit}`} onClick={() => {
+                setActiveRecatpcha("updateProfile")
+                setType("name")
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+              }} ref={type == "name" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar nome" src="/img/edit.png" width={16} height={16} /></button>
             </div>
           {
             data.data.email !=  "" ?
             <div className={`${styles.vals} ${styles.email}`}>
               <p>Email: </p>
               <p>{data.data.email}</p>
+              <button className={`${styles.edit}`} onClick={() => {
+                setActiveRecatpcha("updateProfile")
+                setType("contact")
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+              }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} onClick={() => setType("contact")} /></button>
             </div>
             :
             <div className={styles.vals}>
               <p>Telefone: </p>
               <p>{data.data.telefone}</p>
+              <button className={`${styles.edit}`} onClick={() => {
+                setActiveRecatpcha("updateProfile")
+                setType("contact")
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+              }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} /></button>
             </div>
           }
           {
@@ -305,8 +218,8 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
                     <p>{infos.cep}</p>
                   </div>
                   <button aria-label="fecha
-                     r" type="button" className={styles.close} ref={buttonToOpenFormDeleteAddressRef} onClick={() => {
-                    handleModalClick(formDeleteAddressRef, buttonToOpenFormDeleteAddressRef, closeRefDeleteAddress, styles.active, "block")
+                     r" type="button" className={styles.close} ref={buttonToOpenModalRefDeleteAddress} onClick={() => {
+                    handleModalClick(modalRefDeleteAddress, buttonToOpenModalRefDeleteAddress, closeRefDeleteAddress, styles.active, "block")
                     changeDeleteAddress({...infos,})
                   }}><span aria-hidden="true">x</span></button>
               </div>
@@ -315,7 +228,10 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             }
             </>
           }
-          {!changed ? <button className={`${styles.button} ${styles.changePassword}`} ref={buttonToOpenModalRef} onClick={() => handleModalClick(modalRef, buttonToOpenModalRef, closeRef, styles.active, "grid")}>Alterar senha</button> : <p className={styles.changed}>Senha alterada com sucesso</p>}
+          {!changed ? <button className={`${styles.button} ${styles.changePassword}`} ref={buttonToOpenModalRefChangePassword} onClick={() => {
+            setActiveRecatpcha("changePassword")
+            handleModalClick(modalRefChangePassword, buttonToOpenModalRefChangePassword, closeRefChangePassword, styles.active, "grid")
+          }}>Alterar senha</button> : <p className={styles.changed}>Senha alterada com sucesso</p>}
           </>
          : load ? <>
           <h1 className={styles.title}>Minha conta</h1>

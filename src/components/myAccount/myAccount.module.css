@@ -14,13 +14,15 @@
   padding-top: 0px;
   border-radius: 10px;
   margin-top: 30px;
+  width: 320px;
 }
 
 .title {
   color: #dbdbdb;
   font-family: var(--interRegular);
   font-size: 1.5rem;
-  margin-top: 30px; 
+  margin-top: 30px;
+  width: 290px;
 }
 
 .loading {
@@ -30,7 +32,7 @@
   text-align: center;
 }
 
-.lowOpacity {
+.lowOpacity,#lowOpacity {
   opacity: .1;
   pointer-events: none;
 }
@@ -40,6 +42,7 @@
   color: #c8c8c8;
   font-family: var(--interSemiBold);
   display: inline;
+  word-break: break-all;
 }
 
 .vals p:nth-child(2) {
@@ -234,6 +237,7 @@
   padding: 10px;
   margin-top: 10px;
   border-radius: 7px;
+  width: 290px;
 }
 
 .deleteAddress {
@@ -289,47 +293,61 @@
   width: 180px;
 }
 
+.edit {
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  padding: 3px;
+  border-radius: 100%;
+  margin-left: 5px;
+}
+
 @media (hover: hover) { 
   .link:hover {
     cursor: pointer;
     color: #d5d5d5;
   }
-  .button:hover,.close:hover,.arrow img:hover,.deleteAddressButton:hover {
+  .button:hover,.close:hover,.arrow img:hover,.deleteAddressButton:hover, .edit:hover {
     cursor: pointer;
     background-color: var(--btnHover);
   }
 }
 
-.button:active,.close:active,.buttonForm:active, .arrow img:active, .deleteAddressButton:active {
+.button:active,.close:active,.buttonForm:active, .arrow img:active, .deleteAddressButton:active, .edit:active {
   cursor: pointer;
   background-color: var(--btnClicked);
 }
-
-@media (max-width: 520px) {
-  .section {
-    padding: 15px;
-    padding-bottom: 35px;
-  }
-  .title {
-    margin-top: 15px;
-  }
-}
-
-@media (max-width: 465px) {
-  .section {
-    width: 420px;
-  }
-}
-
-@media (max-width: 435px) {
+@media (min-width: 435px) {
   .section {
     width: 345px;
   }
 }
 
-@media (max-width: 355px) {
+@media (min-width: 485px) {
   .section {
-    width: 315px;
+    width: 400px ;
+  }
+  .title {
+    width: 350px;
+  }
+}
+
+@media (min-width: 545px) {
+  .section {
+    width: 450px;
+  }
+  .addressItem,.title {
+    width: 405px;
+  }
+}
+
+@media (min-width: 950px) {
+  .section {
+    width: 550px;
+  }
+  .addressItem,.title {
+    width: 500px;
   }
 }
 

@@ -123,6 +123,35 @@
   margin-left: 12px;
 }
 
+.privacy {
+  position: relative;
+  bottom: 7px;
+  margin: 8px 12px;
+  display: flex;
+  margin-left: 12px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+}
+
+.privacy a {
+  width: max-content;
+  margin-top: 14px;
+  font-family: var(--interSemiBold);
+  color: #c8c8c8;
+  width: max-content;
+  font-size: .9rem;
+}
+
+.privacy label {
+  font-size: .9rem;
+}
+
+.privacy input {
+  width: max-content;
+  margin-left: 5px;
+  width: 15px;
+}
+
 @media (hover: hover) { 
   .button:hover {
     cursor: pointer;

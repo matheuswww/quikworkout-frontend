@@ -20,6 +20,7 @@ const schema = z.object({
   password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
   confirmPassword: z.string(),
   name: z.string().min(2, "nome precisa ter pelo menos de 2 caracteres").max(20, "O nome deve ter no maximo 20 caracteres"),
+  privacy: z.boolean().refine((val) => val, {message: "é necessário aceitar a política de privacidade",})
 }).refine((fields) => fields.password == fields.confirmPassword, {
   path: [ 'confirmPassword' ],
   message: "as senhas precisam ser iguais"
@@ -100,11 +101,15 @@ export default function SignupForm() {
             <Password {...register("password")} id="password" placeholder="senha"/> 
             {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
             <label htmlFor="confirmPassword">Confirmar senha</label>
-            <Password {...register("confirmPassword")} id="confirmPassword" placeholder="confirmar senha"/> 
-            {errors.confirmPassword?.message && <p className={styles.error}>{errors.confirmPassword.message}</p>}
+            <Password {...register("confirmPassword")} id="confirmPassword" placeholder="confirmar senha"/>
+            <div className={styles.privacy}>
+              <label htmlFor="privacy">Aceitar <Link href="/politica-privacidade" target="_blank">política de privacidade</Link></label>
+              <input {...register("privacy")} type="checkbox" id="privacy"/>
+            </div>
+            {errors.confirmPassword?.message ? <p className={styles.error}>{errors.confirmPassword.message}</p> : errors.privacy?.message && <p className={styles.error}>{errors.privacy.message}</p>}
             {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
             <Recaptcha className={styles.recaptcha} />
-            <Link href="/auth/entrar">já possui uma conta?</Link>
+            <Link href="/auth/entrar">Já possui uma conta?</Link>
             <button disabled={load ? true : false} className={`${styles.login} ${load && styles.loading}`} type="submit">{load ? "Cadastrando, aguarde" : "Cadastrar"}</button>
           </form>
         </section>

@@ -59,6 +59,9 @@ export default function FinishPurchaseForm({...props}: props) {
   const [paymentTypeRetryPayment, setPaymentTypeRetryPayment] = useState<string | null>(null)
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
+  const [privacy, setPrivacy] = useState<boolean>(false)
+  const [privacyError, setPrivacyError] = useState<string | null>(null)
+
   const addressRef = useRef<HTMLElement | null>(null)
   const paymentRef = useRef<HTMLElement | null>(null)
   
@@ -268,12 +271,17 @@ export default function FinishPurchaseForm({...props}: props) {
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
+    setPrivacyError(null)
     setRecaptchaError(null)
     setResponseError(null)
     setPopupError(false)
     setResponsePaymentError(null)
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
+      return
+    }
+    if(!privacy) {
+      setPrivacyError("é necessário aceitar a política de privacidade")
       return
     }
     const cookie = props.cookieName+"="+props.cookieVal
@@ -494,7 +502,7 @@ export default function FinishPurchaseForm({...props}: props) {
               <Payment retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
               {(!retryPayment || props.paymentType == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
               <form onSubmit={handleSubmit}>
-                <Products recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
+                <Products privacyError={privacyError} setPrivacy={setPrivacy} recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
               </form> 
             </>
           : load && <p className={styles.load}>carregando...</p>}
