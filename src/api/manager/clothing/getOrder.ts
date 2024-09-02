@@ -56,6 +56,7 @@ interface clothing {
   tamanho: string
   quantidade: number
   imagem: string
+  alt: string
 }
 
 export default async function GetOrder(cookie: string, cursor?: string, atualizado?: string, id?: string):Promise<getOrderAdmin> {

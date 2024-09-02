@@ -28,7 +28,31 @@ interface order {
   precoTotal: number
   frete: number
   motivoCancelamentoEnvio: string
+  pacotes: packages[]
+}
+
+interface packages {
+  pacote_id: string
+  codigoRastreio: string
+  numeroPacote: number
+  largura:  number
+  altura: number
+  peso: number
+  comprimento: number
+  preco: number
   roupa: clothing[]
+}
+
+interface clothing {
+  id: string
+  preco: number
+  nome: string
+  descricao: string
+  cor: string
+  tamanho: string
+  quantidade: number
+  imagem: string
+  alt: string
 }
 
 type paymentInfos = card | boleto | pix

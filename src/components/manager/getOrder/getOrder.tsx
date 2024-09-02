@@ -252,7 +252,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
                           <div key={`item_clothing_${((id))}`} id={`item_clothing_${((id))}`} className={`${styles.clothing} ${styles.displayNone}`}>
                             {pacote.roupa.map(({...clothing}) =>
                                 <div key={clothing.id+clothing.tamanho+clothing.cor}>
-                                  <Image src={clothing.imagem} alt={"#"} width={80} height={85} />
+                                  <Image src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
                                     <div className={`${styles.values}`}>
                                       <p className={styles.field}>Nome: </p>
                                       <p className={styles.value}>{clothing.nome}</p>

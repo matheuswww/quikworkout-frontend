@@ -89,29 +89,31 @@ export default function Products({clothing, totalPrice, freight, responseError, 
             </div>
           )
         })}
-        {retryPaymentData?.data && typeof retryPaymentData?.data == "object" && "pedido" in retryPaymentData.data && retryPaymentData.data.pedido.roupa.map((infos) => {
-          return (
-            <div className={`${styles.clothing}`} key={infos.id+infos.cor+infos.tamanho}>
-              <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} />
-              <div className={`${styles.values}`}>
-                <p className={styles.field}>Nome: </p>
-                <p className={styles.value}>{infos.nome}</p>
+        {retryPaymentData?.data && typeof retryPaymentData?.data == "object" && "pedido" in retryPaymentData.data && retryPaymentData.data.pedido.pacotes.map(({...packages}) => 
+          packages.roupa.map(({...infos}) => {
+            return (
+              <div className={`${styles.clothing}`} key={infos.id+infos.cor+infos.tamanho}>
+                <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} />
+                <div className={`${styles.values}`}>
+                  <p className={styles.field}>Nome: </p>
+                  <p className={styles.value}>{infos.nome}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p className={styles.field}>Cor: </p>
+                  <p className={styles.value}>{infos.cor}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p className={styles.field}>Quantidade: </p>
+                  <p className={styles.value}>{infos.quantidade}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p className={styles.field}>Preço: </p>
+                  <p className={styles.value}>R${formatPrice(infos.preco)}</p>
+                </div>
               </div>
-              <div className={`${styles.values}`}>
-                <p className={styles.field}>Cor: </p>
-                <p className={styles.value}>{infos.cor}</p>
-              </div>
-              <div className={`${styles.values}`}>
-                <p className={styles.field}>Quantidade: </p>
-                <p className={styles.value}>{infos.quantidade}</p>
-              </div>
-              <div className={`${styles.values}`}>
-                <p className={styles.field}>Preço: </p>
-                <p className={styles.value}>R${formatPrice(infos.preco)}</p>
-              </div>
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </div>
     </section>
     </>

@@ -173,6 +173,7 @@ export default function FinishPurchaseForm({...props}: props) {
             const id = "ORDE_"+props.retryPayment
 
             const res = await GetOrderDetail(cookie, id, paymentType)
+            console.log(res);
             
             
             if(res.status == 200 && res.data && typeof res.data == "object") {
@@ -406,12 +407,14 @@ export default function FinishPurchaseForm({...props}: props) {
       }
       setLoad(true)
       const clothing: clothing[] = []
-      retryPaymentData?.data?.pedido.roupa.map((infos) => {
-        clothing.push({
-          cor: infos.cor,
-          quantidade: Number(infos.quantidade),
-          roupaId: infos.id,
-          tamanho: infos.tamanho.toLocaleLowerCase(),
+      retryPaymentData?.data?.pedido.pacotes.map(({...packages}) => {
+        packages.roupa.map(({...infos}) => {
+          clothing.push({
+            cor: infos.cor,
+            quantidade: Number(infos.quantidade),
+            roupaId: infos.id,
+            tamanho: infos.tamanho.toLocaleLowerCase(),
+          })
         })
       })
       let newPayment: string = "" 
