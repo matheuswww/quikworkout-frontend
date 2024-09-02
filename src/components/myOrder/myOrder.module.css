@@ -73,6 +73,13 @@
   font-size: .9rem;
 }
 
+.p {
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  color: #c8c8c8;
+}
+
 .values p:nth-child(1) {
   color: #c8c8c8;
 }

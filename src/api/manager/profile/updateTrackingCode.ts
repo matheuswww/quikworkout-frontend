@@ -4,7 +4,12 @@ import { managerProfile } from "./pathProfile"
 
 export interface params {
   pedido_id: string
-  codigo_rastreio: string
+  pacotes: packages[]
+}
+
+export interface packages {
+  numeroPacote: number
+  codigoRastreio: string
 }
 
 type updateTrackingCode = 401 | 404 | 500 | 200

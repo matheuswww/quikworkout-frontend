@@ -155,6 +155,7 @@ export const responseErrorsPayOrder: responseErrorsPayOrderType[] = [
 
 export type responseErrorsRetryPaymentType =
   | 'cookie inválido'
+  | 'não é possivel pagar novamente um pagamento cancelado'
   | 'novo tipo de pagamento não pode ser pix'
   | 'ocorreu uma alteração nos preços das roupas'
   | 'contato não verificado'
@@ -170,7 +171,6 @@ export type responseErrorsRetryPaymentType =
   | 'preço calculado não é igual ao esperado'
   | 'não foi possível salvar o pedido'
   | 'erro ao deletar carrinho'
-  | 'server error'
   | "erro ao pagar pedido. não autorizado pelo pagseguro"
   | "erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente"
   | "erro ao pagar pedido. não autorizado pelo emissor do cartão"
@@ -204,6 +204,7 @@ export type responseErrorsRetryPaymentType =
   
 export const responseErrorsRetryPayment: responseErrorsRetryPaymentType[] = [
   'cookie inválido',
+  'não é possivel pagar novamente um pagamento cancelado',
   'novo tipo de pagamento não pode ser pix',
   'ocorreu uma alteração nos preços das roupas',
   'contato não verificado',
@@ -219,7 +220,6 @@ export const responseErrorsRetryPayment: responseErrorsRetryPaymentType[] = [
   'preço calculado não é igual ao esperado',
   'não foi possível salvar o pedido',
   'erro ao deletar carrinho',
-  'server error',
   'erro ao pagar pedido. não autorizado pelo pagseguro',
   'erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente',
   'erro ao pagar pedido. não autorizado pelo emissor do cartão',

@@ -1,45 +1,61 @@
-import { Dispatch, MutableRefObject, SetStateAction } from "react"
+import React, { Dispatch, MutableRefObject, SetStateAction, SyntheticEvent, useState } from "react"
 import styles from "./getOrder.module.css"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import UpdateTrackingCode from "@/api/manager/profile/updateTrackingCode"
+import UpdateTrackingCode, { packages } from "@/api/manager/profile/updateTrackingCode"
 import { useRouter } from "next/navigation"
 import { getOrderAdmin } from "@/api/manager/clothing/getOrder"
+import { packageNumbers } from "./getOrder"
 
 interface props {
+  setSuccess: Dispatch<SetStateAction<boolean>>
   setLoad: Dispatch<boolean>
-  setOrderId: Dispatch<string | null>
   setPopupError: Dispatch<boolean>
-  setResponseError: Dispatch<string | null>
   setData: Dispatch<SetStateAction<getOrderAdmin | null>>
   modalRef: MutableRefObject<HTMLFormElement | null>
   closeRef: MutableRefObject<HTMLButtonElement | null>
   cookieName?: string
   cookieVal?: string
   order_id: string | null
-  error: string | null
+  packageNumbers: packageNumbers[] | null
 }
 
-const schema = z.object({
-  codigo_rastreio: z.string().min(10, "código inválido").max(10, "código inválido")
-})
-
-type FormProps = z.infer<typeof schema>
-
-export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,cookieVal,setLoad,order_id,setOrderId,setPopupError,error,setResponseError,setData}:props) {
+export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,cookieVal,setLoad,order_id,setSuccess,setPopupError,setData,packageNumbers}:props) {
+  const [responseError, setResponseError] = useState<string | null>(null)
   const router = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    resolver: zodResolver(schema)
-  })
 
-  async function handleForm(formData: FormProps) {
+  async function handleSubmit(event: SyntheticEvent) {
+    event.preventDefault()
     setPopupError(false)
     setResponseError(null)
-    if(closeRef.current instanceof HTMLButtonElement) {
-      closeRef.current.click()
+    let rp: boolean = false
+    let packages: Array<packages> = []
+    if(modalRef.current instanceof HTMLFormElement) {
+      const inputs = modalRef.current.querySelectorAll("input")
+      inputs.forEach((i) => {
+        if(i.value.length < 10 || i.value.length > 10) {
+          setResponseError("todos os códigos devem conter 10 caracteres")
+          rp = true
+          return
+        }
+        const id = i.id
+        if(isNaN(Number(id))) {
+          return
+        }
+        if(packages) {
+          const newPk = packages
+          newPk.push({
+            codigoRastreio: i.value,
+            numeroPacote: Number(id)
+          })
+          return newPk
+        }
+        return [{
+          codigoRastreio: i.value,
+          numeroPacote: Number(id)
+        }]
+      })
+    }
+    if (rp || !packages) {
+      return
     }
     if(cookieName == undefined || cookieVal == undefined) {
       router.push("/manager-quikworkout/auth")
@@ -53,10 +69,9 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
     const cookie = cookieName+"="+cookieVal
     const res = await UpdateTrackingCode(cookie, {
       pedido_id: order_id,
-      codigo_rastreio: formData.codigo_rastreio
+      pacotes: packages
     })
 
-    setOrderId(null)
     if(res == 401) {
       router.push("/manager-quikworkout/auth")
       return
@@ -68,6 +83,10 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
       setResponseError("pedido não encontrado, tente recarregar a página")
     }
     if(res == 200) {
+      setSuccess(true)
+      if(closeRef.current instanceof HTMLButtonElement) {
+        closeRef.current.click()
+      }
       setData((data) => {
         const newOrder = data?.order?.pedido.filter((val) => {
           if(order_id != val.pedido_id) {
@@ -85,10 +104,18 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
   }
 
   return (
-    <form tabIndex={0} className={styles.modal} ref={modalRef} onSubmit={handleSubmit(handleForm)}>
-      <label htmlFor="tracking_code">Código de rastreio</label>
-      <input {...register("codigo_rastreio")} id="tracking_code" placeholder="código de rastreio" />
-      {errors.codigo_rastreio?.message ? <p className={styles.error}>{errors.codigo_rastreio.message}</p> : error && <p className={styles.error}>{error}</p>}
+    <form tabIndex={0} className={styles.modal} ref={modalRef} onSubmit={handleSubmit}>
+      <p className={styles.p}>Código de rastreio</p>
+      {packageNumbers?.map((p) => {
+        let id = Math.random()
+        return (
+          <React.Fragment key={Math.random()}>
+            {packageNumbers.length > 1 && <label htmlFor={`${id}`}>Pacote {p.package_number + 1}</label>}
+            <input id={`${id}`} placeholder="código de rastreio" />
+          </React.Fragment>
+        )
+      })}
+      {responseError && <p className={styles.error}>{responseError}</p>}
       <button type="submit" className={`${styles.modalButton} ${styles.button}`}>Enviar</button>
       <button aria-label="fechar" type="button" className={`${styles.close} ${styles.button}`} ref={closeRef}><span aria-hidden="true">x</span></button>
     </form>

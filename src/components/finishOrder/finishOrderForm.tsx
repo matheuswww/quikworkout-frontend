@@ -97,7 +97,6 @@ export default function FinishPurchaseForm({...props}: props) {
 
         if(props.retryPayment == undefined || (props.paymentType != "CARTAO_CREDITO" && props.paymentType != "CARTAO_DEBITO" && props.paymentType != "BOLETO" && props.paymentType != "PIX")) {
           if((props.clothing_id == undefined || props.color == undefined || props.size == undefined) && props.page != undefined && isNaN(props.page)) {
-            console.log("ldkjfkl")
             setEnd(true)
             setLoad(false)
             setData({
@@ -457,7 +456,6 @@ export default function FinishPurchaseForm({...props}: props) {
         router.push("/auth/validar-contato")
         return null
       }
-      
       if(res == "novo tipo de pagamento não pode ser pix" || res == "não foi possível salvar o pedido" || res == "não foi possível pagar o pedido" || res == "não é possível pagar um pedido cancelado com pix" || res == 500) {
         setPopupError(true)
       } else if (res == "ocorreu uma alteração nos preços das roupas" || res == "preço calculado não é igual ao esperado") {

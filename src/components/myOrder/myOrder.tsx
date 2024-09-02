@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { SyntheticEvent, useEffect, useState } from "react"
+import React, { SyntheticEvent, useEffect, useState } from "react"
 import styles from './myOrder.module.css'
 import Expand from 'next/image'
 import Link from "next/link"
@@ -56,14 +56,13 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         }
         
         const res = await GetOrder(cookie, cursor)
-    
         if(getOrder && res.status == 404) {
           setEnd(true)
           setLoad(false)
           setNewPageLoad(false)
           return
         }
-  
+        
         if(typeof res.data == "string" && res.data == "cookie inválido") {
           await deleteCookie(cookieName)
           router.push("/auth/entrar")
@@ -77,7 +76,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         if(res.data instanceof Array && res.status == 200) {
           let array: payment[] = []
           for(let i = 0; i <= res.data.length - 1;i++) {
-            if(res.data[i].tipo_pagamento == "PIX" && !checkPix(res.data[i].criadoEm, 60*4) && res.data[i].status_pagamento != "SUCESSO") {
+            if(res.data[i].tipo_pagamento == "PIX" && res.data[i].status_pagamento != "SUCESSO" && res.data[i].status_pagamento != "autorizado" && res.data[i].status_pagamento != "cancelado") {
               const res2 = await getOrderDetail(res.data[i].tipo_pagamento, res.data[i].pedido_id)
               if(res2) {
                 if(res2.data && typeof res2.data == "object" && res2.data.informacoesPagamento && 'qrcode' in res2.data.informacoesPagamento) {
@@ -85,17 +84,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     card: null,
                     boleto: null,
                     pix: res2.data.informacoesPagamento
-                  })
-                }
-              }
-            } else if (res.data[i].tipo_pagamento == "BOLETO" && res.data[i].status_pagamento != "SUCESSO") {
-              const res2 = await getOrderDetail(res.data[i].tipo_pagamento, res.data[i].pedido_id)
-              if(res2) {
-                if(res2.data && typeof res2.data == "object" && res2.data.informacoesPagamento && 'dataVencimento' in res2.data.informacoesPagamento) {
-                  array.push({
-                    card: null,
-                    boleto: res2.data.informacoesPagamento,
-                    pix: null
                   })
                 }
               }
@@ -138,20 +126,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
       return () => observer.disconnect()
     }
   },[])
-
-  function checkPix(dateTime: string, minutes: number): boolean {
-    const startDate = new Date(dateTime.replace(" ", "T")).getMinutes()
-    const currentDate = new Date().getMinutes()
-    const difference =  currentDate - startDate
-    return difference > minutes
-  }
-
-  function checkBoleto(dueDate: string) {
-    const [year, month, day] = dueDate.split('-').map(Number)
-    const dueDateObj = new Date(year, month - 1, day)
-    const currentDate = new Date()
-    return currentDate > dueDateObj
-  }
 
   async function getOrderDetail(tipoPagamento: string, pedido_id: string): Promise<getOrderDetailResponse | null> {
     if(cookieName == undefined || cookieVal == undefined) {
@@ -219,13 +193,18 @@ export default function MyOrder({cookieName,cookieVal}:props) {
   }
 
   function copyLink(event: SyntheticEvent, index: number) {
-    event.preventDefault()
-    const link = paymentInfo[index].pix?.link 
-    if(event.target instanceof HTMLElement && link) {
-      navigator.clipboard.writeText(link).then(() => window.alert("link de pagamento copiado"))
+    event.preventDefault();
+    const link = paymentInfo[index]?.pix?.link
+    if (event.target instanceof HTMLElement && link) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(link)
+          .then(() => window.alert("link de pagamento copiado"))
+          .catch(err => console.error('Failed to copy the link: ', err))
+      } else {
+        console.error('Clipboard API is not supported.');
+      }
     }
-  }
-
+  }  
   return (
    <>
     <header>
@@ -237,11 +216,9 @@ export default function MyOrder({cookieName,cookieVal}:props) {
       <section className={`${styles.section} ${(status == 404 || status == 500) && styles.sectionHeight}`}>
       {(status == 200 || load) && <h1 className={styles.title}>Meus pedidos</h1>}
        {(getOrder && status == 200) ? 
-        <>
-        {getOrder.map((infos,i) => {
+        getOrder.map((infos,i) => {
           return (
-              <div className={`${styles.item}`} key={infos.pedido_id}>
-                <>
+            <div key={infos.pedido_id} className={`${styles.item}`} >
                 <div className={styles.values}>
                   <p>ID do pedido: </p>
                   <p>{infos.pedido_id.substring(5)}</p>
@@ -252,9 +229,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     <p>Motivo do cancelamento: </p>
                     <p>{infos.motivoCancelamentoEnvio}</p>
                   </div>
-                }
-                {paymentInfo[i] && paymentInfo[i].pix && paymentInfo[i].pix?.dataExpiracao == "expirada" && 
-                  <p className={styles.alert}>Seu qr code para pagamento pix foi expirado,gere outro</p>
                 }
                 {infos.status_pagamento != "pago" &&
                 <div className={styles.values}>
@@ -272,41 +246,46 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 </div>
                 <div className={styles.values}>
                   <p>Total: </p>
-                  <p>{formatPrice(infos.precoTotal)}</p>
+                  <p>R${formatPrice(infos.precoTotal)}</p>
                 </div>
-                {infos.status_pagamento == "pagamento não solicitado" && paymentInfo[i].pix && paymentInfo[i].pix?.qrcode && paymentInfo[i].pix?.dataExpiracao == "não expirada" &&
+                {infos.status_pagamento == "pagamento não solicitado" && paymentInfo[i]?.pix && paymentInfo[i].pix?.qrcode && paymentInfo[i].pix?.dataExpiracao == "não expirada" &&
                   <div className={`${styles.values} ${styles.infos} ${styles.qrcode}`}>
                     <p>QR CODE para pagamento: </p>
                     <QRCODE src={paymentInfo[i].pix?.qrcode as string} alt="qr code para pagamento via pix" width={220} height={220}/>
                     <button onClick={(event: SyntheticEvent) => copyLink(event, i)} className={styles.button}>Copiar link de pagamento</button>
                   </div>
                 }
-                {paymentInfo[i].boleto?.pdf &&
-                  <>
-                    <div className={`${styles.values} ${styles.infos} ${styles.boleto}`}>
-                      <p>Baixar boleto: </p>
-                      <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
-                    </div>
-                  </>
-                }
-                {infos.codigo_rastreio != "" ?
-                  <>
-                    <div className={styles.values}>
-                      <p>Código de rastreio: </p>
-                      <p>{infos.codigo_rastreio}</p>
-                    </div>
-                    <div className={styles.values}>
-                      <p>Digite seu código e acompanhe seu pedido aqui: </p>
-                      <Link className={styles.link} href="https://www.kangu.com.br/rastreio" target="_blank">rastrear pedido</Link>
-                    </div>
-                  </>
-                  : infos.status_pagamento == "pago" &&
-                  <div className={styles.values}>
-                    <p>Rastreio do pedido: </p>
-                    <p>aguardando ser entregue a transportadora</p>
+                {paymentInfo[i]?.boleto?.pdf &&
+                  <div className={`${styles.values} ${styles.infos} ${styles.boleto}`}>
+                    <p>Baixar boleto: </p>
+                    <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
                   </div>
                 }
-              </>
+                {
+                infos?.pacotes[0]?.codigoRastreio != "" ?
+                <>
+                  {infos.pacotes.length > 1 && <p className={styles.p}>Você possui {infos.pacotes.length} pacotes a caminho</p>}
+                  {
+                    infos.pacotes.map(({codigoRastreio},v) => {
+                      return (
+                        <div className={styles.values} key={`codigoRastreio${v}`}>
+                          {infos.pacotes.length > 1 ? <p>Código de rastreio pacote {v + 1}: </p> : <p>Código de rastreio: </p>}
+                          <p>{codigoRastreio}</p>
+                        </div>
+                      )
+                    })
+                  }
+                  <div className={styles.values} key={"see_tracking_code"}>
+                    <p>Digite seu código e acompanhe seu pedido aqui: </p>
+                    <Link className={styles.link} href="https://www.kangu.com.br/rastreio" target="_blank">rastrear pedido</Link>
+                  </div>
+                </>
+                : infos.status_pagamento == "pago" &&
+                <div className={styles.values}>
+                  <p>Rastreio do pedido: </p>
+                  <p>aguardando ser entregue a transportadora</p>
+                </div>
+              }
             <div className={styles.addressInfo}>
               <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "address", styles.displayNone)}>Informações de endereço e contato</button>
               <Expand src="/img/arrowUp.png" alt="expandir informações de endereço e contato" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "address", styles.displayNone)} id={`arrowUp_address_${i}`} />
@@ -355,7 +334,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
             <Expand src="/img/arrowDown.png" alt="diminuir informações de endereço e contato" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handlePaymentInfoClick(i,"paymentInfo", infos.pedido_id, infos.tipo_pagamento)} id={`arrowDown_paymentInfo_${i}`} />
           </div>
           }
-           {paymentInfo[i].card && infos.status_pagamento != "pagamento não solicitado" ?
+           {paymentInfo[i]?.card && infos.status_pagamento != "pagamento não solicitado" ?
               <div className={`${styles.payment} ${styles.displayNone}`} id={`item_paymentInfo_${i}`}>
                   <div className={`${styles.values} ${styles.infos}`}>
                     <p>Tipo de pagamento: </p>
@@ -385,7 +364,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     </div>
                   }
               </div>
-              : paymentInfo[i].boleto ? 
+              : paymentInfo[i]?.boleto ? 
               <div className={`${styles.payment} ${styles.displayNone}`} id={`item_paymentInfo_${i}`}>
                 <div className={`${styles.values} ${styles.infos}`}>
                   <p>Nome: </p>
@@ -447,12 +426,10 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                   </div>
                 }
                 {
-                  <>
-                    <div className={`${styles.values} ${styles.infos}`}>
-                      <p>Baixar boleto: </p>
-                      <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
-                    </div>
-                  </>
+                  <div className={`${styles.values} ${styles.infos}`}>
+                    <p>Data de vencimento </p>
+                    <p>{paymentInfo[i].boleto?.dataVencimento}</p>
+                  </div>
                 }
                 {paymentInfo[i].boleto?.mensagem != "SUCESSO" && <div className={`${styles.values} ${styles.infos}`}>
                   <p>Mensagem: </p>
@@ -460,7 +437,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 </div>
                 }
             </div>
-            : paymentInfo[i].pix &&
+            : paymentInfo[i]?.pix &&
               <div id={`item_paymentInfo_${i}`} className={`${styles.payment} ${styles.displayNone}`}>
                 <div className={`${styles.values} ${styles.infos}`}>
                   <p>Tipo de pagamento: </p>
@@ -476,59 +453,65 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 </div>}
               </div>
             }
-            <div className={styles.clothingInfo}>
-              <button className={styles.buttonExpand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)}>Roupas</button>
-              <Expand src="/img/arrowUp.png" alt="expandir informações das roupas do pedido" width={30} height={30} className={styles.expand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} id={`arrowUp_clothing_${i}`} />
-              <Expand src="/img/arrowDown.png" alt="diminuir informações das roupas do pedido" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} id={`arrowDown_clothing_${i}`} />
-            </div>
-            <div id={`item_clothing_${i}`} className={`${styles.clothing} ${styles.displayNone}`} >
-            {infos.roupa.map((clothing) => {
-                return (
-                  <div key={clothing.id+clothing.tamanho+clothing.cor}>
-                    <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
-                    <div className={`${styles.values}`}>
-                      <p className={styles.field}>Nome: </p>
-                      <p className={styles.value}>{clothing.nome}</p>
-                    </div>
-                    <div className={`${styles.values}`}>
-                      <p className={styles.field}>Cor: </p>
-                      <p className={styles.value}>{clothing.cor}</p>
-                    </div>
-                    <div className={`${styles.values}`}>
-                      <p className={styles.field}>Quantidade: </p>
-                      <p className={styles.value}>{clothing.quantidade}</p>
-                    </div>
-                    <div className={`${styles.values}`}>
-                      <p className={styles.field}>Preço: </p>
-                      <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
-                    </div>
+          
+            {infos.pacotes.map((pacote,j) =>
+            {              
+              const id = Math.floor(Math.random() * 1000000) + 1
+              return (
+                <React.Fragment key={"pac"+j}>
+                  <div className={styles.clothingInfo}>
+                    <button className={styles.buttonExpand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} key={`item_button_${id}`}>Roupa(s) {infos.pacotes.length > 1 && `do pacote ${j + 1}`}</button>
+                    <Expand src="/img/arrowUp.png" alt="expandir informações das roupas do pedido" width={30} height={30} className={styles.expand} onClick={() => handleArrowClick(id,"clothing", styles.displayNone)} id={`arrowUp_clothing_${id}`} />
+                    <Expand src="/img/arrowDown.png" alt="diminuir informações das roupas do pedido" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(id,"clothing", styles.displayNone)} id={`arrowDown_clothing_${id}`} />
                   </div>
+                  <div id={`item_clothing_${id}`} className={`${styles.clothing} ${styles.displayNone}`} key={`item_clothing_${id}`}>
+                    {pacote.roupa.map((clothing) => 
+                      <div key={clothing.id+clothing.tamanho+clothing.cor}>
+                      <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
+                        <div className={`${styles.values}`}>
+                          <p className={styles.field}>Nome: </p>
+                          <p className={styles.value}>{clothing.nome}</p>
+                        </div>
+                        <div className={`${styles.values}`}>
+                          <p className={styles.field}>Cor: </p>
+                          <p className={styles.value}>{clothing.cor}</p>
+                        </div>
+                        <div className={`${styles.values}`}>
+                          <p className={styles.field}>Quantidade: </p>
+                          <p className={styles.value}>{clothing.quantidade}</p>
+                        </div>
+                        <div className={`${styles.values}`}>
+                          <p className={styles.field}>Tamanho: </p>
+                          <p className={styles.value}>{clothing.tamanho}</p>
+                        </div>
+                        <div className={`${styles.values}`}>
+                          <p className={styles.field}>Preço: </p>
+                          <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </React.Fragment>
               )
-            })}
-            </div>
-            {infos.tipo_pagamento == "PIX" && (checkPix(infos.criadoEm, 60*4) && infos.status_pagamento == "pagamento não solicitado") && 
+            }
+            )}
+            {infos.tipo_pagamento == "PIX" && paymentInfo[i]?.pix?.dataExpiracao == "expirada" &&
               <div>
                 <p className={styles.error}>Pix expirado</p>
                 <Link href={`/finalizar-compra?retry_payment_id=${infos.pedido_id.substring(5)}&paymentType=${infos.tipo_pagamento}`} className={styles.link}>Gerar novo pix</Link>
               </div>
             }
-            {infos.status_pagamento == "recusado" && (!paymentInfo[i].card?.mensagem.includes("não tente novamente") || !paymentInfo[i].card?.mensagem.includes("não tente novamente") || !paymentInfo[i].card?.mensagem.includes("não tente novamente")) && 
+            {infos.status_pagamento == "recusado" && !paymentInfo[i]?.card?.mensagem.includes("não tente novamente") && 
               <div>
                 <p className={styles.error}>Pagamento recusado</p>
                 <Link href={`/finalizar-compra?retry_payment_id=${infos.pedido_id.substring(5)}&paymentType=${infos.tipo_pagamento == "CREDIT_CARD" ? "CARTAO_CREDITO" : "CARTAO_DEBITO"}`} className={styles.link}>Pagar novamente</Link>
               </div>
             }
-            {infos.status_pagamento == "BOLETO" && paymentInfo[i].boleto && checkBoleto(paymentInfo[i].boleto?.dataVencimento as string) && 
-              <div>
-                <p className={styles.error}>Boleto vencido</p>
-                <Link href={`/finalizar-compra?retry_payment_id=${infos.pedido_id.substring(5)}&paymentType=${infos.tipo_pagamento}`} className={styles.link}>Pagar novamente</Link>
-              </div>
-            }
             <p className={styles.cancelOrder}>Deseja cancelar o pedido? Nos chame no whatsapp: 77777</p>
           </div>
-          )
-        })}
-      </> : load ? <p className={styles.load}>carregando...</p> : status == 404 ?
+          )  
+        })
+      : load ? <p className={styles.load}>carregando...</p> : status == 404 ?
         <div>
           <p className={styles.notFound} style={{marginTop: "25px"}}>Nenhum pedido foi encontrado</p>
           <Link style={{marginLeft: "10px"}} href="/" className={styles.seeClothing}>Ver roupas</Link>

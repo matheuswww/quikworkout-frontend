@@ -286,7 +286,7 @@ export default function Clothing({...props}: props) {
      {load && <SpinLoading />}
      {popUpError && <PopupError msg={popupErrorMsg} handleOut={(() => setPopUpError(false))} />}
       <main className={`${styles.main} ${load && styles.opacity}`}>
-        <Success msg="Adicionado com successo" setSuccess={setSuccess} success={success} />
+        <Success msg="Adicionado com sucesso" setSuccess={setSuccess} success={success} />
         <ModalColor inventario={data?.clothing?.inventario} mainColor={mainColor} modalRef={modalRef} setColor={setColor} />
         <form className={styles.calcFreightForm} onSubmit={handleSubmit(handleSubmitCalcFreight)} ref={calcFreightRef}>
             <label htmlFor="cep">Digite seu cep</label>

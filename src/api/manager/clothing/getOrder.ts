@@ -14,14 +14,6 @@ interface order {
   pedidosRestantes: number
 }
 
-interface volume {
-  peso: number
-  valor: number
-  altura: number
-  largura: number
-  comprimento: number
-}
-
 interface orders {
   pedido_id: string
   status_pagamento: string
@@ -40,7 +32,18 @@ interface orders {
   codigoRastreio: string
   cancelamento: string
   precoTotal: number
-  volume: volume[]
+  pacotes: packages[]
+}
+
+interface packages {
+  pacote_id: string
+  codigoRastreio: string
+  numeroPacote: number
+  largura:  number
+  altura: number
+  peso: number
+  comprimento: number
+  preco: number
   roupa: clothing[]
 }
 
@@ -84,9 +87,10 @@ export default async function GetOrder(cookie: string, cursor?: string, atualiza
       status = res.status
     } else {
       status = 500
-    }    
+    }
+    
     let data: order | null
-    if (status == 200) {
+    if (status == 200) {  
       data = await res.json()
     } else {
       data = null

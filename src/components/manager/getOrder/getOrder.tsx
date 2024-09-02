@@ -14,12 +14,18 @@ import handleModalClick from "@/funcs/handleModalClick"
 import Filter from "./filter"
 import UpdateTrackingCodeForm from "./updateTrackingCode"
 import Menu from "../menu/menu"
+import Success from "@/components/successs/success"
+import React from "react"
 
 interface props {
   cookieName?: string
   cookieVal?: string
   updated?: string
 }
+
+export interface packageNumbers {
+  package_number: number
+} 
 
 export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
   const router = useRouter()
@@ -30,7 +36,6 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
   const [newPage, setNewPage] = useState<boolean>(false)
   const [newPageLoad, setNewPageLoad] = useState<boolean>(false)
   const [orderId, setOrderId] = useState<string | null>(null)
-  const [error, setResponseError] = useState<string | null>(null)
 
   const closeFilterRef = useRef<HTMLButtonElement | null>(null)
   const buttonToOpenModalRefFilter = useRef<HTMLButtonElement | null>(null)
@@ -38,6 +43,9 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
 
   const closeTrackingCodeRef = useRef<HTMLButtonElement | null>(null)
   const trackingCodeRef = useRef<HTMLFormElement | null>(null)
+
+  const [packageNumbers, setPackageNumbers] = useState<packageNumbers[] | null>(null)
+  const [success, setSuccess] = useState<boolean>(false)
 
   useEffect(() => {
     if(!end) {
@@ -61,17 +69,30 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
         
         const res = await GetOrder(cookie, cursor, updated)
-        
         if(res.status == 401) {
           router.push("/manager-quikworkout/auth")
           return
         }
-        if(res.status == 404 || res.status == 500) {
+        
+        if((res.status == 404 || res.status == 500) && !data?.order) {
           setEnd(true)
           setLoad(false)
           setNewPageLoad(false)
           setData(res)
           return
+        }
+        if(data?.order && data.status == 500) {
+          setPopupError(true)
+        }
+        if (data?.order && res.status == 404) {
+          setEnd(true)
+          setData((d) => {
+            let newD = d
+            if(newD?.order?.pedidosRestantes) {
+              newD.order.pedidosRestantes = 0
+            }
+            return d
+          })
         }
         if(!data?.order?.pedido && res.status == 200) {
           setData(res)
@@ -85,6 +106,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             setEnd(true)
           }
         }
+
         setNewPageLoad(false)
         setLoad(false)
       }())
@@ -110,7 +132,8 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
     <>
       {popupError && <PopupError handleOut={() => setPopupError(false)} />}
       {load && <SpinLoading />}
-      <UpdateTrackingCodeForm setData={setData} error={error} setResponseError={setResponseError} setPopupError={setPopupError} order_id={orderId} setOrderId={setOrderId} setLoad={setLoad} cookieName={cookieName} cookieVal={cookieVal} closeRef={closeTrackingCodeRef} modalRef={trackingCodeRef} />
+      {success && <Success msg="código enviado com sucesso" setSuccess={setSuccess} success={success} />}
+      <UpdateTrackingCodeForm setSuccess={setSuccess} packageNumbers={packageNumbers} setData={setData} setPopupError={setPopupError} order_id={orderId} setLoad={setLoad} cookieName={cookieName} cookieVal={cookieVal} closeRef={closeTrackingCodeRef} modalRef={trackingCodeRef} />
       <Filter load={load} closeRef={closeFilterRef} modalRef={filterRef} setLoad={setLoad}/>
       <Menu cookieName={cookieName} cookieVal={cookieVal} />
       <main className={`${styles.main} ${load && styles.opacity} ${data?.status == 500 && styles.mainError}`}>
@@ -125,149 +148,164 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             {load && !data && <p className={styles.p}>carregando pedidos aguarde...</p>}
           </div>
           }
-          {error && <p className={styles.error}>{error}</p>}
-          {data?.order && data?.order.pedido.map(({...order},i) => {
-              return (
-                <div key={order.pedido_id} className={styles.item}>
-                  <div className={`${styles.values}`}>
-                    <p>Pedido id: </p>
-                    <p>{order.pedido_id.substring(5)}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Status pagamento: </p>
-                    <p>{order.status_pagamento}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Tipo pagamento: </p>
-                    <p>{order.tipo_pagamento}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Rua: </p>
-                    <p>{order.rua}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Número de residência: </p>
-                    <p>{order.numeroResidencia}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Complemento: </p>
-                    <p>{order.complemento}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Bairro: </p>
-                    <p>{order.bairro}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Cidade: </p>
-                    <p>{order.cidade}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Email: </p>
-                    <p>{order.email}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Telefone: </p>
-                    <p>{order.telefone}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Serviço: </p>
-                    <p>{order.servico}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>CPF/CNPJ: </p>
-                    <p>{order.cpfCnpj}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Frete: </p>
-                    <p>{order.frete == 0 ? "grátis" : order.frete}</p>
-                  </div>
-                  <div className={`${styles.values}`}>
-                    <p>Preço total: </p>
-                    <p>R${order.precoTotal}</p>
-                  </div>
-                  <div className={styles.clothingInfos}>
-                    <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "volume", styles.displayNone)}>Volumes</button>
-                    <Expand src="/img/arrowUp.png" alt="expandir informações de volumes" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "volume", styles.displayNone)} id={`arrowUp_volume_${i}`} />
-                    <Expand src="/img/arrowDown.png" alt="diminuir informações de volumes" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "volume", styles.displayNone)} id={`arrowDown_volume_${i}`}/>
-                  </div>
-                  <div className={`${styles.volumes} ${styles.displayNone}`} id={`item_volume_`+i}>
-                  {
-                    order.volume.map(({...volume},j) => {
-                      return (
-                        <div className={styles.volume} key={"volume"+i+j}>
-                          <div className={`${styles.values}`}>
-                              <p className={styles.field}>Altura: </p>
-                              <p className={styles.value}>{volume.altura}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Largura: </p>
-                              <p className={styles.value}>{volume.largura}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Comprimento: </p>
-                              <p className={styles.value}>{volume.comprimento}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Peso: </p>
-                              <p className={styles.value}>{volume.peso}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Preço: </p>
-                              <p className={styles.value}>R${volume.valor}</p>
-                            </div>
+          {data?.order?.pedido.map((order,i) => {
+            return (
+              <div className={styles.item} key={order.pedido_id}>
+                <div className={`${styles.values}`}>
+                  <p>Pedido id: </p>
+                  <p>{order.pedido_id.substring(5)}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Status pagamento: </p>
+                  <p>{order.status_pagamento}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Tipo pagamento: </p>
+                  <p>{order.tipo_pagamento}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Rua: </p>
+                  <p>{order.rua}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Número de residência: </p>
+                  <p>{order.numeroResidencia}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Complemento: </p>
+                  <p>{order.complemento}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Bairro: </p>
+                  <p>{order.bairro}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Cidade: </p>
+                  <p>{order.cidade}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Email: </p>
+                  <p>{order.email}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Telefone: </p>
+                  <p>{order.telefone}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Serviço: </p>
+                  <p>{order.servico}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>CPF/CNPJ: </p>
+                  <p>{order.cpfCnpj}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Frete: </p>
+                  <p>{order.frete == 0 ? "grátis" : formatPrice(order.frete)}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p>Preço total: </p>
+                  <p>R${formatPrice(order.precoTotal)}</p>
+                </div>
+                {
+                  order.pacotes.map(({...pacote},j) => {
+                    const id = Math.floor(Math.random() * 1000000) + 1
+                    return (
+                      <React.Fragment key={"vol"+j}>
+                        <div className={styles.volumesInfo}>
+                          <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "volume", styles.displayNone)}>{order.pacotes.length > 1 ? `Volume ${pacote.numeroPacote + 1}` : `Volume`}</button>
+                          <Expand src="/img/arrowUp.png" alt="expandir informações de volumes" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowUp_volume_${(id)}`} />
+                          <Expand src="/img/arrowDown.png" alt="diminuir informações de volumes" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowDown_volume_${(id)}`}/>
                         </div>
-                      )
-                    })
+                          <div className={`${styles.volumes} ${styles.displayNone}`} id={`item_volume_`+(id)}>
+                            <div className={styles.volume}>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Número pacote: </p>
+                                  <p className={styles.value}>{pacote.numeroPacote + 1}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Altura: </p>
+                                  <p className={styles.value}>{pacote.altura}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Largura: </p>
+                                  <p className={styles.value}>{pacote.largura}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Comprimento: </p>
+                                  <p className={styles.value}>{pacote.comprimento}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Peso: </p>
+                                  <p className={styles.value}>{pacote.peso}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Preço: </p>
+                                  <p className={styles.value}>R${formatPrice(pacote.preco)}</p>
+                                </div>
+                            </div>
+                          <div className={styles.clothingInfos}>
+                            <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)}>Roupa(s)</button>
+                            <Expand src="/img/arrowUp.png" alt="expandir informações de roupa" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowUp_clothing_${(id)}`} />
+                            <Expand src="/img/arrowDown.png" alt="diminuir informações de roupa" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowDown_clothing_${(id)}`}/>
+                          </div>
+                          <div key={`item_clothing_${((id))}`} id={`item_clothing_${((id))}`} className={`${styles.clothing} ${styles.displayNone}`}>
+                            {pacote.roupa.map(({...clothing}) =>
+                                <div key={clothing.id+clothing.tamanho+clothing.cor}>
+                                  <Image src={clothing.imagem} alt={"#"} width={80} height={85} />
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Nome: </p>
+                                      <p className={styles.value}>{clothing.nome}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Cor: </p>
+                                      <p className={styles.value}>{clothing.cor}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Quantidade: </p>
+                                      <p className={styles.value}>{clothing.quantidade}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Tamanho: </p>
+                                      <p className={styles.value}>{clothing.tamanho}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Preço: </p>
+                                      <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                                    </div>
+                                </div>
+                              )
+                            }
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    )
+                  })
+                }
+                <button disabled={load} className={`${styles.add}`} onClick={(event: SyntheticEvent) => {
+                  const packageNums = order.pacotes.map(({...pacotes}) => {
+                    return {
+                      package_number: pacotes.numeroPacote,
+                    }
+                  }) 
+                  setPackageNumbers(packageNums)
+                  setOrderId(order.pedido_id)
+                  let button: HTMLButtonElement | null = null
+                  if(event.target instanceof HTMLImageElement) {
+                    if(event.target.parentElement instanceof HTMLButtonElement) {
+                      button = event.target.parentElement
+                    }
                   }
-                  </div>
-                  <div className={styles.clothingInfos}>
-                    <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)}>Roupas</button>
-                    <Expand src="/img/arrowUp.png" alt="expandir informações de roupa" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)} id={`arrowUp_clothing_${i}`} />
-                    <Expand src="/img/arrowDown.png" alt="diminuir informações de roupa" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)} id={`arrowDown_clothing_${i}`}/>
-                  </div>
-                  <div id={`item_clothing_${i}`} className={`${styles.clothing} ${styles.displayNone}`}>
-                    {order.roupa.map(({...clothing}) => {
-                      return (
-                        <div key={clothing.id+clothing.tamanho+clothing.cor}>
-                          <Image src={clothing.imagem} alt={"#"} width={80} height={85} />
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Nome: </p>
-                              <p className={styles.value}>{clothing.nome}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Cor: </p>
-                              <p className={styles.value}>{clothing.cor}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Quantidade: </p>
-                              <p className={styles.value}>{clothing.quantidade}</p>
-                            </div>
-                            <div className={`${styles.values}`}>
-                              <p className={styles.field}>Preço: </p>
-                              <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
-                            </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                  <button disabled={load} className={`${styles.add}`} onClick={(event: SyntheticEvent) => {
-                    setOrderId(order.pedido_id)
-                    let button: HTMLButtonElement | null = null
-                    if(event.target instanceof HTMLImageElement) {
-                      if(event.target.parentElement instanceof HTMLButtonElement) {
-                        button = event.target.parentElement
-                      }
-                    }
-                    if(event.target instanceof HTMLButtonElement) {
-                      button = event.target
-                    }
-                    if(button instanceof HTMLButtonElement) {
-                      handleModalClick(trackingCodeRef, button, closeTrackingCodeRef, styles.active, "flex")
-                    }
-                  }}><Image src="/img/add.png" width={20} height={21} alt="adicionar código de rastreio"/></button>
-              </div>
+                  if(event.target instanceof HTMLButtonElement) {
+                    button = event.target
+                  }
+                  if(button instanceof HTMLButtonElement) {
+                    handleModalClick(trackingCodeRef, button, closeTrackingCodeRef, styles.active, "flex")
+                  }
+                }}><Image src="/img/add.png" width={20} height={21} alt="adicionar código de rastreio"/></button>
+            </div>
             )
-        })}
+          })}
         <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
         {newPageLoad && 
             <div className={styles.ldsRing} aria-label="carregando" tabIndex={0}>

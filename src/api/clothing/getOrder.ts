@@ -34,9 +34,8 @@ export default async function GetOrder(cookie: string, cursor?: string):Promise<
       status = 500
     }
     let data: getOrder[] | ResponseErr | null = null
-
     if (status == 200 || status == 401 || status == 400) {
-      data = await res.json()     
+      data = await res.json()
     }
 
     if(data && typeof data == "object" && "message" in data && (data.message == "cookie inválido" || data.message == "contato não verificado")) {

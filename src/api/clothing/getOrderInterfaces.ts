@@ -58,7 +58,6 @@ interface getOrder {
   pedido_id: string
   status_pagamento: string
   tipo_pagamento: string
-  codigo_rastreio: string
   email: string
   telefone: string
   servico: string
@@ -71,6 +70,11 @@ interface getOrder {
   precoTotal: number
   frete: number
   motivoCancelamentoEnvio: string
+  pacotes: packages[]
+}
+
+interface packages {
+  codigoRastreio: string
   roupa: clothing[]
 }
 

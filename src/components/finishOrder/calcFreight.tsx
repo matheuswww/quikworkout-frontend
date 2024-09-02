@@ -33,6 +33,7 @@ const schema = z.object({
   if(fields.cep.includes("-")){
     cepNumber = fields.cep.replace("-","")
   }
+  
   if(isNaN(Number(cepNumber))) {
     return false
   }

@@ -48,6 +48,18 @@ const schema = z.object({
 }, {
    path: ["cpfCnpj"],
    message: "cpf ou cnpj inválido"
+}).refine((fields) => {
+  let cepNumber = fields.cep
+  if(fields.cep.includes("-")){
+    cepNumber = fields.cep.replace("-","")
+  }
+  if(isNaN(Number(cepNumber))) {
+    return false
+  }
+  return true
+},{
+  path: [ 'cep' ],
+  message: "cep inválido"
 })
 
 type FormProps = z.infer<typeof schema>
@@ -122,6 +134,9 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
     const regionCode = data.regionCode.slice(0,2)
     const DDD = data.phoneNumber.slice(0,2)
     const number = data.phoneNumber.substring(2)
+    if(data.cep.includes("-")) {
+      data.cep = data.cep.replace("-","")
+    }
     setAddress({
       nome: data.name,
       cep: data.cep,

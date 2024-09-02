@@ -91,7 +91,7 @@
   font-size: 1.5rem;
 }
 
-.clothingInfos {
+.clothingInfos,.volumesInfo {
   display: flex;
 }
 
@@ -160,8 +160,6 @@
 
 .volume {
   margin-left: 12px;
-  border-bottom: 1px solid #797979;
-  padding-bottom: 15px;
   width: 135px;
 }
 
@@ -186,6 +184,16 @@
   justify-content: center;
   border: 1px solid #797979;
   z-index: 999;
+}
+
+.modal label {
+  margin-top: 12px;
+}
+
+.modal .p {
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
 }
 
 .modalButton {
@@ -322,6 +330,10 @@
   font-size: 1.2rem;
   padding-top: 1px;
   border: 1px solid white;
+}
+
+.clothing,.clothingInfos {
+  margin-left: 12px;
 }
 
 @keyframes ldsRing {

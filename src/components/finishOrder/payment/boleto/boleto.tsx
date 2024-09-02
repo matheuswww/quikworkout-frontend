@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import Back from '../back/back'
 import styles from './boleto.module.css'
 import { z } from 'zod'
@@ -37,7 +37,7 @@ const schema = z.object({
     const today = new Date();
     const date = new Date(fields.dueDate);
     const differenceInDays = Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    if (differenceInDays >= 0 && differenceInDays <= 7) {
+    if (differenceInDays >= 1 && differenceInDays <= 7) {
      return true
     }
     return false
