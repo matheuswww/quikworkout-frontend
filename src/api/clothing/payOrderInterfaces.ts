@@ -77,37 +77,6 @@ export type responseErrorsPayOrderType =
   | "cep de destino inválido"
   | "frete não disponível"
   | "preço calculado não é igual ao esperado"
-  | "não foi possível pagar o pedido"
-  | "erro ao pagar pedido. não autorizado pelo pagseguro"
-  | "erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente"
-  | "erro ao pagar pedido. não autorizado pelo emissor do cartão"
-  | "erro ao pagar pedido. transação inválida - não tente novamente"
-  | "erro ao pagar pedido. transação não permitida - não tente novamente"
-  | "erro ao pagar pedido. contate a central do seu cartão"
-  | "erro ao pagar pedido. compra não autorizada"
-  | "erro ao pagar pedido. verifique os dados do cartão"
-  | "erro ao pagar pedido. parcelamento inválido - não tente novamente"
-  | "erro ao pagar pedido. valor da transação não permitido - não tente novamente"
-  | "erro ao pagar pedido. senha inválida - não tente novamente"
-  | "erro ao pagar pedido. transação não permitida - não tente novamente"
-  | "erro ao pagar pedido. contate a central do seu cartão - não tente novamente"
-  | "erro ao pagar pedido. falha de comunicação tente mais tarde"
-  | "erro ao pagar pedido. transação não permitida para o cartão - não tente novamente"
-  | "erro ao pagar pedido. senha inválida"
-  | "erro ao pagar pedido. senha inválida utilize a nova senha"
-  | "erro ao pagar pedido. excedidas tentativas de senha. Contate a central do seu cartão"
-  | "erro ao pagar pedido. valor execedido. Contate a central do seu cartão"
-  | "erro ao pagar pedido. quantidade de saques execedida. Contate a central do seu cartão"
-  | "erro ao pagar pedido. conta de origem inválida - não tente novamente"
-  | "erro ao pagar pedido. utilize função crédito"
-  | "erro ao pagar pedido. utilize função débito"
-  | "erro ao pagar pedido. saque não disponível - não tente novamente"
-  | "erro ao pagar pedido. dados do cartão inválido - não tente novamente"
-  | "erro ao pagar pedido. erro no cartão - não tente novamente"
-  | "erro ao pagar pedido. refazer a transação"
-  | "erro ao pagar pedido. cartão não permite transação internacional"
-  | "erro ao pagar pedido. desbloquei o cartão"
-  | "erro ao pagar pedido. server error"
 
 export const responseErrorsPayOrder: responseErrorsPayOrderType[] = [
   "cookie inválido",
@@ -120,37 +89,6 @@ export const responseErrorsPayOrder: responseErrorsPayOrderType[] = [
   "cep de destino inválido",
   "frete não disponível",
   "preço calculado não é igual ao esperado",
-  "não foi possível pagar o pedido",
-  "erro ao pagar pedido. não autorizado pelo pagseguro",
-  "erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente",
-  "erro ao pagar pedido. não autorizado pelo emissor do cartão",
-  "erro ao pagar pedido. transação inválida - não tente novamente",
-  "erro ao pagar pedido. transação não permitida - não tente novamente",
-  "erro ao pagar pedido. contate a central do seu cartão",
-  "erro ao pagar pedido. compra não autorizada",
-  "erro ao pagar pedido. verifique os dados do cartão",
-  "erro ao pagar pedido. parcelamento inválido - não tente novamente",
-  "erro ao pagar pedido. valor da transação não permitido - não tente novamente",
-  "erro ao pagar pedido. senha inválida - não tente novamente",
-  "erro ao pagar pedido. transação não permitida - não tente novamente",
-  "erro ao pagar pedido. contate a central do seu cartão - não tente novamente",
-  "erro ao pagar pedido. falha de comunicação tente mais tarde",
-  "erro ao pagar pedido. transação não permitida para o cartão - não tente novamente",
-  "erro ao pagar pedido. senha inválida",
-  "erro ao pagar pedido. senha inválida utilize a nova senha",
-  "erro ao pagar pedido. excedidas tentativas de senha. Contate a central do seu cartão",
-  "erro ao pagar pedido. valor execedido. Contate a central do seu cartão",
-  "erro ao pagar pedido. quantidade de saques execedida. Contate a central do seu cartão",
-  "erro ao pagar pedido. conta de origem inválida - não tente novamente",
-  "erro ao pagar pedido. utilize função crédito",
-  "erro ao pagar pedido. utilize função débito",
-  "erro ao pagar pedido. saque não disponível - não tente novamente",
-  "erro ao pagar pedido. dados do cartão inválido - não tente novamente",
-  "erro ao pagar pedido. erro no cartão - não tente novamente",
-  "erro ao pagar pedido. refazer a transação",
-  "erro ao pagar pedido. cartão não permite transação internacional",
-  "erro ao pagar pedido. desbloquei o cartão",
-  "erro ao pagar pedido. server error"
 ]
 
 export type responseErrorsRetryPaymentType =
@@ -164,43 +102,12 @@ export type responseErrorsRetryPaymentType =
   | 'roupa não encontrada'
   | 'peso máximo atingido'
   | 'cep de destino inválido'
-  | 'frete não disponível'
-  | 'não foi possível pagar o pedido'
   | 'pedido já está pago'
   | 'pedido está sendo processado'
   | 'preço calculado não é igual ao esperado'
   | 'não foi possível salvar o pedido'
+  | 'frete não disponível'
   | 'erro ao deletar carrinho'
-  | "erro ao pagar pedido. não autorizado pelo pagseguro"
-  | "erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente"
-  | "erro ao pagar pedido. não autorizado pelo emissor do cartão"
-  | "erro ao pagar pedido. transação inválida - não tente novamente"
-  | "erro ao pagar pedido. transação não permitida - não tente novamente"
-  | "erro ao pagar pedido. contate a central do seu cartão"
-  | "erro ao pagar pedido. compra não autorizada"
-  | "erro ao pagar pedido. verifique os dados do cartão"
-  | "erro ao pagar pedido. parcelamento inválido - não tente novamente"
-  | "erro ao pagar pedido. valor da transação não permitido - não tente novamente"
-  | "erro ao pagar pedido. senha inválida - não tente novamente"
-  | "erro ao pagar pedido. transação não permitida - não tente novamente"
-  | "erro ao pagar pedido. contate a central do seu cartão - não tente novamente"
-  | "erro ao pagar pedido. falha de comunicação tente mais tarde"
-  | "erro ao pagar pedido. transação não permitida para o cartão - não tente novamente"
-  | "erro ao pagar pedido. senha inválida"
-  | "erro ao pagar pedido. senha inválida utilize a nova senha"
-  | "erro ao pagar pedido. excedidas tentativas de senha. Contate a central do seu cartão"
-  | "erro ao pagar pedido. valor execedido. Contate a central do seu cartão"
-  | "erro ao pagar pedido. quantidade de saques execedida. Contate a central do seu cartão"
-  | "erro ao pagar pedido. conta de origem inválida - não tente novamente"
-  | "erro ao pagar pedido. utilize função crédito"
-  | "erro ao pagar pedido. utilize função débito"
-  | "erro ao pagar pedido. saque não disponível - não tente novamente"
-  | "erro ao pagar pedido. dados do cartão inválido - não tente novamente"
-  | "erro ao pagar pedido. erro no cartão - não tente novamente"
-  | "erro ao pagar pedido. refazer a transação"
-  | "erro ao pagar pedido. cartão não permite transação internacional"
-  | "erro ao pagar pedido. desbloquei o cartão"
-  | "erro ao pagar pedido. server error"
   
 export const responseErrorsRetryPayment: responseErrorsRetryPaymentType[] = [
   'cookie inválido',
@@ -215,39 +122,8 @@ export const responseErrorsRetryPayment: responseErrorsRetryPaymentType[] = [
   'cep de destino inválido',
   'pedido está sendo processado',
   'frete não disponível',
-  'não foi possível pagar o pedido',
   'pedido já está pago',
   'preço calculado não é igual ao esperado',
   'não foi possível salvar o pedido',
   'erro ao deletar carrinho',
-  'erro ao pagar pedido. não autorizado pelo pagseguro',
-  'erro ao pagar pedido. quantidade de tentativas excedidas - não tente novamente',
-  'erro ao pagar pedido. não autorizado pelo emissor do cartão',
-  'erro ao pagar pedido. transação inválida - não tente novamente',
-  'erro ao pagar pedido. transação não permitida - não tente novamente',
-  'erro ao pagar pedido. contate a central do seu cartão',
-  'erro ao pagar pedido. compra não autorizada',
-  'erro ao pagar pedido. verifique os dados do cartão',
-  'erro ao pagar pedido. parcelamento inválido - não tente novamente',
-  'erro ao pagar pedido. valor da transação não permitido - não tente novamente',
-  'erro ao pagar pedido. senha inválida - não tente novamente',
-  'erro ao pagar pedido. transação não permitida - não tente novamente',
-  'erro ao pagar pedido. contate a central do seu cartão - não tente novamente',
-  'erro ao pagar pedido. falha de comunicação tente mais tarde',
-  'erro ao pagar pedido. transação não permitida para o cartão - não tente novamente',
-  'erro ao pagar pedido. senha inválida',
-  'erro ao pagar pedido. senha inválida utilize a nova senha',
-  'erro ao pagar pedido. excedidas tentativas de senha. Contate a central do seu cartão',
-  'erro ao pagar pedido. valor execedido. Contate a central do seu cartão',
-  'erro ao pagar pedido. quantidade de saques execedida. Contate a central do seu cartão',
-  'erro ao pagar pedido. conta de origem inválida - não tente novamente',
-  'erro ao pagar pedido. utilize função crédito',
-  'erro ao pagar pedido. utilize função débito',
-  'erro ao pagar pedido. saque não disponível - não tente novamente',
-  'erro ao pagar pedido. dados do cartão inválido - não tente novamente',
-  'erro ao pagar pedido. erro no cartão - não tente novamente',
-  'erro ao pagar pedido. refazer a transação',
-  'erro ao pagar pedido. cartão não permite transação internacional',
-  'erro ao pagar pedido. desbloquei o cartão',
-  'erro ao pagar pedido. server error'
 ]

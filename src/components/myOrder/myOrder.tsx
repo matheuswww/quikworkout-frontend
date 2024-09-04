@@ -352,10 +352,13 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     <p>Titular: </p>
                     <p>{paymentInfo[i].card?.portador.name}</p>
                   </div>
-                  <div className={`${styles.values} ${styles.infos}`}>
-                    <p>Parcelas: </p>
-                    <p>{paymentInfo[i].card?.parcelas}</p>
-                  </div>
+                  {
+                    paymentInfo[i].card?.parcelas != 0 &&
+                    <div className={`${styles.values} ${styles.infos}`}>
+                      <p>Parcelas: </p>
+                      <p>{paymentInfo[i].card?.parcelas}</p>
+                    </div>
+                  }
                   {
                     paymentInfo[i].card?.mensagem != "SUCESSO" && 
                     <div className={`${styles.values} ${styles.infos}`}>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 import styles from './card.module.css'
 import Back from '../back/back'
 import Create3DSSession from '@/api/order/create3DSSession'
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { card } from '@/api/clothing/payOrderInterfaces'
+import { card, enderecoContato } from '@/api/clothing/payOrderInterfaces'
 import Visibility from "next/image"
 
 interface props {
@@ -23,20 +23,89 @@ interface props {
   setCard: Dispatch<card | null>
   card: card | null
   responseError: string | null
+  address: enderecoContato | null
+  addressRef: MutableRefObject<HTMLElement | null>
+  responseError3ds: string | null
+  setIdTo3ds: Dispatch<SetStateAction<string | null>>
 }
+
+export interface request3DSData {
+  data: request3DS
+}
+
+interface request3DS {
+  customer: customer
+  paymentMethod: paymentMethod
+  amount: amount
+  shippingAddress: shippingAddress
+  dataOnly: false
+}
+
+interface shippingAddress {
+  street: string
+  number: number
+  complement: string
+  city: string
+  regionCode: string
+  country: string
+  postalCode: string
+}
+
+interface amount {
+  value: number
+  currency: "BRL"
+}
+
+interface customer {
+  name: string
+  email: string
+  phones: phones[]
+}
+
+interface paymentMethod {
+  type: string
+  installments: string
+  card: cardInterface
+}
+
+interface cardInterface {
+  number: number
+  expMonth: number
+  expYear: number
+  holder: holder
+}
+
+interface holder {
+  name: string
+}
+
+interface phones {
+  country: number
+  area: number
+  number: number
+  type: "MOBILE"
+}
+
 
 const schema = z.object({
   cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido").min(15,"número de cartão inválido").max(20,"número de cartão inválido"),
-  holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido"),
+  holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido").regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "titular do cartão inválido" }),
   cvv: z.string().min(1,"cvv").max(4,"cvv"),
   expMonth: z.string(),
   expYear: z.string(),
-  installments: z.string()
+  installments: z.string().default("1")
+}).refine((field) => {
+  const expiryDate = new Date(Number(field.expYear), Number(field.expMonth), 0)
+  const now = new Date()
+  return expiryDate >= now
+},{
+  message: "este cartão está expirado",
+  path: ["expYear"]
 })
 
 type FormProps = z.infer<typeof schema>
 
-export default function Card({ setPaymentType,paymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card, responseError  }:props) {
+export default function Card({ setPaymentType,paymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card, responseError, address, addressRef, responseError3ds, setIdTo3ds }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -44,9 +113,11 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
   })
   const router = useRouter()
   const [next, setNext] = useState<boolean>(false)
-  const [Id3DS, setId3DS] = useState<string | null>(null)
   const [saved,setSaved] = useState<boolean>(false)
   const [visibility, setVisibility] = useState<boolean>(false)
+  const [idTo3dsExpiration, setIdTo3dsExpiration] = useState<number | null>(null)
+
+  const formRef = useRef<HTMLFormElement | null>(null)
 
   useEffect(() => {
     if(paymentType == "debit_card") {
@@ -56,8 +127,16 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
           return
         }
         const cookie = cookieName+"="+cookieVal
+        if(idTo3dsExpiration != null) {
+          const now = Date.now()
+          if(now < idTo3dsExpiration) {
+            setNext(true)
+            return
+          }
+        }
         setLoad(true)
-        const data = await Create3DSSession(cookie)   
+        const data = await Create3DSSession(cookie)
+
         if(data == "contato não verificado") {
           router.push("/auth/validar-contato")
           return
@@ -71,7 +150,15 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
           setError(true)
           return
         }
-        setId3DS(data.session)
+        const pagbank_script = document.querySelector("#pagbank_script")
+        if(!(pagbank_script instanceof HTMLScriptElement)) {
+          const script = document.createElement("script")
+          script.src = "https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js"
+          script.id = "pagbank_script"
+          document.body.append(script)
+        }
+        setIdTo3ds(data.session)
+        setIdTo3dsExpiration(data.expires_at)
         setLoad(false)
         setNext(true)
       }())
@@ -80,14 +167,18 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
     }
   }, [paymentType])
 
-  function handleForm(data: FormProps) {
+  useEffect(() => {
+    if(responseError3ds) {
+      formRef.current?.scrollIntoView({behavior:"smooth",block:"center"})
+      setSaved(false)
+    }
+  },[responseError3ds])
+
+
+  async function handleForm(data: FormProps) {
+    data.cardNumber = data.cardNumber.replaceAll("-","").trim()
     let expMonth = Number(data.expMonth)
     let installments = Number(data.installments)
-    let threedsId = Id3DS
-    if(paymentType == "debit_card" && threedsId == null) {
-      setError(false)
-      return
-    }
     if(!isNaN(expMonth) && !isNaN(installments)) {
       setCard({
         nome: data.holder,
@@ -96,7 +187,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         expAno: data.expYear,
         expMes: expMonth,
         parcelas: installments,
-        id3DS: threedsId
+        id3DS: null
       })
       setSaved(true)
     } else {
@@ -114,13 +205,13 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
       </div>
     :
     !saved ?
-      <form className={`${styles.form} ${!showCard && styles.displayNone}`} onSubmit={handleSubmit(handleForm)}>
+      <form className={`${styles.form} ${!showCard && styles.displayNone}`} onSubmit={handleSubmit(handleForm)} ref={formRef}>
       <Back handleBack={() => {setNext(false);setLoad(false);setPaymentType("card")}} ariaLabel="Voltar para tipo de cartão" />
       <label className={styles.label} htmlFor="cardNumber">Número do cartão</label>
       <input {...register("cardNumber")} type="text" placeholder="número do cartão" id="cardNumber"/>
       {errors.cardNumber && <p className={styles.error}>{errors.cardNumber.message}</p>}
-      <label className={styles.label} htmlFor="name">Nome do titular</label>
-      <input {...register("holder")} type="text" placeholder="titular do cartão" id="name"/>
+      <label className={styles.label} htmlFor="holder">Nome do titular</label>
+      <input {...register("holder")} type="text" placeholder="titular do cartão" id="holder"/>
       {errors.holder && <p className={styles.error}>{errors.holder.message}</p>}
       <label className={styles.label} htmlFor="cvv">Cvv</label>
       <input {...register("cvv")} type="text" placeholder="código do cartão" id="cvv"/>
@@ -155,6 +246,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         <option value="2034">2034</option>
         <option value="2035">2040</option>
       </select>
+      {errors.expYear && <p className={styles.error}>{errors.expYear.message}</p>}
       {paymentType == "credit_card" &&
         <>
           <label className={`${styles.label}`} htmlFor="installments" {...register("installments")}>Parcelas</label>
@@ -168,6 +260,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
           </select>
         </>
       }
+      {responseError3ds && <p className={styles.error}>{responseError3ds}</p>}
       <button className={styles.button} type="submit" id="submit">Salvar dados do cartão</button>
     </form>
     : 

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef } from "react"
 import styles from './products.module.css'
 import { dataGetClothingCart } from "@/api/clothing/getClothingCart"
 import ClothingImg from 'next/image'
@@ -21,6 +21,8 @@ interface props {
 }
 
 export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight, recaptchaError, privacyError, setPrivacy}:props) {
+  const productsRef = useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
     if(freight == null) {
       setTotalPriceWithFreight(null)
@@ -48,10 +50,16 @@ export default function Products({clothing, totalPrice, freight, responseError, 
     setTotalPriceWithFreight(null)
   }, [freight])
 
+  useEffect(() => {
+    if(responseError) {
+      productsRef.current?.scrollIntoView({behavior:"smooth",block:"center"})
+    }
+  },[responseError])
+
   return (
     <>
     <section className={`${styles.section}`}>
-      <div>
+      <div ref={productsRef}>
         <p className={styles.price}>Preço total: R${totalPrice}</p>
         {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p style={{marginBottom: "10px"}} className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p style={{marginBottom: "10px"}} className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p style={{marginBottom: "10px"}} className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
         <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />

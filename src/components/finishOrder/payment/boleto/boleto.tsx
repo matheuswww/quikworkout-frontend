@@ -44,6 +44,19 @@ const schema = z.object({
 }, {
   path: ["dueDate"],
   message: "data de vencimento deve ser entre 1 dia e 1 semana"
+}).refine((fields) => {
+  let cepNumber = fields.cep
+  if(fields.cep.includes("-")){
+    cepNumber = fields.cep.replace("-","")
+  }
+  
+  if(isNaN(Number(cepNumber))) {
+    return false
+  }
+  return true
+}, {
+  path: [ 'cep' ],
+  message: "cep inválido"
 })
 
 type FormProps = z.infer<typeof schema>
@@ -60,7 +73,9 @@ export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto
   function handleForm(data: FormProps) {
     const region = data.regionCode.substring(5)
     const regionCode = data.regionCode.slice(0,2)
-    
+    if(data.cep.includes("-")) {
+      data.cep = data.cep.replace("-","")
+    }
     setBoleto({
       dataVencimento: data.dueDate,
       titularBoleto: {

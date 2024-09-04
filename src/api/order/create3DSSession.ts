@@ -9,7 +9,7 @@ type responseErrors = "cookie inválido" | "contato não verificado"
 
 export interface create3DSSessionData {
   session: string
-  expires_at: string
+  expires_at: number
 }
 
 type create3DSSessionResponse = statusCode | responseErrors | create3DSSessionData

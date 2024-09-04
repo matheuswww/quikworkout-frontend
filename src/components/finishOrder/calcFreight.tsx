@@ -10,13 +10,11 @@ import PopupError from '../popupError/popupError'
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import formatPrice from '@/funcs/formatPrice'
-import { getOrderDetailResponse } from '@/api/clothing/getOrderDetail'
 
 interface props {
   setDelivery: Dispatch<SetStateAction<"E" | "X" | "R">>
   delivery: "E" | "X" | "R"
   clothing: dataGetClothingCart[] | null | undefined
-  clothingRetryPayment: getOrderDetailResponse | null
   end: boolean
   load: boolean
   setLoad: Dispatch<boolean>
@@ -45,7 +43,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, setPopupError, popupError, clothing, setFreight, totalPrice, clothingRetryPayment }:props) {
+export default function CalcFreightForm({ setDelivery, delivery, end, load, setLoad, setPopupError, clothing, setFreight, totalPrice }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -69,13 +67,7 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
           productQuantity.push(quantidade)
         })
       }
-      if(clothingRetryPayment?.data && typeof clothingRetryPayment?.data == "object" && "pedido" in clothingRetryPayment?.data) {
-        clothingRetryPayment.data.pedido.roupa.map(({id,quantidade}) => {
-          clothingIds.push(id)
-          productQuantity.push(quantidade)
-        })
-      }
-      if(clothing || clothingRetryPayment) {
+      if(clothing) {
         if(values.cep.includes("-")) {
           values.cep = values.cep.replace("-","")
         }

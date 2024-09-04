@@ -2,7 +2,7 @@
 
 import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import styles from './finishOrderForm.module.css'
-import GetClothingCart, { dataGetClothingCart, getClothingCartResponse } from '@/api/clothing/getClothingCart'
+import GetClothingCart, { getClothingCartResponse } from '@/api/clothing/getClothingCart'
 import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
 import SpinLoading from '../spinLoading/spinLoading'
@@ -21,6 +21,7 @@ import GetOrderDetail, { getOrderDetailResponse } from '@/api/clothing/getOrderD
 import Menu from '../menu/menu'
 import GetUser from '@/api/user/getUser'
 import RecaptchaForm from '@/funcs/recaptchaForm'
+import { env } from '@/api/path'
 
 interface props {
   cookieName?: string
@@ -29,8 +30,8 @@ interface props {
   clothing_id?: string
   color?: string
   size?: string
-  retryPayment?: string
-  paymentType?: string
+  retryPaymentId: string | null
+  paymentTypeRetryPayment: string | null
 }
 
 export default function FinishPurchaseForm({...props}: props) {
@@ -38,12 +39,11 @@ export default function FinishPurchaseForm({...props}: props) {
 
   const [delivery, setDelivery] = useState<"E" | "X" | "R">("E")
   const [data, setData] = useState<getClothingCartResponse | null>(null)
-  const [retryPaymentData, setRetryPaymentData] = useState<getOrderDetailResponse | null>(null)
   const [popupError, setPopupError] = useState<boolean>(false)
   const [load, setLoad] = useState<boolean>(true)
   const [requests, setRequests] = useState<number>(0)
   const [end, setEnd] = useState<boolean>(false)
-
+  
   const [totalPriceWithFreight, setTotalPriceWithFreight] = useState<string | null>(null)
   const [freight, setFreight] = useState<string | null>(null)
   const [paymentType, setPaymentType] = useState<"card" | "credit_card" | "debit_card" | "pix" | "boleto" | null>(null)
@@ -53,14 +53,19 @@ export default function FinishPurchaseForm({...props}: props) {
   const [address, setAddress] = useState<enderecoContato | null>(null)
   const [responsePaymentError, setResponsePaymentError] = useState<string | null>(null)
   const [responseError, setResponseError] = useState<string | null>(null)
-  const [retryPayment,setRetryPayment] = useState<string | null>(null)
   const [addressStatus, setAddressStatus] = useState<500 | null>(null)
 
+  const [retryPaymentData, setRetryPaymentData] = useState<getOrderDetailResponse | null>(null)
   const [paymentTypeRetryPayment, setPaymentTypeRetryPayment] = useState<string | null>(null)
+  const [retryPaymentId, setRetryPaymentId] = useState<string | null>(null)
+  
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
   const [privacy, setPrivacy] = useState<boolean>(false)
   const [privacyError, setPrivacyError] = useState<string | null>(null)
+
+  const [responseError3ds, setResponseError3ds] = useState<string | null>(null)
+  const [idTo3ds,setIdTo3ds] = useState<string | null>(null)
 
   const addressRef = useRef<HTMLElement | null>(null)
   const paymentRef = useRef<HTMLElement | null>(null)
@@ -95,7 +100,7 @@ export default function FinishPurchaseForm({...props}: props) {
           return
         }
 
-        if(props.retryPayment == undefined || (props.paymentType != "CARTAO_CREDITO" && props.paymentType != "CARTAO_DEBITO" && props.paymentType != "BOLETO" && props.paymentType != "PIX")) {
+        if(props.retryPaymentId == undefined || (props.paymentTypeRetryPayment != "CARTAO_CREDITO" && props.paymentTypeRetryPayment != "CARTAO_DEBITO" && props.paymentTypeRetryPayment != "BOLETO" && props.paymentTypeRetryPayment != "PIX")) {
           if((props.clothing_id == undefined || props.color == undefined || props.size == undefined) && props.page != undefined && isNaN(props.page)) {
             setEnd(true)
             setLoad(false)
@@ -162,26 +167,24 @@ export default function FinishPurchaseForm({...props}: props) {
           setLoad(false)
           } else {
             setEnd(true)
-            setRetryPayment(props.paymentType)
             let paymentType: string = ""
-            if(props.paymentType == "CARTAO_CREDITO" || props.paymentType == "CARTAO_DEBITO") {
+            if(props.paymentTypeRetryPayment == "CARTAO_CREDITO" || props.paymentTypeRetryPayment == "CARTAO_DEBITO") {
               paymentType = "CARTAO"
             } else {
-              paymentType = props.paymentType
+              paymentType = props.paymentTypeRetryPayment
             }
             
-            const id = "ORDE_"+props.retryPayment
-
-            const res = await GetOrderDetail(cookie, id, paymentType)
-            console.log(res);
+            const id = "ORDE_"+props.retryPaymentId
             
+            setPaymentTypeRetryPayment(props.paymentTypeRetryPayment)
+            setRetryPaymentId(props.retryPaymentId)
+            const res = await GetOrderDetail(cookie, id, paymentType)
             
             if(res.status == 200 && res.data && typeof res.data == "object") {
               if(res.data.informacoesPagamento.mensagem == "SUCESSO") {
                 router.push("/usuario/meus-pedidos")
                 return
               }
-              setPaymentTypeRetryPayment(props.paymentType)
             }
             if(typeof res.status == "number" && res.status == 404) {
               setRetryPaymentData({
@@ -269,6 +272,105 @@ export default function FinishPurchaseForm({...props}: props) {
     return null
   }
 
+  async function handle3DS(totalPrice: number): Promise<boolean> {
+    if (!address || !paymentType || !card) return false
+    if (!address) return false
+    const request = {
+      data: {
+        amount: {
+          value: totalPrice,
+          currency: "BRL"
+        },
+        customer: {
+          name: address.nome,
+          email: address.email,
+          phones: [{
+            area: Number(address.telefone.DDD),
+            country: Number(address.telefone.DDI),
+            number: Number(address.telefone.Numero),
+            type: "MOBILE"
+          }]
+        },
+        paymentMethod: {
+          installments: card.parcelas,
+          type: paymentType.toUpperCase(),
+          card: {
+            expMonth: Number(card.expMes),
+            expYear: Number(card.expAno),
+            holder: {
+              name: card.nome
+            },
+            number: Number(card.numeroCartao),
+          }
+        },
+        shippingAddress: {
+          city: address.cidade,
+          complement: address.complemento,
+          country: "BRA",
+          number: Number(address.numeroResidencia),
+          postalCode: address.cep,
+          regionCode: address.codigoRegiao,
+          street: address.rua
+        },
+        dataOnly: false
+      }
+    }
+    setLoad(true)
+    /*@ts-ignore*/ 
+    PagSeguro.setUp({
+      session: idTo3ds,
+      env: env
+    })
+    let returnBool: boolean = false
+   /*@ts-ignore*/ 
+    await PagSeguro.authenticate3DS(request).then( result => {
+      if(result.status == "CHANGE_PAYMENT_METHOD") {
+        setResponseError3ds("autenticação 3DS negada pelo pagbank,escolha outro meio de pagamento")
+        returnBool = false
+      }
+      if(result.status == "AUTH_NOT_SUPPORTED") {
+        setResponseError3ds("autenticação 3DS indisponível para este cartão,escolha outro meio de pagamento")
+      }
+      if(result.status == "AUTH_FLOW_COMPLETED") {
+        setCard((c) => {
+          const newC = c
+          if(newC) {
+            newC.id3DS = result.id
+            return newC
+          }
+          return c
+        })
+        returnBool = true
+      }
+      /*@ts-ignore*/ 
+      if("logResponseToScreen" in this) {
+        /*@ts-ignore*/ 
+        this.logResponseToScreen(result)
+      }
+      /*@ts-ignore*/ 
+      if("stopLoading" in this) {
+        /*@ts-ignore*/ 
+        this.stopLoading()
+      }
+      /*@ts-ignore*/ 
+    }).catch((err) => {
+      /*@ts-ignore*/ 
+      if(err instanceof PagSeguro.PagSeguroError ) {
+        setPopupError(true)
+        console.log(err);
+        console.log(err.detail);
+        returnBool = false
+        /*@ts-ignore*/ 
+          /*@ts-ignore*/ 
+        if("stopLoading" in this) {
+          /*@ts-ignore*/ 
+          this.stopLoading()
+        }
+      }
+    })
+    return returnBool
+  }
+  
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
     setPrivacyError(null)
@@ -276,6 +378,7 @@ export default function FinishPurchaseForm({...props}: props) {
     setResponseError(null)
     setPopupError(false)
     setResponsePaymentError(null)
+    setResponseError3ds(null)
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
       return
@@ -285,7 +388,7 @@ export default function FinishPurchaseForm({...props}: props) {
       return
     }
     const cookie = props.cookieName+"="+props.cookieVal
-    if(!retryPayment) {
+    if(!retryPaymentData && !retryPaymentId) {
     const clothing: clothing[] = []
     data?.clothing && data.clothing.map((infos) => {
       if(!infos.excedeEstoque || infos.disponivel) {
@@ -328,6 +431,14 @@ export default function FinishPurchaseForm({...props}: props) {
         if(totalPrice >= 200) {
           vlrFrete = 0
         }
+        const tp = Math.round((totalPrice+vlrFrete)*100) / 100
+        if (paymentType == "debit_card") {
+          if(!await handle3DS(Math.round(tp * 100))) {
+            setLoad(false)
+            return
+          }
+        }
+  
         const res = await PayOrder(cookie, {
           bairro: address.bairro,
           cep: address.cep,
@@ -338,7 +449,7 @@ export default function FinishPurchaseForm({...props}: props) {
           email: address.email,
           nome: address.nome,
           numeroResidencia: address.numeroResidencia,
-          precoTotal: Math.round((totalPrice+vlrFrete)*100) / 100,
+          precoTotal: tp,
           regiao: address.regiao,
           rua: address.rua,
           servico: address.servico,
@@ -374,6 +485,7 @@ export default function FinishPurchaseForm({...props}: props) {
         if(res == 500) {
           setPopupError(true)
         }
+ 
         if(res == "roupa não encontrada" || res == "a quantidade do pedido excede o estoque") {
           setResponseError("parece que uma das suas roupas está indisponível, tente novamente, esta roupa não será incluida no pedido")
           setEnd(false)
@@ -386,14 +498,32 @@ export default function FinishPurchaseForm({...props}: props) {
         } else if (res == "preço calculado não é igual ao esperado" || res == "não foi possivel salvar o pedido") {
           setPopupError(true)
         } else {
+          if(typeof res == "string" && res.includes("order_id:")) {
+            const startIndex = res.indexOf('order_id:')
+            const start = startIndex + 'order_id:'.length
+            const orderId = res.substring(start)
+            const beforeOrderId = res.substring(0, startIndex).trim().replace(",","")
+            let pt: string
+            if(paymentType == "credit_card") {
+              pt = "CARTAO_CREDITO"
+            } else if (paymentType == "debit_card"){
+              pt = "CARTAO_DEBITO"
+            } else {
+              pt = paymentType.toUpperCase()
+            }
+            window.history.pushState({}, "", "?retry_payment_id="+orderId.substring(5)+"&paymentType="+pt)
+            setPaymentTypeRetryPayment(pt)
+            setRetryPaymentId(orderId)
+            setResponseError(beforeOrderId)
+          }
           const quantityErrorPattern = /a quantidade do pedido \d+ excede o estoque/
-          if (typeof res == "string" && (responseErrorsPayOrder.includes(res as responseErrorsPayOrderType) || quantityErrorPattern.test(res) || res == "não foi possível pagar o pedido")) {
+          if (typeof res == "string" && (responseErrorsPayOrder.includes(res as responseErrorsPayOrderType) || quantityErrorPattern.test(res))) {
             setResponseError(res)
           }
         }
         setLoad(false)
       }
-    } else if (paymentTypeRetryPayment && props.paymentType && props.retryPayment && paymentType && retryPaymentData && typeof retryPaymentData.data == "object" && retryPaymentData.data) {
+    } else if (paymentTypeRetryPayment && retryPaymentId && paymentType) {
       if(paymentType == null || (card == null && boleto == null && paymentType != "pix")) {
         if(paymentRef.current instanceof HTMLElement) {
           const button = paymentRef.current.querySelector("#submit")
@@ -406,17 +536,38 @@ export default function FinishPurchaseForm({...props}: props) {
         }
       }
       setLoad(true)
-      const clothing: clothing[] = []
-      retryPaymentData?.data?.pedido.pacotes.map(({...packages}) => {
-        packages.roupa.map(({...infos}) => {
-          clothing.push({
-            cor: infos.cor,
-            quantidade: Number(infos.quantidade),
-            roupaId: infos.id,
-            tamanho: infos.tamanho.toLocaleLowerCase(),
+      let tp:number = 0
+      let clothing: clothing[] = []
+      if(retryPaymentData && typeof retryPaymentData.data == "object" && retryPaymentData.data) {
+        retryPaymentData.data.pedido.pacotes.map(({...packages}) => {
+          packages.roupa.map(({...infos}) => {
+            clothing.push({
+              cor: infos.cor,
+              quantidade: Number(infos.quantidade),
+              roupaId: infos.id,
+              tamanho: infos.tamanho.toLocaleLowerCase(),
+            })
           })
         })
-      })
+        tp = retryPaymentData.data.pedido.precoTotal
+      } else if (data?.clothing) {
+        let vlrFrete = await calcFreight()
+        if(vlrFrete == null) {
+          return
+        }
+        if(totalPrice >= 200) {
+          vlrFrete = 0
+        }
+        data.clothing.map(({...c}) => {
+          clothing.push({
+            cor: c.cor,
+            quantidade: Number(c.quantidade),
+            roupaId: c.roupa_id,
+            tamanho: c.tamanho.toLocaleLowerCase(),
+          })
+        })
+        tp = Math.round((totalPrice+vlrFrete)*100) / 100
+      }
       let newPayment: string = "" 
       let payment: string
       if(paymentType == "credit_card") {
@@ -427,20 +578,30 @@ export default function FinishPurchaseForm({...props}: props) {
         payment = paymentType.toUpperCase()
       }
 
-      if(props.paymentType != payment) {
+      if(paymentTypeRetryPayment != payment) {
         newPayment = payment
       }
-      
+      if (paymentType == "debit_card") {
+        if(!await handle3DS(Math.round(tp * 100))) {
+          setLoad(false)
+          return
+        }
+      }
       const res = await RetryPayment(cookie, {
         novoTipoPagamento: newPayment,
         boleto: boleto,
         cartao: card,
-        pedido_id: "ORDE_"+props.retryPayment,
-        precoTotal: retryPaymentData.data.pedido.precoTotal,
+        pedido_id: "ORDE_"+retryPaymentId,
+        precoTotal: tp,
         roupa: clothing,
-        tipoPagamento: props.paymentType,
+        tipoPagamento: paymentTypeRetryPayment,
         token: token
       })
+      
+      if(typeof res == "object" && 'pedido_id' in res) {
+        router.push("/usuario/meus-pedidos")
+        return
+      }
       if (typeof res == "string" && res == "recaptcha inválido") {
         setRecaptchaError(res)
         //@ts-ignore
@@ -459,7 +620,7 @@ export default function FinishPurchaseForm({...props}: props) {
         router.push("/auth/validar-contato")
         return null
       }
-      if(res == "novo tipo de pagamento não pode ser pix" || res == "não foi possível salvar o pedido" || res == "não foi possível pagar o pedido" || res == "não é possível pagar um pedido cancelado com pix" || res == 500) {
+      if(res == "novo tipo de pagamento não pode ser pix" || res == "não foi possível salvar o pedido" || res == "não é possível pagar um pedido cancelado com pix" || res == 500) {
         setPopupError(true)
       } else if (res == "ocorreu uma alteração nos preços das roupas" || res == "preço calculado não é igual ao esperado") {
         setResponseError("não é possivel tentar pagar novamente, o preço foi alterado")
@@ -469,10 +630,15 @@ export default function FinishPurchaseForm({...props}: props) {
         setResponseError("não é possível tentar pagar novamente, o peso excede o máximo de entrega")
       } else if (res == "a quantidade do pedido excede o estoque") {
         setResponseError("não é possível tentar pagar novamente, o estoque não é suficiente")
-      } else if (res == "pedido está sendo processado" || res == "pedido já está pago" || res == "erro ao deletar carrinho" || res == "erro ao pagar pedido. não autorizado pelo pagseguro") {
+      } else if (res == "pedido está sendo processado" || res == "pedido já está pago" || res == "erro ao deletar carrinho") {
         router.push("/usuario/meus-pedidos")
         return
       } else {
+        if(typeof res == "string" && res.includes("order_id:")) {
+          const startIndex = res.indexOf('order_id:')
+          const beforeOrderId = res.substring(0, startIndex).trim().replace(",","")
+          setResponseError(beforeOrderId)
+        }
         const quantityErrorPattern = /a quantidade do pedido \d+ excede o estoque/
         if (typeof res == "string" && (responseErrorsPayOrder.includes(res as responseErrorsPayOrderType) || quantityErrorPattern.test(res))) {
           setResponseError(res)
@@ -482,7 +648,6 @@ export default function FinishPurchaseForm({...props}: props) {
         router.push("/usuarios/meus-pedidos")
         return
       }
-    
       setLoad(false)
     }
   }
@@ -497,11 +662,11 @@ export default function FinishPurchaseForm({...props}: props) {
       <main className={`${styles.main} ${load && `${styles.opacity}`} ${(data?.status == 500 || data?.status == 404 || retryPaymentData?.status == 404 || retryPaymentData?.status == 500 || addressStatus == 500) && styles.mainHeight}`}>
         <div className={styles.container}>
           {(((data?.status == 200 || (retryPaymentData == null && data == null)) || (retryPaymentData?.status == 200 || (retryPaymentData == null && data == null))) && addressStatus != 500) && <h1 className={styles.title}>Finalizar compra</h1>}
-          {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && retryPayment)) && addressStatus != 500 ?
+          {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && paymentTypeRetryPayment)) && addressStatus != 500 ?
             <>
-              {!retryPaymentData?.data && <CalcFreightForm popupError={popupError} setPopupError={setPopupError} clothingRetryPayment={retryPaymentData} totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data?.clothing} setDelivery={setDelivery} delivery={delivery} />}
-              <Payment retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
-              {(!retryPayment || props.paymentType == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
+              {(!retryPaymentData?.data && !retryPaymentId) && <CalcFreightForm popupError={popupError} setPopupError={setPopupError} totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data?.clothing} setDelivery={setDelivery} delivery={delivery} />}
+              <Payment responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
+              {(!paymentTypeRetryPayment || paymentTypeRetryPayment == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
               <form onSubmit={handleSubmit}>
                 <Products privacyError={privacyError} setPrivacy={setPrivacy} recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
               </form> 
@@ -513,7 +678,7 @@ export default function FinishPurchaseForm({...props}: props) {
           {((data?.status == 404 || retryPaymentData?.status == 404) && addressStatus != 500) && 
           <div>
             <p className={styles.notFound} style={{marginTop: "25px"}}>{"Pedido não encontrado"}</p>
-            <Link style={{marginLeft: "10px"}} href={`${props.paymentType && props.retryPayment ? "/usuario/minha-bolsa" : "/"}`}className={styles.seeClothing}>{props.paymentType && props.retryPayment ? "Ver carrinho" : "Ver roupas"}</Link>
+            <Link style={{marginLeft: "10px"}} href={`${paymentTypeRetryPayment && retryPaymentId ? "/usuario/minha-bolsa" : "/"}`}className={styles.seeClothing}>{paymentTypeRetryPayment && retryPaymentId ? "Ver carrinho" : "Ver roupas"}</Link>
           </div>
           }
         </div>

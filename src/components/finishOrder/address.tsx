@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation'
 import GetAddress from '@/api/user/getAddress'
 
 const schema = z.object({
-  name: z.string().min(1, "nome precisa ter pelo menos 1 carácter").max(30, "é permitido no máximo 30 caracteres"),
+  name: z.string().regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "nome e sobrenome inválido" }),
   email: z.string().min(10, "email precisa ter pelo menos 10 caracteres").max(255, "é permitido no máximo 255 caracteres").regex(/^([a-zA-Z0-9.!#$%&'*+\/=?^_ {|}~-]{1,64}@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?){0,5})?$/, "email inválido"),
   phoneNumber: z.string().min(10, "telefone inválido").max(14, "telefone inválido"),
   cpfCnpj: z.string().min(11, "cpf ou cnpj inválido").max(14, "cpf ou cnpj inválido"),
@@ -144,9 +144,9 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
       complemento: data.complement,
       email: data.email,
       telefone: {
-          DDI: "55",
-          DDD: DDD,
-          Numero: number
+        DDI: "55",
+        DDD: DDD,
+        Numero: number
       },
       bairro: data.neighbordhood,
       numeroResidencia: data.residenceNumber,
@@ -212,14 +212,14 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
                 </div>
               )
             })}
-            {addressSaved && <button className={styles.otherAddress} onClick={handleOtherAddressClick}>Selecionar outro endereço</button>}
+            {addressSaved && <button className={styles.otherAddress} id="submit" onClick={handleOtherAddressClick}>Selecionar outro endereço</button>}
           </>
           }
           {
             !saved ?
             <form className={`${styles.form} ${(!addressForm || addressSaved ) && styles.displayNone}`} onSubmit={handleSubmit(handleForm)}>
-            <label className={styles.label} htmlFor="name">Nome</label>
-            <input {...register("name")} className={styles.input} placeholder="nome" type="text" id="name"/>
+            <label className={styles.label} htmlFor="name">Nome e sobrenome</label>
+            <input {...register("name")} className={styles.input} placeholder="nome e sobrenome" type="text" id="name"/>
             {errors.name && <p className={styles.error}>{errors.name.message}</p>}
             <label className={styles.label} htmlFor="email">Email</label>
             <input {...register("email")} className={styles.input} placeholder="email" type="text" id="email"/>

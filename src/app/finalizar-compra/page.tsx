@@ -28,7 +28,7 @@ export default function FinishPurchase({searchParams}: props) {
   
   return (
     <>
-      <FinishPurchaseForm paymentType={searchParams.paymentType} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size} retryPayment={searchParams.retry_payment_id}/>
+      <FinishPurchaseForm paymentTypeRetryPayment={searchParams.paymentType ? searchParams.paymentType : null} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value} page={searchParams.page} clothing_id={searchParams.clothing_id} color={searchParams.color} size={searchParams.size} retryPaymentId={searchParams.retry_payment_id ? searchParams.retry_payment_id : null}/>
       <Footer />
     </>
   )

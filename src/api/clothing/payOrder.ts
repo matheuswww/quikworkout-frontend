@@ -64,6 +64,9 @@ export default async function PayOrder(cookie: string, params: params):Promise<p
       return res.message
     }
     if (res && 'message' in res && res.message) {
+      if(res.message.includes("order_id:")) {
+        return res.message as responseErrorsPayOrderType
+      }
       if (responseErrorsPayOrder.includes(res.message as responseErrorsPayOrderType)) {
         return res.message as responseErrorsPayOrderType
       }
