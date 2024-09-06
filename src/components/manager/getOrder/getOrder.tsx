@@ -48,7 +48,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
   const [success, setSuccess] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!end) {
+    if(!end && !newPageLoad) {
       (async function() {
         if(cookieName == undefined || cookieVal == undefined) {
           router.push("/manager-quikworkout/auth")
@@ -64,6 +64,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             cursor = data.order.pedido[lastIndex - 1].criadoEm
           }
         }
+        
         if(isNaN(Number(updated)) || Number(updated) <= 0) {
           updated = undefined
         }
@@ -86,28 +87,16 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
         if (data?.order && res.status == 404) {
           setEnd(true)
-          setData((d) => {
-            let newD = d
-            if(newD?.order?.pedidosRestantes) {
-              newD.order.pedidosRestantes = 0
-            }
-            return d
-          })
         }
         if(!data?.order?.pedido && res.status == 200) {
           setData(res)
-          if(res.order?.pedidosRestantes == 0) {
-            setEnd(true)
-          }
-        } else if(data?.order?.pedido && res.status == 200) {
-          res.order?.pedido.push(...data.order.pedido)
-          setData(res)
-          if(res.order?.pedidosRestantes == 0) {
-            setEnd(true)
-          }
+        } else if(data?.order?.pedido && res.status == 200 && res.order?.pedido) {
+          data.order?.pedido.push(...res.order.pedido)
+          setData(data)
         }
 
         setNewPageLoad(false)
+        setNewPage(false)
         setLoad(false)
       }())
     }
@@ -143,12 +132,12 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             data?.status != 500 && <div className={styles.order}>
             <h1 className={styles.title}>Pedidos</h1>
             <button className={styles.button} onClick={() => handleModalClick(filterRef, buttonToOpenModalRefFilter, closeFilterRef, styles.active, "flex")} ref={buttonToOpenModalRefFilter}>Filtrar</button>
-            {data?.order?.pedidosRestantes != undefined && <p className={styles.p}>{data.order.pedidosRestantes == 0 ? "Todos os pedidos foram carregados" : `Pedidos não carregados: ${data.order.pedidosRestantes}`}</p>}
-            {((data?.status == 404 || data?.order?.pedidosRestantes == 0) && !data.order?.pedido) && <p className={`${styles.p}`}>Nenhum pedido foi encontrado</p>}
+            {data?.order && <p className={styles.p}>{end ? "Todos os pedidos foram carregados" : `Ainda exitem pedidos a serem carregados`}</p>}
+            {((data?.status == 404) && !data.order?.pedido) && <p className={`${styles.p}`}>Nenhum pedido foi encontrado</p>}
             {load && !data && <p className={styles.p}>carregando pedidos aguarde...</p>}
           </div>
           }
-          {data?.order?.pedido.map((order,i) => {
+          {data?.order?.pedido.map((order) => {
             return (
               <div className={styles.item} key={order.pedido_id}>
                 <div className={`${styles.values}`}>
@@ -156,12 +145,12 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
                   <p>{order.pedido_id.substring(5)}</p>
                 </div>
                 <div className={`${styles.values}`}>
-                  <p>Status pagamento: </p>
-                  <p>{order.status_pagamento}</p>
+                  <p>Status do pagamento: </p>
+                  <p className={order.status_pagamento == "pago" ? styles.green : ""}>{order.status_pagamento}</p>
                 </div>
                 <div className={`${styles.values}`}>
-                  <p>Tipo pagamento: </p>
-                  <p>{order.tipo_pagamento}</p>
+                  <p>Tipo do pagamento: </p>
+                  <p>{order.tipo_pagamento == "DEBIT_CARD"? "cartão de débito" : order.tipo_pagamento == "CREDIT_CARD" ? "cartão de crédito" : order.tipo_pagamento.toLowerCase()}</p>
                 </div>
                 <div className={`${styles.values}`}>
                   <p>Rua: </p>
@@ -319,6 +308,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
               </div>
             </div>
           }
+          {end && <p className={styles.end}>Todos os pedidos foram carregados</p>}
         </section>
       </main>
     </>

@@ -64,6 +64,7 @@ export interface clothing {
   cor: string
   tamanho: string
   quantidade: number
+  preco: number
 }
 
 export type responseErrorsPayOrderType =

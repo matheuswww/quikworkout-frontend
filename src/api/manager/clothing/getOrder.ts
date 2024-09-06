@@ -11,7 +11,6 @@ export interface getOrderAdmin {
 
 interface order {
   pedido: orders[]
-  pedidosRestantes: number
 }
 
 interface orders {

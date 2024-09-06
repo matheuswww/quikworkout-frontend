@@ -130,10 +130,10 @@ export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto
       <input {...register("complement")} className={styles.input} placeholder="complemento" type="text" id="complement2"/>
       {errors.complement && <p className={styles.error}>{errors.complement.message}</p>}
       <label className={styles.label} htmlFor="residenceNumber2">Número da residência</label>
-      <input {...register("residenceNumber")} className={styles.input} placeholder="número de residência" type="text" id="residenceNumber2"/>
+      <input {...register("residenceNumber")} className={styles.input} placeholder="número de residência" type="number" id="residenceNumber2"/>
       {errors.residenceNumber && <p className={styles.error}>{errors.residenceNumber.message}</p>}
       <label className={styles.label} htmlFor="cep3">Cep</label>
-      <input {...register("cep")} className={styles.input} placeholder="cep" type="text" id="cep3" />
+      <input {...register("cep")} className={styles.input} placeholder="cep" type="number" id="cep3" />
       {errors.cep && <p className={styles.error}>{errors.cep.message}</p>}
       <label className={styles.label} htmlFor="instructionLine1">Linha de instrução 1</label>
       <textarea {...register("instructionLine1")} placeholder="primeira linha de instrução do boleto" className={styles.textarea} id="instructionLine1" maxLength={75}></textarea>

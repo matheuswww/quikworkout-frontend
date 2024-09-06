@@ -39,7 +39,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
   const [newPageLoad, setNewPageLoad] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!end) {
+    if(!end && !newPageLoad) {
       (async function() {
         if(cookieName == undefined || cookieVal == undefined) {
           router.push("/auth/entrar")
@@ -97,6 +97,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           }
           if(getOrder && res) {
             getOrder.push(...res.data)
+            
             paymentInfo.push(...array)
             setGetOrder(getOrder)
             setPaymentInfo(paymentInfo)
@@ -107,6 +108,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         }
         setStaus(res.status)
         setNewPageLoad(false)
+        setNewPage(false)
         setLoad(false)
       }())
     }
@@ -460,6 +462,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
             {infos.pacotes.map((pacote,j) =>
             {              
               const id = Math.floor(Math.random() * 1000000) + 1
+  
               return (
                 <React.Fragment key={"pac"+j}>
                   <div className={styles.clothingInfo}>

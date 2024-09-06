@@ -90,7 +90,7 @@ interface phones {
 const schema = z.object({
   cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido").min(15,"número de cartão inválido").max(20,"número de cartão inválido"),
   holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido").regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "titular do cartão inválido" }),
-  cvv: z.string().min(1,"cvv").max(4,"cvv"),
+  cvv: z.string().min(1,"cvv inválido").max(4,"cvv inválido"),
   expMonth: z.string(),
   expYear: z.string(),
   installments: z.string().default("1")
@@ -122,6 +122,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
   useEffect(() => {
     if(paymentType == "debit_card") {
       (async function() {
+        setError(false)
         if(cookieName == undefined || cookieVal == undefined) {
           router.push("/auth/entrar")
           return
@@ -148,6 +149,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         if(data == 500) {
           setLoad(false)
           setError(true)
+          setPaymentType("card")
           return
         }
         const pagbank_script = document.querySelector("#pagbank_script")
@@ -163,6 +165,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         setNext(true)
       }())
     } else if (paymentType == "credit_card") {
+      setError(false)
       setNext(true)
     }
   }, [paymentType])
@@ -208,13 +211,13 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
       <form className={`${styles.form} ${!showCard && styles.displayNone}`} onSubmit={handleSubmit(handleForm)} ref={formRef}>
       <Back handleBack={() => {setNext(false);setLoad(false);setPaymentType("card")}} ariaLabel="Voltar para tipo de cartão" />
       <label className={styles.label} htmlFor="cardNumber">Número do cartão</label>
-      <input {...register("cardNumber")} type="text" placeholder="número do cartão" id="cardNumber"/>
+      <input {...register("cardNumber")} type="number" placeholder="número do cartão" id="cardNumber"/>
       {errors.cardNumber && <p className={styles.error}>{errors.cardNumber.message}</p>}
       <label className={styles.label} htmlFor="holder">Nome do titular</label>
       <input {...register("holder")} type="text" placeholder="titular do cartão" id="holder"/>
       {errors.holder && <p className={styles.error}>{errors.holder.message}</p>}
       <label className={styles.label} htmlFor="cvv">Cvv</label>
-      <input {...register("cvv")} type="text" placeholder="código do cartão" id="cvv"/>
+      <input {...register("cvv")} type="number" placeholder="código do cartão" id="cvv"/>
       {errors.cvv && <p className={styles.error}>{errors.cvv.message}</p>}
       <label className={`${styles.label}`} htmlFor="expMonth">Mês de expiração</label>
       <select id="expMonth" {...register("expMonth")}>

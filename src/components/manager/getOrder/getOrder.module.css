@@ -336,6 +336,21 @@
   margin-left: 12px;
 }
 
+.green {
+  color: #73cb73 !important;
+}
+
+.end {
+  margin-top: 24px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  background-color: transparent;
+  border: none;
+  font-size: 1.1rem;
+  justify-self: center;
+}
+
 @keyframes ldsRing {
   0% {
     transform: rotate(0deg);

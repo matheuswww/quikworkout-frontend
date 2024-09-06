@@ -225,7 +225,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
             <input {...register("email")} className={styles.input} placeholder="email" type="text" id="email"/>
             {errors.email && <p className={styles.error}>{errors.email.message}</p>}
             <label className={styles.label} htmlFor="telefone">Telefone</label>
-            <input {...register("phoneNumber")} className={styles.input} placeholder="telefone(+55 somente)" type="text" id="telefone"/>
+            <input {...register("phoneNumber")} className={styles.input} placeholder="telefone(+55 somente)" type="number" id="telefone"/>
             {errors.phoneNumber && <p className={styles.error}>{errors.phoneNumber.message}</p>}
             <label className={styles.label} htmlFor="cpfCnpj">Cpf ou cnpj</label>
             <input {...register("cpfCnpj")} className={styles.input} placeholder="cpf ou cnpj" type="text" id="cpfCnpj"/>
@@ -243,7 +243,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
             <input {...register("city")} className={styles.input} placeholder="cidade" type="text" id="city"/>
             {errors.city && <p className={styles.error}>{errors.city.message}</p>}
             <label className={styles.label} htmlFor="residenceNumber">Número da residência</label>
-            <input {...register("residenceNumber")} className={styles.input} placeholder="número de residência" type="text" id="residenceNumber"/>
+            <input {...register("residenceNumber")} className={styles.input} placeholder="número de residência" type="number" id="residenceNumber"/>
             {errors.residenceNumber && <p className={styles.error}>{errors.residenceNumber.message}</p>}
             <label className={styles.label} htmlFor="cep2">Cep</label>
             <input {...register("cep")} className={styles.input} placeholder="cep" type="text" id="cep2" />

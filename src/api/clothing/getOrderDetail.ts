@@ -27,6 +27,10 @@ interface order {
   criadoEm: string
   precoTotal: number
   frete: number
+  cep: string
+  nome: string
+  regiao: string
+  cpfCnpj: string
   motivoCancelamentoEnvio: string
   pacotes: packages[]
 }

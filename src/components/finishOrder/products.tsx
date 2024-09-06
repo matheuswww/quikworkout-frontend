@@ -65,7 +65,7 @@ export default function Products({clothing, totalPrice, freight, responseError, 
         <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
         { <p className={styles.error}>{responseError}</p> }
         <div className={styles.privacy}>
-          <label htmlFor="privacy">Aceitar <Link href="/politica-privacidade-pagamento">política de privacidade</Link></label>
+          <label htmlFor="privacy">Aceitar <Link href="/politica-privacidade-pagamento" target="_blank">política de privacidade</Link></label>
           <input type="checkbox" id="privacy" onClick={() => setPrivacy((p) => !p)} />
         </div>
         {recaptchaError && <p style={{marginBottom: "15px"}} className={styles.error}>{recaptchaError}</p>}

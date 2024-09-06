@@ -103,8 +103,12 @@
   color: #9e9e9e;
 }
 
-.clothingInfos {
+.clothingInfos,.volumesInfo {
   display: flex;
+}
+
+.volumes {
+  margin-left: 12px;
 }
 
 .buttonExpand {

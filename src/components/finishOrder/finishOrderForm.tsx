@@ -22,6 +22,7 @@ import Menu from '../menu/menu'
 import GetUser from '@/api/user/getUser'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 import { env } from '@/api/path'
+import { regions } from './regionCode'
 
 interface props {
   cookieName?: string
@@ -185,6 +186,25 @@ export default function FinishPurchaseForm({...props}: props) {
                 router.push("/usuario/meus-pedidos")
                 return
               }
+              setAddress({
+                bairro: res.data.pedido.bairro,
+                cidade: res.data.pedido.cidade,
+                complemento: res.data.pedido.complemento,
+                email: res.data.pedido.email,
+                numeroResidencia: res.data.pedido.numeroResidencia,
+                rua: res.data.pedido.rua,
+                servico: res.data.pedido.servico,
+                cep: res.data.pedido.cep,
+                nome: res.data.pedido.nome,
+                tax_id: res.data.pedido.cpfCnpj,
+                telefone: {
+                  DDD: res.data.pedido.telefone.substring(2,4),
+                  DDI: "55",
+                  Numero: res.data.pedido.telefone.substring(4)
+                },
+                codigoRegiao: res.data.pedido.regiao, 
+                regiao: regions[res.data.pedido.regiao as keyof typeof regions],
+              })
             }
             if(typeof res.status == "number" && res.status == 404) {
               setRetryPaymentData({
@@ -272,9 +292,9 @@ export default function FinishPurchaseForm({...props}: props) {
     return null
   }
 
-  async function handle3DS(totalPrice: number): Promise<boolean> {
-    if (!address || !paymentType || !card) return false
-    if (!address) return false
+  async function handle3DS(totalPrice: number): Promise<string | null> {
+    if (!address || !paymentType || !card) return null
+    if (!address) return null
     const request = {
       data: {
         amount: {
@@ -315,34 +335,26 @@ export default function FinishPurchaseForm({...props}: props) {
         dataOnly: false
       }
     }
-    setLoad(true)
     /*@ts-ignore*/ 
     PagSeguro.setUp({
       session: idTo3ds,
       env: env
     })
-    let returnBool: boolean = false
+    let id: string = ""
    /*@ts-ignore*/ 
     await PagSeguro.authenticate3DS(request).then( result => {
       if(result.status == "CHANGE_PAYMENT_METHOD") {
         setResponseError3ds("autenticação 3DS negada pelo pagbank,escolha outro meio de pagamento")
-        returnBool = false
       }
       if(result.status == "AUTH_NOT_SUPPORTED") {
         setResponseError3ds("autenticação 3DS indisponível para este cartão,escolha outro meio de pagamento")
       }
       if(result.status == "AUTH_FLOW_COMPLETED") {
-        setCard((c) => {
-          const newC = c
-          if(newC) {
-            newC.id3DS = result.id
-            return newC
-          }
-          return c
-        })
-        returnBool = true
+        id = result.id
       }
-      /*@ts-ignore*/ 
+        /*@ts-ignore*/ 
+      if(this) {
+        /*@ts-ignore*/ 
       if("logResponseToScreen" in this) {
         /*@ts-ignore*/ 
         this.logResponseToScreen(result)
@@ -352,23 +364,26 @@ export default function FinishPurchaseForm({...props}: props) {
         /*@ts-ignore*/ 
         this.stopLoading()
       }
+      }
       /*@ts-ignore*/ 
     }).catch((err) => {
+      setLoad(false)
       /*@ts-ignore*/ 
       if(err instanceof PagSeguro.PagSeguroError ) {
         setPopupError(true)
         console.log(err);
         console.log(err.detail);
-        returnBool = false
         /*@ts-ignore*/ 
-          /*@ts-ignore*/ 
-        if("stopLoading" in this) {
-          /*@ts-ignore*/ 
-          this.stopLoading()
+        if(this) {
+              /*@ts-ignore*/ 
+          if("stopLoading" in this) {
+            /*@ts-ignore*/ 
+            this.stopLoading()
+          }
         }
-      }
+        }
     })
-    return returnBool
+    return id == "" ? null : id
   }
   
   async function handleSubmit(event: SyntheticEvent) {
@@ -397,6 +412,7 @@ export default function FinishPurchaseForm({...props}: props) {
           quantidade: infos.quantidade,
           roupaId: infos.roupa_id,
           tamanho: infos.tamanho,
+          preco: infos.preco
         })
       }
     })
@@ -431,11 +447,16 @@ export default function FinishPurchaseForm({...props}: props) {
         if(totalPrice >= 200) {
           vlrFrete = 0
         }
+        let newCard = card
         const tp = Math.round((totalPrice+vlrFrete)*100) / 100
         if (paymentType == "debit_card") {
-          if(!await handle3DS(Math.round(tp * 100))) {
+          const id = await handle3DS(Math.round(tp * 100))
+          if(typeof id != "string" || id == "") {
             setLoad(false)
             return
+          }
+          if(newCard) {
+            newCard.id3DS = id
           }
         }
   
@@ -454,7 +475,7 @@ export default function FinishPurchaseForm({...props}: props) {
           rua: address.rua,
           servico: address.servico,
           boleto: boleto,
-          cartao: card,
+          cartao: newCard,
           roupa: clothing,
           telefone: address.telefone,
           tipoPagamento: paymentType == "debit_card" ? "CARTAO_DEBITO" : paymentType == "credit_card" ? "CARTAO_CREDITO" : paymentType == "boleto" ? "BOLETO" : "PIX",
@@ -546,6 +567,7 @@ export default function FinishPurchaseForm({...props}: props) {
               quantidade: Number(infos.quantidade),
               roupaId: infos.id,
               tamanho: infos.tamanho.toLocaleLowerCase(),
+              preco: infos.preco
             })
           })
         })
@@ -564,6 +586,7 @@ export default function FinishPurchaseForm({...props}: props) {
             quantidade: Number(c.quantidade),
             roupaId: c.roupa_id,
             tamanho: c.tamanho.toLocaleLowerCase(),
+            preco: c.preco,
           })
         })
         tp = Math.round((totalPrice+vlrFrete)*100) / 100
@@ -581,16 +604,22 @@ export default function FinishPurchaseForm({...props}: props) {
       if(paymentTypeRetryPayment != payment) {
         newPayment = payment
       }
+      let newCard = card
       if (paymentType == "debit_card") {
-        if(!await handle3DS(Math.round(tp * 100))) {
+        const id = await handle3DS(Math.round(tp * 100))
+        if(typeof id != "string" || id == "") {
           setLoad(false)
           return
         }
+        if(newCard) {
+          newCard.id3DS = id
+        }
       }
+
       const res = await RetryPayment(cookie, {
         novoTipoPagamento: newPayment,
         boleto: boleto,
-        cartao: card,
+        cartao: newCard,
         pedido_id: "ORDE_"+retryPaymentId,
         precoTotal: tp,
         roupa: clothing,

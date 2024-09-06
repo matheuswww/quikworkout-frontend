@@ -1,6 +1,6 @@
 "use client"
 
-import { SyntheticEvent, useState } from "react"
+import React, { SyntheticEvent, useState } from "react"
 import styles from "./cancelOrder.module.css"
 import GetOrder, { getOrderAdmin } from "@/api/manager/clothing/getOrder"
 import PopupError from "@/components/popupError/popupError"
@@ -174,7 +174,7 @@ export default function CancelOrderForm({cookieName,cookieVal}:props) {
                 </div>
                 <div className={`${styles.values}`}>
                   <p>Frete: </p>
-                  <p>{order.frete == 0 ? "grátis" : order.frete}</p>
+                  <p>{order.frete == 0 ? "grátis" : formatPrice(order.frete)}</p>
                 </div>
                 {order.cancelamento && 
                   <div className={`${styles.values}`}>
@@ -188,73 +188,83 @@ export default function CancelOrderForm({cookieName,cookieVal}:props) {
                 </div>
                 <div className={`${styles.values}`}>
                   <p>Preço total: </p>
-                  <p>R${order.precoTotal}</p>
+                  <p>R${formatPrice(order.precoTotal)}</p>
                 </div>
-                <div className={styles.clothingInfos}>
-                  <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "volume", styles.displayNone)}>Volumes</button>
-                  <Expand src="/img/arrowUp.png" alt="expandir informações de volumes" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "volume", styles.displayNone)} id={`arrowUp_volume_${i}`} />
-                  <Expand src="/img/arrowDown.png" alt="diminuir informações de volumes" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "volume", styles.displayNone)} id={`arrowDown_volume_${i}`}/>
-                </div>
-                <div className={`${styles.volumes} ${styles.displayNone}`} id={`item_volume_`+i}>
                 {
-                  order.volume.map(({...volume},j) => {
+                  order.pacotes.map(({...pacote},j) => {
+                    const id = Math.floor(Math.random() * 1000000) + 1
                     return (
-                      <div className={styles.volume} key={"volume"+i+j}>
-                        <div className={`${styles.values}`}>
-                            <p className={styles.field}>Altura: </p>
-                            <p className={styles.value}>{volume.altura}</p>
+                      <React.Fragment key={"vol"+j}>
+                        <div className={styles.volumesInfo}>
+                          <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "volume", styles.displayNone)}>{order.pacotes.length > 1 ? `Volume ${pacote.numeroPacote + 1}` : `Volume`}</button>
+                          <Expand src="/img/arrowUp.png" alt="expandir informações de volumes" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowUp_volume_${(id)}`} />
+                          <Expand src="/img/arrowDown.png" alt="diminuir informações de volumes" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowDown_volume_${(id)}`}/>
+                        </div>
+                          <div className={`${styles.volumes} ${styles.displayNone}`} id={`item_volume_`+(id)}>
+                            <div className={styles.volume}>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Número pacote: </p>
+                                  <p className={styles.value}>{pacote.numeroPacote + 1}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Altura: </p>
+                                  <p className={styles.value}>{pacote.altura}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Largura: </p>
+                                  <p className={styles.value}>{pacote.largura}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Comprimento: </p>
+                                  <p className={styles.value}>{pacote.comprimento}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Peso: </p>
+                                  <p className={styles.value}>{pacote.peso}</p>
+                                </div>
+                                <div className={`${styles.values}`}>
+                                  <p className={styles.field}>Preço: </p>
+                                  <p className={styles.value}>R${formatPrice(pacote.preco)}</p>
+                                </div>
+                            </div>
+                          <div className={styles.clothingInfos}>
+                            <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)}>Roupa(s)</button>
+                            <Expand src="/img/arrowUp.png" alt="expandir informações de roupa" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowUp_clothing_${(id)}`} />
+                            <Expand src="/img/arrowDown.png" alt="diminuir informações de roupa" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowDown_clothing_${(id)}`}/>
                           </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Largura: </p>
-                            <p className={styles.value}>{volume.largura}</p>
+                          <div key={`item_clothing_${((id))}`} id={`item_clothing_${((id))}`} className={`${styles.clothing} ${styles.displayNone}`}>
+                            {pacote.roupa.map(({...clothing}) =>
+                                <div key={clothing.id+clothing.tamanho+clothing.cor}>
+                                  <Image src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Nome: </p>
+                                      <p className={styles.value}>{clothing.nome}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Cor: </p>
+                                      <p className={styles.value}>{clothing.cor}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Quantidade: </p>
+                                      <p className={styles.value}>{clothing.quantidade}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Tamanho: </p>
+                                      <p className={styles.value}>{clothing.tamanho}</p>
+                                    </div>
+                                    <div className={`${styles.values}`}>
+                                      <p className={styles.field}>Preço: </p>
+                                      <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                                    </div>
+                                </div>
+                              )
+                            }
                           </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Comprimento: </p>
-                            <p className={styles.value}>{volume.comprimento}</p>
-                          </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Peso: </p>
-                            <p className={styles.value}>{volume.peso}</p>
-                          </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Preço: </p>
-                            <p className={styles.value}>R${volume.valor}</p>
-                          </div>
-                      </div>
+                        </div>
+                      </React.Fragment>
                     )
                   })
                 }
-                </div>
-                <div className={styles.clothingInfos}>
-                  <button className={styles.buttonExpand} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)}>Roupas</button>
-                  <Expand src="/img/arrowUp.png" alt="expandir informações de roupa" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)} id={`arrowUp_clothing_${i}`} />
-                  <Expand src="/img/arrowDown.png" alt="diminuir informações de roupa" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(i, "clothing", styles.displayNone)} id={`arrowDown_clothing_${i}`}/>
-                </div>
-                <div id={`item_clothing_${i}`} className={`${styles.clothing} ${styles.displayNone}`}>
-                  {order.roupa.map(({...clothing}) => {
-                    return (
-                      <div key={clothing.id+clothing.tamanho+clothing.cor}>
-                        <Image src={clothing.imagem} alt={"#"} width={80} height={85} />
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Nome: </p>
-                            <p className={styles.value}>{clothing.nome}</p>
-                          </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Cor: </p>
-                            <p className={styles.value}>{clothing.cor}</p>
-                          </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Quantidade: </p>
-                            <p className={styles.value}>{clothing.quantidade}</p>
-                          </div>
-                          <div className={`${styles.values}`}>
-                            <p className={styles.field}>Preço: </p>
-                            <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
-                          </div>
-                      </div>
-                    )
-                  })}
-                </div>
             </div>
           )
           })}

@@ -37,6 +37,7 @@ export default async function RetryPayment(cookie: string, params: params):Promi
       status = res.status    
       return res.json()
     })
+    
     if(status == 200) {
       if(res && 'pedido_id' in res) {
         return res
