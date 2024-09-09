@@ -56,13 +56,13 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         }
         
         const res = await GetOrder(cookie, cursor)
+
         if(getOrder && res.status == 404) {
           setEnd(true)
           setLoad(false)
           setNewPageLoad(false)
           return
         }
-        
         if(typeof res.data == "string" && res.data == "cookie inválido") {
           await deleteCookie(cookieName)
           router.push("/auth/entrar")
@@ -263,25 +263,61 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
                   </div>
                 }
-                {
-                infos?.pacotes[0]?.codigoRastreio != "" ?
-                <>
-                  {infos.pacotes.length > 1 && <p className={styles.p}>Você possui {infos.pacotes.length} pacotes a caminho</p>}
-                  {
-                    infos.pacotes.map(({codigoRastreio},v) => {
+                {infos?.pacotes[0]?.codigoRastreio != "" ?
+                  <>
+                    {infos.pacotes.length > 1 && <p className={styles.p}>Você possui {infos.pacotes.length} pacotes a caminho</p>}
+                    {infos.pacotes.map(({rastreio,codigoRastreio},v) => {
+                      const id = Math.floor(Math.random() * 1000000) + 1
                       return (
-                        <div className={styles.values} key={`codigoRastreio${v}`}>
-                          {infos.pacotes.length > 1 ? <p>Código de rastreio pacote {v + 1}: </p> : <p>Código de rastreio: </p>}
-                          <p>{codigoRastreio}</p>
-                        </div>
-                      )
-                    })
-                  }
-                  <div className={styles.values} key={"see_tracking_code"}>
-                    <p>Digite seu código e acompanhe seu pedido aqui: </p>
-                    <Link className={styles.link} href="https://www.kangu.com.br/rastreio" target="_blank">rastrear pedido</Link>
-                  </div>
-                </>
+                        <React.Fragment key={`codigoRastreio${v}`}>
+                          <div className={styles.packageInfo}>
+                            {infos.pacotes.length > 1 ? <button className={styles.buttonExpand} onClick={() => handleArrowClick(id, "package", styles.displayNone)}>Rastreio do pacote {v + 1}</button> : <button className={styles.buttonExpand} onClick={() => handleArrowClick(id, "package", styles.displayNone)}>Rastreio do pacote</button>}
+                            <Expand src="/img/arrowUp.png" alt="expandir informações de rastreio" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick(id, "package", styles.displayNone)} id={`arrowUp_package_${id}`} />
+                            <Expand src="/img/arrowDown.png" alt="diminuir informações de rastreio" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(id, "package", styles.displayNone)} id={`arrowDown_package_${id}`} />
+                          </div>
+                          {
+                            rastreio.acao != "" || rastreio.data != "" || rastreio.observacao != "" || rastreio.ocorrencia != "" ?
+                            <>
+                              <div id={`item_package_${id}`} className={`${styles.displayNone} ${styles.package}`}>
+                                {rastreio.acao != "" &&
+                                  <div className={`${styles.values} ${styles.infos}`}>
+                                    <p>Rastreio</p>
+                                    <p>{rastreio.ocorrencia}</p>
+                                  </div>}
+                                {rastreio.ocorrencia != "" &&
+                                  <div className={`${styles.values} ${styles.infos}`}>
+                                    <p>Ocorrência</p>
+                                    <p>{rastreio.ocorrencia}</p>
+                                  </div>}
+                                {rastreio.observacao != "" &&
+                                  <div className={`${styles.values} ${styles.infos}`}>
+                                    <p>Observação</p>
+                                    <p>{rastreio.observacao}</p>
+                                  </div>}
+                                {rastreio.data != "" &&
+                                  <div className={`${styles.values} ${styles.infos}`}>
+                                    <p>Data de entrega</p>
+                                    <p>{rastreio.data}</p>
+                                  </div>}
+                              </div>
+                            </>
+                          :
+                            <div id={`item_package_${id}`} className={`${styles.displayNone} ${styles.package}`}>
+                               <div className={`${styles.values} ${styles.infos}`}>
+                                <p>Digite seu código de rastreio aqui: </p>
+                                <Link className={styles.link} href={"https://www.kangu.com.br/rastreio"} target="_blank">rastrear pacote</Link> 
+                               </div>
+                               <div className={`${styles.values} ${styles.infos}`}>
+                                <p className={styles.value}>Código de rastreio: </p>
+                                <p>{codigoRastreio}</p>
+                               </div>
+                            </div>
+                          }
+                          </React.Fragment>
+                        )
+                      })
+                      }
+                  </>
                 : infos.status_pagamento == "pago" &&
                 <div className={styles.values}>
                   <p>Rastreio do pedido: </p>
@@ -460,41 +496,44 @@ export default function MyOrder({cookieName,cookieVal}:props) {
             }
           
             {infos.pacotes.map((pacote,j) =>
-            {              
+            {
               const id = Math.floor(Math.random() * 1000000) + 1
-  
               return (
                 <React.Fragment key={"pac"+j}>
                   <div className={styles.clothingInfo}>
-                    <button className={styles.buttonExpand} onClick={() => handleArrowClick(i,"clothing", styles.displayNone)} key={`item_button_${id}`}>Roupa(s) {infos.pacotes.length > 1 && `do pacote ${j + 1}`}</button>
+                    <button className={styles.buttonExpand} onClick={() => handleArrowClick(id,"clothing", styles.displayNone)} key={`item_button_${id}`}>Roupa(s) {infos.pacotes.length > 1 && `do pacote ${j + 1}`}</button>
                     <Expand src="/img/arrowUp.png" alt="expandir informações das roupas do pedido" width={30} height={30} className={styles.expand} onClick={() => handleArrowClick(id,"clothing", styles.displayNone)} id={`arrowUp_clothing_${id}`} />
                     <Expand src="/img/arrowDown.png" alt="diminuir informações das roupas do pedido" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick(id,"clothing", styles.displayNone)} id={`arrowDown_clothing_${id}`} />
                   </div>
-                  <div id={`item_clothing_${id}`} className={`${styles.clothing} ${styles.displayNone}`} key={`item_clothing_${id}`}>
+                  <div id={`item_clothing_${id}`} className={`${styles.clothing} ${styles.displayNone}`}>
                     {pacote.roupa.map((clothing) => 
-                      <div key={clothing.id+clothing.tamanho+clothing.cor}>
-                      <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
-                        <div className={`${styles.values}`}>
-                          <p className={styles.field}>Nome: </p>
-                          <p className={styles.value}>{clothing.nome}</p>
-                        </div>
-                        <div className={`${styles.values}`}>
-                          <p className={styles.field}>Cor: </p>
-                          <p className={styles.value}>{clothing.cor}</p>
-                        </div>
-                        <div className={`${styles.values}`}>
-                          <p className={styles.field}>Quantidade: </p>
-                          <p className={styles.value}>{clothing.quantidade}</p>
-                        </div>
-                        <div className={`${styles.values}`}>
-                          <p className={styles.field}>Tamanho: </p>
-                          <p className={styles.value}>{clothing.tamanho}</p>
-                        </div>
-                        <div className={`${styles.values}`}>
-                          <p className={styles.field}>Preço: </p>
-                          <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
-                        </div>
-                      </div>
+                      {
+                        return (
+                          <div key={clothing.id+clothing.tamanho+clothing.cor}>
+                              <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
+                              <div className={`${styles.values}`}>
+                                <p className={styles.field}>Nome: </p>
+                                <p className={styles.value}>{clothing.nome}</p>
+                              </div>
+                              <div className={`${styles.values}`}>
+                                <p className={styles.field}>Cor: </p>
+                                <p className={styles.value}>{clothing.cor}</p>
+                              </div>
+                              <div className={`${styles.values}`}>
+                                <p className={styles.field}>Quantidade: </p>
+                                <p className={styles.value}>{clothing.quantidade}</p>
+                              </div>
+                              <div className={`${styles.values}`}>
+                                <p className={styles.field}>Tamanho: </p>
+                                <p className={styles.value}>{clothing.tamanho}</p>
+                              </div>
+                              <div className={`${styles.values}`}>
+                                <p className={styles.field}>Preço: </p>
+                                <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                              </div>
+                          </div>
+                        )
+                      }
                     )}
                   </div>
                 </React.Fragment>

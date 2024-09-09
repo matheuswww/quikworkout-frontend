@@ -62,7 +62,7 @@ export default function CheckTwoAuthCodeForm({...props}: props) {
       window.location.href = "/auth/entrar"
       return
     }
-    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido"  || res == "código expirado") {
+    if(res == "você não possui um código registrado" || res == "código expirado") {
       window.location.href = "/auth/validar-codigo-dois-fatores"
       return
     }

@@ -75,7 +75,15 @@ interface getOrder {
 
 interface packages {
   codigoRastreio: string
+  rastreio: track
   roupa: clothing[]
+}
+
+interface track {
+  ocorrencia: string
+  data: string
+  observacao: string
+  acao: string
 }
 
 interface clothing {

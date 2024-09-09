@@ -9,12 +9,13 @@ interface changeColorProps {
   color: string | null
   callbackOnEnter?: Function
   callbackOnOut?: Function
+  activeModal?: boolean
 } 
 
-export function ChangeColor({buttonToOpenModalRef, color, modalRef, callbackOnEnter, callbackOnOut}: changeColorProps) {
+export function ChangeColor({buttonToOpenModalRef, color, modalRef, callbackOnEnter, callbackOnOut, activeModal}: changeColorProps) {
   return (
     <>
-      <button className={styles.changeColorButton} onClick={() => handleModalColorClick(buttonToOpenModalRef, modalRef, styles.active, callbackOnEnter, callbackOnOut)} type="button" ref={buttonToOpenModalRef} aria-label={`cor ${color} está selecionada, clique aqui para alterar a cor da roupa`}>
+      <button className={styles.changeColorButton} disabled={activeModal} onClick={() => handleModalColorClick(buttonToOpenModalRef, modalRef, styles.active, callbackOnEnter, callbackOnOut)} type="button" ref={buttonToOpenModalRef} aria-label={`cor ${color} está selecionada, clique aqui para alterar a cor da roupa`}>
         <p>{color}</p>
         <span className={styles.expand}></span>
       </button>

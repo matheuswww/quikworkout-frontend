@@ -47,7 +47,7 @@ export default function DeleteClothingCartForm({setData, open, setOpen, clothing
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active) 
         setTimeout(() => {
-          form.current instanceof HTMLElement && (form.current.style.diswplay = "none")
+          form.current instanceof HTMLElement && (form.current.style.display = "none")
           setOpen(false)
         }, 500);
        }

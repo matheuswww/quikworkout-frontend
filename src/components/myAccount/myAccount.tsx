@@ -38,6 +38,8 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
 
   const [activeRecaptcha, setActiveRecatpcha] = useState<"updateProfile" | "changePassword" | null>(null)
 
+  const [activeModal, setActiveModal] = useState<boolean>(false)
+
   const modalRefChangePassword = useRef<HTMLFormElement | null>(null)
   const buttonToOpenModalRefChangePassword = useRef<HTMLButtonElement | null>(null)
   const closeRefChangePassword = useRef<HTMLButtonElement | null>(null)
@@ -118,31 +120,31 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             <div className={styles.vals}>
               <p>Nome: </p>
               <p>{data.data.nome}</p>
-              <button className={`${styles.edit}`} onClick={() => {
+              <button className={`${styles.edit}`} disabled={activeModal} onClick={() => {
                 setActiveRecatpcha("updateProfile")
                 setType("name")
-                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false)));
               }} ref={type == "name" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar nome" src="/img/edit.png" width={16} height={16} /></button>
             </div>
           {
             data.data.email !=  "" ?
-            <div className={`${styles.vals} ${styles.email}`}>
+            <div className={`${styles.vals} ${styles.email}`} style={{marginTop: "0px"}}>
               <p>Email: </p>
               <p>{data.data.email}</p>
-              <button className={`${styles.edit}`} onClick={() => {
+              <button className={`${styles.edit}`} disabled={activeModal} onClick={() => {
                 setActiveRecatpcha("updateProfile")
                 setType("contact")
-                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false)));
               }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} onClick={() => setType("contact")} /></button>
             </div>
             :
             <div className={styles.vals}>
               <p>Telefone: </p>
               <p>{data.data.telefone}</p>
-              <button className={`${styles.edit}`} onClick={() => {
+              <button className={`${styles.edit}`} disabled={activeModal} onClick={() => {
                 setActiveRecatpcha("updateProfile")
                 setType("contact")
-                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid"));
+                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false)));
               }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} /></button>
             </div>
           }
@@ -228,9 +230,9 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             }
             </>
           }
-          {!changed ? <button className={`${styles.button} ${styles.changePassword}`} ref={buttonToOpenModalRefChangePassword} onClick={() => {
+          {!changed ? <button className={`${styles.button} ${styles.changePassword}`} ref={buttonToOpenModalRefChangePassword} disabled={activeModal} onClick={() => {
             setActiveRecatpcha("changePassword")
-            handleModalClick(modalRefChangePassword, buttonToOpenModalRefChangePassword, closeRefChangePassword, styles.active, "grid")
+            handleModalClick(modalRefChangePassword, buttonToOpenModalRefChangePassword, closeRefChangePassword, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false))
           }}>Alterar senha</button> : <p className={styles.changed}>Senha alterada com sucesso</p>}
           </>
          : load ? <>

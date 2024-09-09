@@ -24,9 +24,10 @@ interface props {
   addressRef: MutableRefObject<HTMLElement | null>
   responseError3ds: string | null
   setIdTo3ds: Dispatch<SetStateAction<string | null>>
+  price: number
 }
 
-export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef,retryPayment, address, addressRef, responseError3ds, setIdTo3ds }:props) {
+export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef,retryPayment, address, addressRef, responseError3ds, setIdTo3ds, price }:props) {
   const [payment, setPayment] = useState<boolean>(true)
   
   return (
@@ -40,7 +41,7 @@ export default function Payment({ cookieName, cookieVal, setError, setLoad, load
         }
         <label htmlFor="arrowPayment" className={styles.label} >Formas de pagamento</label>
       </div>
-      <PaymentMethod responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={retryPayment} responseError={responseError} card={card} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} load={load} showPayment={payment} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} />
+      <PaymentMethod price={price} responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={retryPayment} responseError={responseError} card={card} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} load={load} showPayment={payment} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} />
     </section>
   )
 }

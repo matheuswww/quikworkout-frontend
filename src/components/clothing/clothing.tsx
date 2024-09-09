@@ -74,6 +74,7 @@ export default function Clothing({...props}: props) {
   const [delivery, setDelivery] = useState<"E" | "X" | "R">("E")
   const [freightData, setFreightData] = useState<calcFreightData | null>(null)
   const [success, setSuccess] = useState<boolean>(false)
+  const [activeModal, setActiveModal] = useState<boolean>(false)
   const calcFreightRef = useRef<HTMLFormElement | null>(null)
   const buttonToOpenModalFreight = useRef<HTMLButtonElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -138,6 +139,9 @@ export default function Clothing({...props}: props) {
   async function handleSubmitCalcFreight(formData: FormProps) {
     if(data?.clothing?.id && count) {
       setLoad(true)
+      if(formData.cep.includes("-")) {
+        formData.cep = formData.cep.replace("-","")
+      }
       const res = await CalcFreight({
         cep: formData.cep,
         quantidadeProduto: [count],
@@ -306,7 +310,8 @@ export default function Clothing({...props}: props) {
             </div>
             {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
             {freightData?.prazoEnt && <p className={styles.freightPrice}>Prazo de entrega: {freightData.prazoEnt} dias úteis</p>}
-            <button type="submit" disabled={load} className={styles.calcFreightButton} ref={closeRef}>Calcular frete</button>
+            <button type="submit" disabled={load} className={styles.calcFreightButton}>Calcular frete</button>
+            <button aria-label="fechar" disabled={activeModal}  type="button" className={styles.close} ref={closeRef}><span aria-hidden="true">x</span></button>
         </form>
         <section>
         {data?.status == 404 && notFound()}
@@ -368,15 +373,15 @@ export default function Clothing({...props}: props) {
                 </div>
                 <div className={styles.colors} aria-label="cores da roupa">
                   <p>cores</p>
-                  <ChangeColor buttonToOpenModalRef={buttonToOpenModalRef} color={color} modalRef={modalRef} />
+                  <ChangeColor activeModal={activeModal} callbackOnEnter={() => setActiveModal(true)} callbackOnOut={() => setActiveModal(false)} buttonToOpenModalRef={buttonToOpenModalRef} color={color} modalRef={modalRef} />
                 </div>
                 <div className={styles.freight}>
-                  <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={() => handleModalClick(calcFreightRef, buttonToOpenModalFreight, closeRef, styles.active, "flex")}>Calcular frete</button>
+                  {data?.clothing && Math.round((data.clothing.preco*count*100)/100) < 200 ? <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={() => handleModalClick(calcFreightRef, buttonToOpenModalFreight, closeRef, styles.active, "flex", () => setActiveModal(true), () => setActiveModal(false))}>Calcular frete</button> : <p className={styles.noFreight}>Frete grátis</p>}
                   {freightData && data &&
                     <>
                         <div className={styles.freightPrice}>
                           <p className={styles.freightPrice}>Frete: R${formatPrice(freightData.vlrFrete)}</p>
-                          <p>Prazo de entrega: 2 dia úteis</p>
+                          <p>Prazo de entrega: {freightData.prazoEnt} dias utéis</p>
                         </div>
                     </>
                 }

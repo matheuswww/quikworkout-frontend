@@ -1,4 +1,4 @@
-export default function handleModalClick(modalRef:React.MutableRefObject<HTMLElement | null>, buttonRef:React.MutableRefObject<HTMLButtonElement | null> | HTMLButtonElement, closeRef: React.MutableRefObject<HTMLButtonElement | null>, active: string, display: string) {
+export default function handleModalClick(modalRef:React.MutableRefObject<HTMLElement | null>, buttonRef:React.MutableRefObject<HTMLButtonElement | null> | HTMLButtonElement, closeRef: React.MutableRefObject<HTMLButtonElement | null>, active: string, display: string, callbackEnter?: Function, callbackOut?: Function) {
   let button: HTMLButtonElement | null = null
   if('current' in buttonRef) {
     if(buttonRef.current instanceof HTMLButtonElement) {
@@ -18,6 +18,7 @@ export default function handleModalClick(modalRef:React.MutableRefObject<HTMLEle
     modalRef.current.focus()
     modalRef.current.tabIndex = 0
     button.style.pointerEvents = "none"
+    callbackEnter && callbackEnter()
   }
   document.addEventListener("click", handleCloseModal)
   function handleCloseModal(event: Event) {
@@ -37,6 +38,7 @@ export default function handleModalClick(modalRef:React.MutableRefObject<HTMLEle
     if(section instanceof HTMLElement) {
       section.style.opacity = "1"
     }
+    callbackOut && callbackOut()
     document.removeEventListener("click", handleCloseModal)
   }
 }

@@ -481,6 +481,7 @@ export default function FinishPurchaseForm({...props}: props) {
           tipoPagamento: paymentType == "debit_card" ? "CARTAO_DEBITO" : paymentType == "credit_card" ? "CARTAO_CREDITO" : paymentType == "boleto" ? "BOLETO" : "PIX",
           token: token
         })
+
         if (typeof res == "string" && res == "recaptcha inválido") {
           setRecaptchaError(res)
           //@ts-ignore
@@ -508,8 +509,7 @@ export default function FinishPurchaseForm({...props}: props) {
         }
  
         if(res == "roupa não encontrada" || res == "a quantidade do pedido excede o estoque") {
-          setResponseError("parece que uma das suas roupas está indisponível, tente novamente, esta roupa não será incluida no pedido")
-          setEnd(false)
+          setResponseError("parece que uma das suas roupas está indisponível, volte a sua bolsa e exclua ou altere esta roupa")
         } else if (res ==  "peso maxímo atingido") {
           setResponseError("tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega")
         } else if (res == "cep de destino inválido") {
@@ -518,6 +518,10 @@ export default function FinishPurchaseForm({...props}: props) {
           setResponseError(res)
         } else if (res == "preço calculado não é igual ao esperado" || res == "não foi possivel salvar o pedido") {
           setPopupError(true)
+          if(res == "preço calculado não é igual ao esperado") {
+            setResponseError("parece que houve uma alteração nos preços,recarregue a página e tente novamente")
+            setEnd(false)
+          }
         } else {
           if(typeof res == "string" && res.includes("order_id:")) {
             const startIndex = res.indexOf('order_id:')
@@ -694,7 +698,7 @@ export default function FinishPurchaseForm({...props}: props) {
           {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && paymentTypeRetryPayment)) && addressStatus != 500 ?
             <>
               {(!retryPaymentData?.data && !retryPaymentId) && <CalcFreightForm popupError={popupError} setPopupError={setPopupError} totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data?.clothing} setDelivery={setDelivery} delivery={delivery} />}
-              <Payment responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
+              <Payment price={Math.round((totalPrice) * 100)/100} responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
               {(!paymentTypeRetryPayment || paymentTypeRetryPayment == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
               <form onSubmit={handleSubmit}>
                 <Products privacyError={privacyError} setPrivacy={setPrivacy} recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />

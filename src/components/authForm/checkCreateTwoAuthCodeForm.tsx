@@ -56,7 +56,7 @@ export default function CheckCreateTwoAuthCodeForm({...props}:props) {
       setLoad(false)
       return
     }
-    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
+    if(res == "você não possui um código registrado" || res == "código expirado") {
       await deleteCookie("userProfile")
       window.location.href = "/auth/criar-dois-fatores"
       return

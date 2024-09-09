@@ -92,7 +92,7 @@ export default function Products({clothing, totalPrice, freight, responseError, 
                 <p className={styles.value}>R${formatPrice(infos.preco)}</p>
               </div>
               <div className={`${styles.values}`}>
-                {(infos.excedeEstoque || !infos.disponivel) && <p className={styles.alert}>{infos.excedeEstoque ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${infos.quantidadeDisponivel}`}</p>}
+                {(infos.excedeEstoque || !infos.disponivel) && <p className={styles.alert}>{!infos.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${infos.quantidadeDisponivel}`}</p>}
               </div>
             </div>
           )

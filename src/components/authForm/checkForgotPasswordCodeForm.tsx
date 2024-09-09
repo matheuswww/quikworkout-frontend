@@ -56,7 +56,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       window.grecaptcha.reset()
       return
     }
-    if(res == "você não possui um código registrado" || res == "máximo de tentativas atingido" || res == "código expirado") {
+    if(res == "você não possui um código registrado" || res == "código expirado") {
       await deleteCookie("userAuthResetPass")
       window.location.href = "/auth/esqueci-minha-senha"
       return

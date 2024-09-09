@@ -29,12 +29,13 @@ interface props {
   addressRef: MutableRefObject<HTMLElement | null>
   responseError3ds: string | null
   setIdTo3ds: Dispatch<SetStateAction<string | null>>
+  price: number
 }
 
-export default function PaymentMethod({ showPayment, cookieName, cookieVal, setError, setLoad, load, setCard, card, setPaymentType, paymentType, setBoleto, boleto, responseError, retryPayment, address, addressRef, responseError3ds, setIdTo3ds }:props) {
+export default function PaymentMethod({ showPayment, cookieName, cookieVal, setError, setLoad, load, setCard, card, setPaymentType, paymentType, setBoleto, boleto, responseError, retryPayment, address, addressRef, responseError3ds, setIdTo3ds, price }:props) {
   return (
     <>
-      {(paymentType == "card" || paymentType == "debit_card" || paymentType == "credit_card") && <Card responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} responseError={responseError} paymentType={paymentType} card={card} showCard={showPayment} setCard={setCard} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} setPaymentType={setPaymentType} load={load} />}
+      {(paymentType == "card" || paymentType == "debit_card" || paymentType == "credit_card") && <Card price={price} responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} responseError={responseError} paymentType={paymentType} card={card} showCard={showPayment} setCard={setCard} cookieName={cookieName} cookieVal={cookieVal} setError={setError} setLoad={setLoad} setPaymentType={setPaymentType} load={load} />}
       {(paymentType == "pix") && <Pix paymentType={paymentType} responseError={responseError} setPaymentType={setPaymentType} showPix={showPayment} />}
       {(paymentType == "boleto") && <Boleto paymentType={paymentType} responseError={responseError} boleto={boleto} setBoleto={setBoleto} setPaymentType={setPaymentType} showBoleto={showPayment} />}
       <div className={`${styles.container} ${(paymentType == "card" || paymentType == "credit_card" || paymentType == "debit_card" || paymentType == "pix" || paymentType == "boleto" || !showPayment) && styles.displayNone}`}>

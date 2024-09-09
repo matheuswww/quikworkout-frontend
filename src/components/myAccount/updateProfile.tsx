@@ -28,7 +28,6 @@ const schema = z.object({
       return ValidateEmail(value)
     }
     return ValidatePhoneNumber(value)
-    
   }
   return true
   },{
@@ -53,24 +52,40 @@ interface props {
 
 export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cookieVal,modalRef,closeRef,type,activeRecaptcha,setData,load}:props) {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const [responseError, setResponseError] = useState<string | null>(null)
 
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
-  const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
+  const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     resolver: zodResolver(schema)
   })
 
+  useEffect(() => {
+    if(type == "name") {
+      setValue("emailOrPhoneNumber", "")
+    }
+    if(type == "contact") {
+      setValue("name", "")
+    }   
+  },[type])
+
   async function handleForm(data: FormProps) {
     setRecaptchaError(null)
-    setError(null)
+    setResponseError(null)
     setPopupError(false)
-    if(!data.emailOrPhoneNumber && !data.name) {
+
+    if(data.emailOrPhoneNumber == "" && data.name == "") {
       if(type == "contact") {
-        setError("email ou telefone inválido")
+        setResponseError("email ou telefone inválido")
+        setError("emailOrPhoneNumber", {
+          message: ""
+        })
       } else {
-        setError("nome precisa ter entre 2 e 20 caracteres")
+        setResponseError("nome precisa ter entre 2 e 20 caracteres")
+        setError("name", {
+          message: ""
+        })
       }
       return
     }
@@ -88,8 +103,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
     const newEmail = data.emailOrPhoneNumber ? data.emailOrPhoneNumber.includes("@") ? data.emailOrPhoneNumber : "" : ""
     const newTelefone = data.emailOrPhoneNumber ? !data.emailOrPhoneNumber.includes("@") ? data.emailOrPhoneNumber : "" : ""
     const newName = data.name ? data.name : ""
-    console.log(newEmail != "" && newEmail)
-    
+
     const res = await UpdateProfile(cookie, {
       email: newEmail,
       telefone: newTelefone,
@@ -98,10 +112,10 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
       token: token
     })
     if(res == "senha errada") {
-      setError("senha inválida")
+      setResponseError("senha inválida")
     }
     if(res == "contato já utilizado") {
-      setError(res)
+      setResponseError(res)
     }
     if(res == 500) {
       setPopupError(true)
@@ -111,6 +125,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
       router.push("/auth/entrar")
       return
     }
+
     let reload = false
     if(res == 200) {
       setData((d) => {
@@ -133,6 +148,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
       }
       return d
     })
+    closeRef.current instanceof HTMLButtonElement && closeRef.current.click()
     }
     setLoad(false)
   }
@@ -148,7 +164,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
         <div>
           <label htmlFor="new_name">Novo nome</label>
           <input {...register("name")} id="new_name" placeholder="novo nome"/>
-          {errors.name?.message && <p className={styles.error}>{errors.name.message}</p>}
+          {errors?.name?.message && <p className={styles.error}>{errors.name.message}</p>}
         </div>
       }
       <div style={{marginTop: "15px"}}>
@@ -156,7 +172,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
         <Password {...register("password")} id="password" placeholder="senha"/>
         {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
       </div>
-      {!errors.password?.message && !errors.emailOrPhoneNumber?.message && !errors.name?.message && error && <p className={styles.error}>{error}</p>}
+      {!errors.password?.message && !errors.emailOrPhoneNumber?.message && !errors.name?.message && responseError && <p className={styles.error}>{responseError}</p>}
       {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
       {activeRecaptcha == "updateProfile" && <Recaptcha className={styles.recaptcha} />}
       <button type="submit" className={`${styles.button} ${styles.confirm}`}>Confirmar</button>

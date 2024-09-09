@@ -238,7 +238,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
                             <Expand src="/img/arrowUp.png" alt="expandir informações de roupa" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowUp_clothing_${(id)}`} />
                             <Expand src="/img/arrowDown.png" alt="diminuir informações de roupa" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "clothing", styles.displayNone)} id={`arrowDown_clothing_${(id)}`}/>
                           </div>
-                          <div key={`item_clothing_${((id))}`} id={`item_clothing_${((id))}`} className={`${styles.clothing} ${styles.displayNone}`}>
+                          <div id={`item_clothing_${((id))}`} className={`${styles.clothing} ${styles.displayNone}`}>
                             {pacote.roupa.map(({...clothing}) =>
                                 <div key={clothing.id+clothing.tamanho+clothing.cor}>
                                   <Image src={clothing.imagem} alt={clothing.alt} width={80} height={85} />

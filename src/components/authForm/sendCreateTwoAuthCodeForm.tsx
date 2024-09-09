@@ -160,8 +160,8 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
               <Password {...register("password")} id="password" placeholder="senha"/>
               {errors.password?.message ? <p className={styles.error}>{errors.password.message}</p> : error == "senha inválida" && <p className={styles.error}>{error}</p>}
               {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
+              {error && error != "senha inválida" && <p className={styles.error}>{error}</p>}
               <Recaptcha className={styles.recaptcha} />
-              {error && error != "senha inválida" && <p className={styles.error} style={{marginTop: "0px",marginBottom: "10px"}}>{error}</p>}
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
             </form>
           </section>

@@ -166,11 +166,11 @@
   font-size: .9rem;
 }
 
-.payment div,.address div {
+.payment div,.address div, .package div {
   margin-top: 5px !important;
 }
 
-.paymentInfo,.addressInfo {
+.paymentInfo,.addressInfo,.packageInfo {
   display: flex;
 }
 

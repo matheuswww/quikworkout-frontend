@@ -27,6 +27,7 @@ interface props {
   addressRef: MutableRefObject<HTMLElement | null>
   responseError3ds: string | null
   setIdTo3ds: Dispatch<SetStateAction<string | null>>
+  price: number
 }
 
 export interface request3DSData {
@@ -90,7 +91,7 @@ interface phones {
 const schema = z.object({
   cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido").min(15,"número de cartão inválido").max(20,"número de cartão inválido"),
   holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido").regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "titular do cartão inválido" }),
-  cvv: z.string().min(1,"cvv inválido").max(4,"cvv inválido"),
+  cvv: z.string().min(3,"cvv inválido").max(4,"cvv inválido"),
   expMonth: z.string(),
   expYear: z.string(),
   installments: z.string().default("1")
@@ -105,7 +106,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function Card({ setPaymentType,paymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card, responseError, address, addressRef, responseError3ds, setIdTo3ds }:props) {
+export default function Card({ setPaymentType,paymentType,showCard,setError,setLoad, cookieName, cookieVal, load, setCard, card, responseError, responseError3ds, setIdTo3ds, price }:props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -250,7 +251,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         <option value="2035">2040</option>
       </select>
       {errors.expYear && <p className={styles.error}>{errors.expYear.message}</p>}
-      {paymentType == "credit_card" &&
+      {paymentType == "credit_card" && price >= 200 &&
         <>
           <label className={`${styles.label}`} htmlFor="installments" {...register("installments")}>Parcelas</label>
           <select id="installments" {...register("installments")}>

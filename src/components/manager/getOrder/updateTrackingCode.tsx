@@ -40,6 +40,8 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
         if(isNaN(Number(id))) {
           return
         }
+        console.log(i.value);
+        
         if(packages) {
           const newPk = packages
           newPk.push({
@@ -66,6 +68,8 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
       return
     }
     setLoad(true)
+    console.log(packages);
+    
     const cookie = cookieName+"="+cookieVal
     const res = await UpdateTrackingCode(cookie, {
       pedido_id: order_id,
@@ -107,11 +111,10 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
     <form tabIndex={0} className={styles.modal} ref={modalRef} onSubmit={handleSubmit}>
       <p className={styles.p}>Código de rastreio</p>
       {packageNumbers?.map((p) => {
-        let id = Math.random()
         return (
           <React.Fragment key={Math.random()}>
-            {packageNumbers.length > 1 && <label htmlFor={`${id}`}>Pacote {p.package_number + 1}</label>}
-            <input id={`${id}`} placeholder="código de rastreio" />
+            {packageNumbers.length > 1 && <label htmlFor={`${p.package_number}`}>Pacote {p.package_number + 1}</label>}
+            <input id={`${p.package_number}`} placeholder="código de rastreio" />
           </React.Fragment>
         )
       })}

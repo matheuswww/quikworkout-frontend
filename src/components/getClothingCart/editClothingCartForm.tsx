@@ -118,14 +118,14 @@ export default function EditClothingCartForm({clothing, setClothingData, setPopu
   }
 
   function close(event: MouseEvent) {
-    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) || closeRef.current?.contains(event.target))) {
+    if(event.target instanceof HTMLElement && (form.current && !form.current.contains(event.target) || closeRef.current?.contains(event.target)) && (event.target.contains(modalRef.current) || event.target.contains(closeRef.current) || event.target.contains(closeRef.current?.firstChild instanceof HTMLElement ? closeRef.current?.firstChild : null))) {
       window.removeEventListener("click", close)
       if(form.current instanceof HTMLFormElement) {
         form.current.classList.remove(styles.active)
         setTimeout(() => {
           form.current instanceof HTMLElement && (form.current.style.display = "none")
           setOpen(false)
-        }, 500);
+        }, 500)
        }
     }
   }
