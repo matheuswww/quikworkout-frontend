@@ -21,6 +21,7 @@ export default function Menu(props:props) {
   const menuRef = useRef<HTMLElement | null>(null)
 
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if(path == "/") {
@@ -56,9 +57,9 @@ export default function Menu(props:props) {
       }, 500);
     }
     function handelClose(event: Event) {
-      if(menuRef.current instanceof HTMLElement && buttonRef.current instanceof HTMLButtonElement) {
-        buttonRef.current.style.pointerEvents = "none"
-        if(event.target instanceof HTMLElement && !event.target.contains(menuRef.current)) {
+      if(menuRef.current instanceof HTMLElement && buttonRef.current instanceof HTMLButtonElement && containerRef.current instanceof HTMLDivElement) {
+        if((event.target instanceof HTMLElement && !event.target.contains(menuRef.current)) || (event.target instanceof HTMLElement && containerRef.current instanceof HTMLDivElement && event.target.contains(containerRef.current))) {
+          buttonRef.current.style.pointerEvents = "none"
           document.removeEventListener("click", handelClose)
           setMenu(false)
           setTimeout(() => {
@@ -74,7 +75,7 @@ export default function Menu(props:props) {
 
  return (
     <>
-      <div className={styles.container}>
+      <div className={styles.container} ref={containerRef}>
         <Link href="/">
           <Logo 
             src="/img/logo.png"

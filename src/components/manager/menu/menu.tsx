@@ -21,6 +21,8 @@ export default function Menu(props:props) {
   const menuRef = useRef<HTMLElement | null>(null)
 
   const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
 
   useEffect(() => {
     if(path == "/manager-quikworkout") {
@@ -57,8 +59,8 @@ export default function Menu(props:props) {
     }
     function handelClose(event: Event) {
       if(menuRef.current instanceof HTMLElement && buttonRef.current instanceof HTMLButtonElement) {
-        buttonRef.current.style.pointerEvents = "none"
-        if(event.target instanceof HTMLElement && !event.target.contains(menuRef.current)) {
+        if((event.target instanceof HTMLElement && !event.target.contains(menuRef.current)) || (event.target instanceof HTMLElement && containerRef.current instanceof HTMLDivElement && event.target.contains(containerRef.current))) {
+          buttonRef.current.style.pointerEvents = "none"
           document.removeEventListener("click", handelClose)
           setMenu(false)
           setTimeout(() => {
@@ -74,7 +76,7 @@ export default function Menu(props:props) {
 
  return (
     <header>
-      <div className={styles.container}>
+      <div className={styles.container} ref={containerRef}>
         <Link href="/manager-quikworkout">
           <Logo 
             src="/img/logo.png"

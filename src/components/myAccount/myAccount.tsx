@@ -235,7 +235,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             handleModalClick(modalRefChangePassword, buttonToOpenModalRefChangePassword, closeRefChangePassword, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false))
           }}>Alterar senha</button> : <p className={styles.changed}>Senha alterada com sucesso</p>}
           </>
-         : load ? <>
+         : load || addressData ? <>
           <h1 className={styles.title}>Minha conta</h1>
           <p className={styles.loading}>carregando...</p>
          </> : <p className={styles.serverError}>Parece que houve um erro! Tente recarregar a página</p>}
