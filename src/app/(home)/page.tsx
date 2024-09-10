@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import Menu from '@/components/menu/menu'
 import Footer from '@/components/footer/footer'
+import MakeYourSyle from './makeYourSytle'
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -36,7 +37,7 @@ export default function Home({searchParams}: props) {
         <span className={styles.line}></span>
         <span className={styles.phrase2}> quik <br /> workout</span>
         </h1>
-        <button className={styles.button}>faça seu estilo</button>
+        <MakeYourSyle />
       </header>
       <main className={styles.main}>
         <Collections />

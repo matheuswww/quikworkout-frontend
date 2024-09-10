@@ -430,6 +430,14 @@
   opacity: .5;
 }
 
+.shop {
+  color: transparent;
+  width: 24px;
+  position: relative;
+  height: 24px;
+  top: -1px;
+}
+
 @media (min-width: 400px) {
   .images {
     width: 290px;

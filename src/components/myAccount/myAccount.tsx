@@ -220,8 +220,8 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
                     <p>{infos.cep}</p>
                   </div>
                   <button aria-label="fecha
-                     r" type="button" className={styles.close} ref={buttonToOpenModalRefDeleteAddress} onClick={() => {
-                    handleModalClick(modalRefDeleteAddress, buttonToOpenModalRefDeleteAddress, closeRefDeleteAddress, styles.active, "block")
+                     r" type="button" disabled={activeModal} className={styles.close} ref={buttonToOpenModalRefDeleteAddress} onClick={() => {
+                    handleModalClick(modalRefDeleteAddress, buttonToOpenModalRefDeleteAddress, closeRefDeleteAddress, styles.active, "block", () => setActiveModal(true), () => setActiveModal(false))
                     changeDeleteAddress({...infos,})
                   }}><span aria-hidden="true">x</span></button>
               </div>

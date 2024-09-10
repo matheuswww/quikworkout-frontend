@@ -126,7 +126,7 @@ export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto
       <label className={styles.label} htmlFor="city2">Cidade</label>
       <input {...register("city")} className={styles.input} placeholder="cidade" type="text" id="city2"/>
       {errors.city && <p className={styles.error}>{errors.city.message}</p>}
-      <label className={styles.label} htmlFor="complement2">Complemento(opcional)</label>
+      <label className={styles.label} htmlFor="complement2">Complemento</label>
       <input {...register("complement")} className={styles.input} placeholder="complemento" type="text" id="complement2"/>
       {errors.complement && <p className={styles.error}>{errors.complement.message}</p>}
       <label className={styles.label} htmlFor="residenceNumber2">Número da residência</label>

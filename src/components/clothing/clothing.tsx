@@ -387,7 +387,7 @@ export default function Clothing({...props}: props) {
                 }
                 </div>
                 <button className={`${styles.button} ${styles.buy} ${success && styles.buttonOpacity}`} disabled={load || success} type="button" onClick={handleBuy}><p>Comprar</p></button>
-                <button className={`${styles.button} ${success && styles.buttonOpacity}`} disabled={load || success}><Shop src={"/img/shop.png"} alt="imagem de uma bolsa" width={14} height={17} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}/><p aria-hidden="true">Adicionar a bolsa</p></button>
+                <button className={`${styles.button} ${success && styles.buttonOpacity}`} disabled={load || success}><Shop src={"/img/shop.png"} alt="imagem de uma bolsa" width={25} height={25} aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`} className={styles.shop}/><p aria-hidden="true">Adicionar a bolsa</p></button>
               </form>
             : <div className={stylesLoad.infos} aria-label="carregando conteúdo" tabIndex={0}>
               <Skeleton className={stylesLoad.name}/>

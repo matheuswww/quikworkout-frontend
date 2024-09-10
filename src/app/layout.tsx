@@ -8,7 +8,7 @@ export const viewport: Viewport = {
 
 export const metadata:Metadata = {
   icons: {
-    icon: "/img/favicon.ico"
+    icon: "/img/favicon.png"
   }
 }
 

@@ -5,7 +5,7 @@ import styles from './card.module.css'
 import Back from '../back/back'
 import Create3DSSession from '@/api/order/create3DSSession'
 import { useRouter } from 'next/navigation'
-import { z } from 'zod'
+import { tuple, z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { card, enderecoContato } from '@/api/clothing/payOrderInterfaces'
@@ -87,9 +87,31 @@ interface phones {
   type: "MOBILE"
 }
 
-
 const schema = z.object({
-  cardNumber: z.string().regex(/(?:\d[\s-]*?){13,16}|(?:\d[\s-]*?){15}|(?:\d[\s-]*?){14}|(?:\d[\s-]*?){16,19}/, "número de cartão inválido").min(15,"número de cartão inválido").max(20,"número de cartão inválido"),
+  cardNumber: z.string().min(14,"número de cartão inválido").max(20,"número de cartão inválido").refine((number) => {
+    number = number.replaceAll("-","").trim()
+    if(isNaN(Number(number))) {
+      return false
+    }
+    let sum = 0
+    let sum_2 = 0
+    let double = true
+    for (let i = 0; i < number.length; i++) {
+      if(double) {
+        let n = String(Number(number[i])*2)
+        for (let j = 0; j < n.length; j++) {
+          sum += Number(n[j])
+        }
+        double = false
+      } else {
+        sum_2 += Number(number[i])
+        double = true
+      }
+    }
+    return (sum + sum_2) % 10 === 0
+  },{
+    message: "número de cartão inválido"
+  }),
   holder: z.string().min(1, "titular do cartão inválido").max(100, "titular do cartão inválido").regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "titular do cartão inválido" }),
   cvv: z.string().min(3,"cvv inválido").max(4,"cvv inválido"),
   expMonth: z.string(),

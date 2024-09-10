@@ -83,6 +83,10 @@ export default function Products({clothing, totalPrice, freight, responseError, 
                 <p className={styles.field}>Cor: </p>
                 <p className={styles.value}>{infos.cor}</p>
               </div>
+              <div className={`${styles.values}`}>
+                <p className={styles.field}>Tamanho: </p>
+                <p className={styles.value}>{infos.tamanho}</p>
+              </div>
               <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Quantidade: </p>
                 <p className={styles.value}>{infos.quantidade}</p>
@@ -109,6 +113,10 @@ export default function Products({clothing, totalPrice, freight, responseError, 
                 <div className={`${styles.values}`}>
                   <p className={styles.field}>Cor: </p>
                   <p className={styles.value}>{infos.cor}</p>
+                </div>
+                <div className={`${styles.values}`}>
+                  <p className={styles.field}>Tamanho: </p>
+                  <p className={styles.value}>{infos.tamanho}</p>
                 </div>
                 <div className={`${styles.values}`}>
                   <p className={styles.field}>Quantidade: </p>

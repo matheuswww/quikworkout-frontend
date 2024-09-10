@@ -138,6 +138,12 @@ export default function GetClothingCartForm({...props}: props) {
       totalPrice += preco*quantidade
     })
     setTotalPrice(totalPrice)
+    if(data?.clothing?.length == 0) {
+      setData({
+        clothing: null,
+        status: 404
+      })
+    }
   },[data])
 
   useEffect(() => {
@@ -237,7 +243,7 @@ export default function GetClothingCartForm({...props}: props) {
               <p className={`${styles.description} ${styles.interRegular} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>{data.descricao}</p>
               <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity} ${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}>Finalizar compra</Link>
               {(data.excedeEstoque || !data.disponivel) && <p className={styles.alert}>{!data.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${data.quantidadeDisponivel}`}</p>}
-              <button className={`${styles.delete} ${styles.buttonOpen}`} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="remover produto de minha bolsa" disabled={(data.excedeEstoque || !data.disponivel || openDeleteClothingCart || openEditClothingCart || load)}><span aria-hidden="true">x</span></button>
+              <button className={`${styles.delete} ${styles.buttonOpen}`} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="remover produto de minha bolsa" disabled={(openDeleteClothingCart || openEditClothingCart || load)}><span aria-hidden="true">x</span></button>
               <button className={`${styles.edit} ${styles.buttonOpen} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="editar produto" disabled={(data.excedeEstoque || !data.disponivel || openDeleteClothingCart || openEditClothingCart || load)}><Edit src="/img/edit.png" width={12} height={12} alt="editar produto" className={`${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}/></button>
             </div>
             )
