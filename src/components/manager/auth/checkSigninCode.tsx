@@ -80,6 +80,7 @@ export default function CheckSigninCodeForm({...props}:props) {
       setLoad(false)
     } else {
       localStorage.removeItem("timeSendSigninCode")
+      return
       window.location.href = "/"
       return
     }

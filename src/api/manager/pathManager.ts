@@ -1,1 +1,1 @@
-export const pathManager = "/manager"
+export const pathManager = "/manager-quikworkout"
