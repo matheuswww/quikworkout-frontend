@@ -15,6 +15,7 @@ import QRCODE from "next/image"
 import ClothingImg from "next/image"
 import Menu from "../menu/menu"
 import handleArrowClick from "@/funcs/handleArrowClick"
+import Image from "next/image"
 
 interface props {
   cookieName?: string
@@ -552,7 +553,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                 <Link href={`/finalizar-compra?retry_payment_id=${infos.pedido_id.substring(5)}&paymentType=${infos.tipo_pagamento == "CREDIT_CARD" ? "CARTAO_CREDITO" : "CARTAO_DEBITO"}`} className={styles.link}>Pagar novamente</Link>
               </div>
             }
-            <p className={styles.cancelOrder}>Deseja cancelar o pedido? Nos chame no whatsapp: 77777</p>
+            <p className={styles.cancelOrder}>Deseja cancelar o pedido? Nos chame no: <Link style={{fontSize: ".9rem"}} className={styles.link} href="https://api.whatsapp.com/send/?phone=5513997763561&text&type=phone_number&app_absent=0" target="_blank">whatsapp</Link></p>
           </div>
           )  
         })

@@ -255,6 +255,8 @@
   background-color: transparent;
   border: none;
   opacity: 70%;
+  height: 100%;
+  width: 100%;
 }
 
 .indexImages li {

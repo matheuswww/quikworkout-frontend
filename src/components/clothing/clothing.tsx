@@ -311,7 +311,7 @@ export default function Clothing({...props}: props) {
             {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
             {freightData?.prazoEnt && <p className={styles.freightPrice}>Prazo de entrega: {freightData.prazoEnt} dias úteis</p>}
             <button type="submit" disabled={load} className={styles.calcFreightButton}>Calcular frete</button>
-            <button aria-label="fechar" disabled={activeModal}  type="button" className={styles.close} ref={closeRef}><span aria-hidden="true">x</span></button>
+            <button aria-label="fechar" ref={closeRef} type="button" className={styles.close}><span aria-hidden="true">x</span></button>
         </form>
         <section>
         {data?.status == 404 && notFound()}
@@ -327,7 +327,7 @@ export default function Clothing({...props}: props) {
                     )
                   })
                 )
-            }) : <div className={stylesLoad.indexImages} aria-label="carregando conteúdo" tabIndex={0}><Skeleton/></div>}
+            }) : <div className={stylesLoad.indexImages} aria-label="carregando conteúdo" tabIndex={0}><Skeleton className={stylesLoad.imageSkeleton}/></div>}
           </ul>
           <div className={styles.images} ref={images} style={{display: data?.clothing ? "initial" : "none"}}>
             <ul className={styles.slide} ref={slide} aria-label="slide que mostra a imagem de cada roupa" tabIndex={0}>
@@ -346,7 +346,7 @@ export default function Clothing({...props}: props) {
               })}
             </ul>
             </div>
-            {!data?.clothing && <div className={stylesLoad.images} aria-label="carregando conteúdo" tabIndex={0}><Skeleton/></div>}
+            {!data?.clothing && <div className={stylesLoad.images} aria-label="carregando conteúdo" tabIndex={0}><Skeleton className={stylesLoad.imageSkeleton}/></div>}
             {data?.clothing ? <form className={styles.infos} onSubmit={(event) => handleSubmitAddToCart(event)}>
               <p className={styles.name} aria-label="nome da roupa">{data.clothing.nome}</p>
               <p className={styles.price} aria-label="preço da roupa">R${formatPrice(data.clothing.preco)}</p>
@@ -376,7 +376,7 @@ export default function Clothing({...props}: props) {
                   <ChangeColor activeModal={activeModal} callbackOnEnter={() => setActiveModal(true)} callbackOnOut={() => setActiveModal(false)} buttonToOpenModalRef={buttonToOpenModalRef} color={color} modalRef={modalRef} />
                 </div>
                 <div className={styles.freight}>
-                  {data?.clothing && Math.round((data.clothing.preco*count*100)/100) < 200 ? <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={() => handleModalClick(calcFreightRef, buttonToOpenModalFreight, closeRef, styles.active, "flex", () => setActiveModal(true), () => setActiveModal(false))}>Calcular frete</button> : <p className={styles.noFreight}>Frete grátis</p>}
+                  {data?.clothing && Math.round((data.clothing.preco*count*100)/100) < 200 ? <button className={styles.calcFreight} ref={buttonToOpenModalFreight} type="button" onClick={() => handleModalClick(calcFreightRef, buttonToOpenModalFreight, closeRef, styles.active, "flex", () => setActiveModal(true), () => setActiveModal(false))} disabled={activeModal}>Calcular frete</button> : <p className={styles.noFreight}>Frete grátis</p>}
                   {freightData && data &&
                     <>
                         <div className={styles.freightPrice}>
