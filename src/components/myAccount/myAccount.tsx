@@ -28,6 +28,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
   const [addressData, setAddressData] = useState<getAddressData[] | null>(null)
   const [data, setData] = useState<getUserResponse | null>(null)
   const [load, setLoad] = useState<boolean>(true)
+  const [allLoad, setAllLoad] = useState<number>(0)
   const [popupError, setPopupError] = useState<boolean>(false)
 
   const [changed, setChanged] = useState<boolean>(false)
@@ -54,7 +55,6 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
 
   useEffect(() => {
     (async function() {
-      setLoad(true)
       if(cookieName == undefined || cookieVal == undefined) {
         router.push("/auth/entrar")
         return
@@ -67,6 +67,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
         return
       }
       setData(res)
+      setAllLoad((c) => c+1)
     }())
   }, [])
 
@@ -76,7 +77,6 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
         router.push("/auth/entrar")
         return
       }
-      setLoad(true)
       const cookie = cookieName+"="+cookieVal
       const res = await GetAddress(cookie)
       if(typeof res.status == "number" && res.status == 401) {
@@ -84,9 +84,17 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
         return
       }
       setAddressData(res.data)
-      setLoad(false)
+      if(allLoad == null) {
+        setAllLoad((c) => c+1)
+      }
     }())
   }, [])
+
+  useEffect(() => {
+    if(allLoad >= 2) {
+      setLoad(false)
+    }
+  }, [allLoad])
 
   function changeDeleteAddress(address: getAddressData) {
     setDeleteAddress({
@@ -127,7 +135,6 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
               }} ref={type == "name" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar nome" src="/img/edit.png" width={16} height={16} /></button>
             </div>
           {
-            data.data.email !=  "" ?
             <div className={`${styles.vals} ${styles.email}`} style={{marginTop: "0px"}}>
               <p>Email: </p>
               <p>{data.data.email}</p>
@@ -137,33 +144,15 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
                 setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false)));
               }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} onClick={() => setType("contact")} /></button>
             </div>
-            :
-            <div className={styles.vals}>
-              <p>Telefone: </p>
-              <p>{data.data.telefone}</p>
-              <button className={`${styles.edit}`} disabled={activeModal} onClick={() => {
-                setActiveRecatpcha("updateProfile")
-                setType("contact")
-                setTimeout(() => handleModalClick(modalRefUpdateProfile, buttonToOpenModalRefUpdateProfile, closeRefUpdateProfile, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false)));
-              }} ref={type == "contact" ? buttonToOpenModalRefUpdateProfile : null}><Edit alt="alterar contato" src="/img/edit.png" width={16} height={16} /></button>
-            </div>
           }
           {
-            (data.data.twoAuthEmail != "" || data.data.twoAuthTelefone != "") ?
+            (data.data.twoAuthEmail != "") ?
             (
-              data.data.twoAuthEmail != "" ?
+              data.data.twoAuthEmail != "" &&
               <>
                 <div className={styles.vals}>
                   <p>Email de dois fatores: </p>
                   <p>{data.data.twoAuthEmail}</p>
-                </div>
-                <Link href="/auth/remover-dois-fatores" className={styles.link}>Remover autenticação de dois fatores</Link>
-              </>
-              :
-              <>
-                <div className={styles.vals}>
-                  <p>Telefone de dois fatores: </p>
-                  <p>{data.data.twoAuthTelefone}</p>
                 </div>
                 <Link href="/auth/remover-dois-fatores" className={styles.link}>Remover autenticação de dois fatores</Link>
               </>
@@ -173,7 +162,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
           }
           {
             !data.data.verificado &&
-            <Link href="/auth/validar-contato" className={styles.link}>Confirmar {data.data.email != "" ? "email" : "telefone"}</Link>
+            <Link href="/auth/validar-contato" className={styles.link}>Confirmar email</Link>
           }
           {
             addressData && 
@@ -235,7 +224,7 @@ export default function MyAccount({cookieName, cookieVal}:  props) {
             handleModalClick(modalRefChangePassword, buttonToOpenModalRefChangePassword, closeRefChangePassword, styles.active, "grid", () => setActiveModal(true), () => setActiveModal(false))
           }}>Alterar senha</button> : <p className={styles.changed}>Senha alterada com sucesso</p>}
           </>
-         : load || addressData ? <>
+         : load ? <>
           <h1 className={styles.title}>Minha conta</h1>
           <p className={styles.loading}>carregando...</p>
          </> : <p className={styles.serverError}>Parece que houve um erro! Tente recarregar a página</p>}

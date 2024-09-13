@@ -8,15 +8,10 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
-import { useRouter } from 'next/navigation'
 import CheckForgotPasswordCode, { checkForgotPasswordCodeResponse } from '@/api/auth/checkForgotPasswordCode'
 import { deleteCookie } from '@/action/deleteCookie'
 import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
-
-interface props {
-  email: boolean
-}
 
 const schema = z.object({
   code: z.string().min(6, "o código deve conter 6 caracteres").max(6, "o código deve conter 6 caracteres")
@@ -24,7 +19,7 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>
 
-export default function CheckForgotPasswordCodeForm({...props}:props) {
+export default function CheckForgotPasswordCodeForm() {
   const [timer,setTimer] = useState<number>(0)
   const [load, setLoad] = useState<boolean>(false)
   const [error, setError] = useState<checkForgotPasswordCodeResponse | null>(null)
@@ -129,7 +124,7 @@ export default function CheckForgotPasswordCodeForm({...props}:props) {
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
-          <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
+          <h1>Verifique seu email</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
           {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
 import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
 import GetUser from '@/api/user/getUser'
-import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import { ValidateEmail } from '@/funcs/validateEmail'
 import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 
@@ -22,16 +22,13 @@ interface props {
 }
 
 const schema = z.object({
-  emailOrPhoneNumber: z.string(),
+  email: z.string(),
   password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
 }).refine((fields) => {
-  if(fields.emailOrPhoneNumber.includes("@")) {
-    return ValidateEmail(fields.emailOrPhoneNumber)
-  }
-  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+  return ValidateEmail(fields.email)
 }, {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone inválido"
+  path: [ 'email' ],
+  message: "email inválido"
 })
 
 type FormProps = z.infer<typeof schema>
@@ -43,7 +40,6 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
-  const [isEmail, setIsEmail] = useState<boolean>(false)
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
     mode: "onSubmit",
@@ -60,7 +56,7 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
       } else {
         ((async function() {
           const res = await GetUser(cookie)
-          if((res.data && 'twoAuthEmail' in res.data && res.data.twoAuthEmail != "") || (res.data && 'twoAuthTelefone' in res.data && res.data.twoAuthTelefone != "")) {
+          if(res.data && 'twoAuthEmail' in res.data && res.data.twoAuthEmail != "") {
             setLoad(true)
             router.push("/")
           } else if (!res.data?.verificado){
@@ -98,19 +94,13 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
   async function handleForm(data: FormProps) {
     setRecaptchaError(null)
     setError(null)
-    let isNum: boolean = true
-    if(isNaN(Number(data.emailOrPhoneNumber))) {
-      isNum = false
-      setIsEmail(true)
-    }
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
       return
     }
     setLoad(true)
     const res = await SendCreateTwoAuthCode(cookie, {
-      email: !isNum ? data.emailOrPhoneNumber : "",
-      telefone: isNum ? data.emailOrPhoneNumber : "",
+      email: data.email,
       senha: data.password,
       token: token
     })
@@ -124,8 +114,12 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
     }
     if(res == 500) {
       setPopUpError(true)
-    } else if (res == "contato já utilizado para autenticação" || res == "este email já é utilizado para sua autenticação" || res == "este telefone já é utilizado para sua autenticação") {
-      setError(res)
+    } else if (res == "contato já utilizado para autenticação" || res == "este email já é utilizado para sua autenticação") {
+      if (res == "contato já utilizado para autenticação") {
+        setError("email já utilizado para autenticação")
+      } else {
+        setError(res)
+      }
     } else if (res == "senha errada") {
       setError("senha inválida")
     } else if (res == "usuário já possui autenticação de dois fatores") {
@@ -153,9 +147,9 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
           <section className={styles.section}>
             <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
               <h1>Criar autenticação de dois fatores</h1>
-              <label htmlFor="emailOrPhoneNumber">E-mail ou telefone de dois fatores</label>
-              <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-              {errors.emailOrPhoneNumber?.message && <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p>}
+              <label htmlFor="email">E-mail de dois fatores</label>
+              <input {...register("email")} type="text" id="email" placeholder="email" max={255}/>
+              {errors.email?.message && <p className={styles.error}>{errors.email.message}</p>}
               <label htmlFor="password">Sua senha</label>
               <Password {...register("password")} id="password" placeholder="senha"/>
               {errors.password?.message ? <p className={styles.error}>{errors.password.message}</p> : error == "senha inválida" && <p className={styles.error}>{error}</p>}
@@ -167,7 +161,7 @@ export default function SendCreateTwoAuthCodeForm({...props}: props) {
           </section>
         </main>
       </>
-      : <CheckCreateTwoAuthCodeForm cookie={cookie} email={isEmail}/> }
+      : <CheckCreateTwoAuthCodeForm cookie={cookie}/> }
     </>
   )
 }

@@ -15,7 +15,6 @@ export type sendCreateTwoAuthCodeResponse =
 
 interface params {
   email: string
-  telefone: string
   senha: string
   token: string
 }

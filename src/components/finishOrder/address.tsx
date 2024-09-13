@@ -9,16 +9,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { regions } from './regionCode'
 import { ValidateCnpj, ValidateCpf } from './payment/validateCpfCnpj'
-import { ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
 import { enderecoContato } from '@/api/clothing/payOrderInterfaces'
 import { getAddressData } from '@/api/user/getAddress'
 import { useRouter } from 'next/navigation'
 import GetAddress from '@/api/user/getAddress'
+import { handlePhoneNumber } from '@/funcs/handlePhoneNumber'
 
 const schema = z.object({
   name: z.string().regex(/^\p{L}+['.-]?(?:\s+\p{L}+['.-]?)+$/u, { message: "nome e sobrenome inválido" }),
   email: z.string().min(10, "email precisa ter pelo menos 10 caracteres").max(255, "é permitido no máximo 255 caracteres").regex(/^([a-zA-Z0-9.!#$%&'*+\/=?^_ {|}~-]{1,64}@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?){0,5})?$/, "email inválido"),
-  phoneNumber: z.string().min(10, "telefone inválido").max(14, "telefone inválido"),
+  phoneNumber: z.string().min(10, "telefone inválido").regex(/^(\+55\s?)?(\(?[1-9]{2}\)?|\d{2})\s?\d{4,5}(-?\d{4})$/, "telefone inválido"),
   cpfCnpj: z.string().min(11, "cpf ou cnpj inválido").max(14, "cpf ou cnpj inválido"),
   street: z.string().min(1, "rua precisa ter pelo menos 1 carácter").max(160, "é permitido no máximo 160 caracteres"),
   residenceNumber: z.string().min(1, "número de residência precisa ter pelo menos 1 carácter").max(20, "é permitido no máximo 20 caracteres"),
@@ -27,11 +27,6 @@ const schema = z.object({
   city: z.string().min(1, "cidade precisa ter pelo menos 1 carácter").max(90, "é permitido no máximo 90 caracteres"),
   regionCode: z.string(),
   cep: z.string().min(8, "cep inválido").max(9, "cep inválido"),
-}).refine((fields) => {
-  return ValidatePhoneNumber(fields.phoneNumber)
-}, {
-  path: ["phoneNumber"],
-  message: "telefone inválido"
 }).refine((fields) => {
   if(fields.cpfCnpj.includes(".")) {
     fields.cpfCnpj = fields.cpfCnpj.replaceAll(".","")
@@ -76,7 +71,7 @@ interface props {
 
 export default function Address({ setAddress, address, addressRef, cookieName, cookieVal, setLoad,setAdressStatus }:props) {
   const router = useRouter()
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormProps>({
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
     resolver: zodResolver(schema)
@@ -130,6 +125,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
   }
                                                                  
   function handleForm(data: FormProps) {
+    data.phoneNumber = data.phoneNumber.replaceAll(" ","").replaceAll("-","").replaceAll("(","").replaceAll(")","")
     const region = data.regionCode.substring(5)
     const regionCode = data.regionCode.slice(0,2)
     const DDD = data.phoneNumber.slice(0,2)
@@ -225,7 +221,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
             <input {...register("email")} className={styles.input} placeholder="email" type="text" id="email"/>
             {errors.email && <p className={styles.error}>{errors.email.message}</p>}
             <label className={styles.label} htmlFor="telefone">Telefone</label>
-            <input {...register("phoneNumber")} className={styles.input} placeholder="telefone(+55 somente)" type="number" id="telefone"/>
+            <input {...register("phoneNumber")} onChange={(e) => setValue("phoneNumber", handlePhoneNumber(e))} className={styles.input} placeholder="telefone" type="text" id="telefone"/>
             {errors.phoneNumber && <p className={styles.error}>{errors.phoneNumber.message}</p>}
             <label className={styles.label} htmlFor="cpfCnpj">Cpf ou cnpj</label>
             <input {...register("cpfCnpj")} className={styles.input} placeholder="cpf ou cnpj" type="text" id="cpfCnpj"/>

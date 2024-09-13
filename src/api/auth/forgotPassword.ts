@@ -10,7 +10,6 @@ export type sendForgotPasswordCodeResponse =
 
 interface params {
   email: string
-  telefone: string
   token: string
 }
 

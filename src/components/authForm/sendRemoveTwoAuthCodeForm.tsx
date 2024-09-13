@@ -5,12 +5,10 @@ import styles from './sendRemoveTwoAuthCodeForm.module.css'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { sendCreateTwoAuthCodeResponse } from '@/api/auth/sendCreateTwoAuthCode'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
 import { useRouter } from 'next/navigation'
 import { deleteCookie } from '@/action/deleteCookie'
-import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm'
 import GetUser from '@/api/user/getUser'
 import SendRemoveTwoAuthCode from '@/api/auth/sendRemoveTwoAuthCode'
 import CheckRemoveTwoAuthCodeForm from './checkRemoveTwoAuthCode'
@@ -35,7 +33,6 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
-  const [isEmail, setIsEmail] = useState<boolean>(false)
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
@@ -57,9 +54,6 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
             await deleteCookie("userProfile")
             router.push("/auth/entrar")
           } else {
-            if(res.data?.email != "") {
-              setIsEmail(true)
-            }
             setLoad(false)
           }
         }
@@ -150,7 +144,7 @@ export default function SendRemoveTwoAuthCodeForm({...props}: props) {
           </section>
         </main>
       </>
-      : <CheckRemoveTwoAuthCodeForm cookie={cookie} email={isEmail ? true : false}/>}
+      : <CheckRemoveTwoAuthCodeForm cookie={cookie} />}
     </>
   )
 }

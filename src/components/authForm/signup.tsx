@@ -11,12 +11,12 @@ import Signup, { ResponseSignup } from '@/api/auth/signup'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
-import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import { ValidateEmail } from '@/funcs/validateEmail'
 import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 
 const schema = z.object({
-  emailOrPhoneNumber: z.string(),
+  email: z.string(),
   password: z.string().min(8,"senha precisa ter pelo menos 8 caracteres").max(72, "A senha deve ter no maxímo de 72 caracteres"),
   confirmPassword: z.string(),
   name: z.string().min(2, "nome precisa ter pelo menos de 2 caracteres").max(20, "O nome deve ter no maximo 20 caracteres"),
@@ -25,20 +25,16 @@ const schema = z.object({
   path: [ 'confirmPassword' ],
   message: "as senhas precisam ser iguais"
 }).refine((fields) => {
-  if(fields.emailOrPhoneNumber.includes("@")) {
-    return ValidateEmail(fields.emailOrPhoneNumber)
-  }
-  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+  return ValidateEmail(fields.email)
 }, {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone inválido"
+  path: [ 'email' ],
+  message: "email inválido"
 })
 
 type FormProps = z.infer<typeof schema>
 
 export default function SignupForm() {
   const [res, setStatus] = useState<ResponseSignup | null>(null)
-  const [isEmail, setIsEmail] = useState<boolean>(true)
   const [load,setLoad] = useState<boolean>(false)
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
   const { register, handleSubmit, formState: { errors } } = useForm<FormProps>({
@@ -50,19 +46,13 @@ export default function SignupForm() {
   const handleForm = async (data: FormProps) => {
     setRecaptchaError(null)
     setStatus(null)
-    let isNum: boolean = false
-    if(!isNaN(Number(data.emailOrPhoneNumber))) {
-      isNum = true
-      setIsEmail(false)
-    }
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
       return
     }
     setLoad(true)
     const res = await Signup({
-      email: isNum ? "" : data.emailOrPhoneNumber,
-      telefone: isNum ? data.emailOrPhoneNumber : "",
+      email: data.email,
       nome: data.name,
       senha: data.password,
       token: token
@@ -94,9 +84,9 @@ export default function SignupForm() {
             <label htmlFor="name">Nome</label>
             <input {...register("name")} type="text" id="name" placeholder="nome"/>
             {errors.name?.message && <p className={styles.error}>{errors.name.message}</p>}
-            <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
-            <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-            {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : res == 409 && <p className={styles.error}>Este {isEmail ? "email" : "telefone"} já esta sendo utilizado</p>}
+            <label htmlFor="email">E-mail</label>
+            <input {...register("email")} type="text" id="email" placeholder="email" max={255}/>
+            {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : res == 409 && <p className={styles.error}>Este email já esta sendo utilizado</p>}
             <label htmlFor="password">Senha</label>
             <Password {...register("password")} id="password" placeholder="senha"/> 
             {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}

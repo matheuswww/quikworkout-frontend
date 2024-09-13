@@ -9,7 +9,6 @@ export type updateProfile =
 
 interface params {
   email: string | null
-  telefone: string | null
   nome: string | null
   senha: string
   token: string

@@ -12,8 +12,6 @@ interface data {
   nome: string
   email: string
   twoAuthEmail: string
-  twoAuthTelefone: string
-  telefone: string
   verificado: boolean
 }
 

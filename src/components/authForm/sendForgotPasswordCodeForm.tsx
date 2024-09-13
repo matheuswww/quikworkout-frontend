@@ -6,29 +6,25 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
-import SendForgotPasswordCode, { sendForgotPasswordCodeResponse } from '@/api/auth/forgotPassword'
+import SendForgotPasswordCode from '@/api/auth/forgotPassword'
 import CheckForgotPasswordCodeForm from './checkForgotPasswordCodeForm'
-import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import { ValidateEmail } from '@/funcs/validateEmail'
 import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 
 const schema = z.object({
-  emailOrPhoneNumber: z.string(),
+  email: z.string(),
 }).refine((fields) => {
-  if(fields.emailOrPhoneNumber.includes("@")) {
-    return ValidateEmail(fields.emailOrPhoneNumber)
-  }
-  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+  return ValidateEmail(fields.email)
 }, {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone inválido"
+  path: [ 'email' ],
+  message: "email inválido"
 })
 
 type FormProps = z.infer<typeof schema>
 
 export default function SendForgotPasswordCodeForm() {
-  const [isEmail, setIsEmail] = useState<boolean>(false)
-  const [error, setError] = useState<sendForgotPasswordCodeResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
@@ -59,11 +55,6 @@ export default function SendForgotPasswordCodeForm() {
   },[next])
 
   async function handleForm(data: FormProps) {
-    let isNum: boolean = true
-    if(isNaN(Number(data.emailOrPhoneNumber))) {
-      isNum = false
-      setIsEmail(true)
-    }
     setRecaptchaError(null)
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
@@ -71,8 +62,7 @@ export default function SendForgotPasswordCodeForm() {
     }
     setLoad(true)
     const res = await SendForgotPasswordCode({
-      email: !isNum ? data.emailOrPhoneNumber : "",
-      telefone: isNum ? data.emailOrPhoneNumber : "",
+      email: data.email,
       token: token
     })
     if (res == "recaptcha inválido") {
@@ -86,7 +76,7 @@ export default function SendForgotPasswordCodeForm() {
     if(res == 500) {
       setPopUpError(true)
     } else if (res == "usuário não encontrado") {
-      setError(res)
+      setError("email não encontrado")
     } else if (res == 200) {
       localStorage.setItem("timeSendForgotPasswordCode", new Date().getTime().toString())
       setNext(true)
@@ -104,10 +94,10 @@ export default function SendForgotPasswordCodeForm() {
         <main className={`${styles.main} ${load && styles.load}`}>
           <section className={styles.section}>
             <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
-              <h1>Insira seu contato para enviarmos um código de redefinição de senha</h1>
-              <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
-              <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-              {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : error && <p className={styles.error}>{error}</p>}
+              <h1>Insira seu email para enviarmos um código de redefinição de senha</h1>
+              <label htmlFor="email">E-mail</label>
+              <input {...register("email")} type="text" id="email" placeholder="email" max={255}/>
+              {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : error && <p className={styles.error}>{error}</p>}
               {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
               <Recaptcha className={styles.recaptcha} />
               <button disabled={load ? true : false} className={`${load && styles.loading} ${styles.button}`} type="submit">{load ? "Carregando..." : "Enviar código"}</button>
@@ -115,7 +105,7 @@ export default function SendForgotPasswordCodeForm() {
           </section>
         </main>
       </>
-      : <CheckForgotPasswordCodeForm email={isEmail}  /> }
+      : <CheckForgotPasswordCodeForm /> }
     </>
   )
 }

@@ -5,7 +5,6 @@ import { authPath } from "../user/userPath"
 interface params {
   nome: string
   email: string
-  telefone: string
   senha: string
   token: string
 }

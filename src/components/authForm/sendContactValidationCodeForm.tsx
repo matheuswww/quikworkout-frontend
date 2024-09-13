@@ -22,7 +22,6 @@ export default function SendContactValidationCodeForm({...props}: props) {
   const [load, setLoad] = useState<boolean>(true)
   const [popUpError, setPopUpError] = useState<boolean>(false)
   const [next, setNext] = useState<boolean>(false)
-  const [isEmail, setEmail] = useState<boolean>(false)
 
   useEffect(() => {
     if(props.cookieName == undefined || props.cookieVal == undefined) {
@@ -31,9 +30,6 @@ export default function SendContactValidationCodeForm({...props}: props) {
       ((async function() {
         const res = await GetUser(cookie)
         setData(res)
-        if(res.data && 'email' in res.data && res.data.email != "") {
-          setEmail(true)
-        }
         if(res.data && 'verificado' in res.data && res.data.verificado) {
           setLoad(true)
           router.push("/")
@@ -107,10 +103,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
                 <>
                 <h1>{props.welcome ? "Estamos quase lá!" : "Validação de contato"}</h1>
                 {load ? <p>Carregando...</p> : 
-                data?.data && 'email' in data.data ?
                   <p>Clique aqui para enviarmos um código de verificação para seu email</p>
-                  :
-                  <p>Clique aqui para enviarmos um código de verificação para seu telefone</p>
                 }
                 <button disabled={load ? true : false}>{load ? "Carregando..." : "Enviar código"}</button> 
                 </>
@@ -123,7 +116,7 @@ export default function SendContactValidationCodeForm({...props}: props) {
             </form>
           </main>
          </>
-        : <CheckContactValidationCodeForm cookie={cookie} email={isEmail} />
+        : <CheckContactValidationCodeForm cookie={cookie} />
       }
     </>
   )

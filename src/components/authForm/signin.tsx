@@ -10,28 +10,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import SpinLoading from '../spinLoading/spinLoading'
 import PopupError from '../popupError/popupError'
-import Signin, { signinResponse } from '@/api/auth/signin'
-import { ValidateEmail, ValidatePhoneNumber } from '@/funcs/validateEmailAndPhoneNumber'
+import Signin from '@/api/auth/signin'
+import { ValidateEmail } from '@/funcs/validateEmail'
 import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 
 const schema = z.object({
-  emailOrPhoneNumber: z.string(),
+  email: z.string(),
   password: z.string(),
 }).refine((fields) => {
-  if(fields.emailOrPhoneNumber.includes("@")) {
-    return ValidateEmail(fields.emailOrPhoneNumber)
-  }
-  return ValidatePhoneNumber(fields.emailOrPhoneNumber)
+  return ValidateEmail(fields.email)
 }, {
-  path: [ 'emailOrPhoneNumber' ],
-  message: "email ou telefone inválido"
+  path: [ 'email' ],
+  message: "email inválido"
 })
 
 type FormProps = z.infer<typeof schema>
 
 export default function SigninForm() {
-  const [error, setError] = useState<signinResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<number>(0)
   const [load,setLoad] = useState<boolean>(false)
   const [recaptchaError, setRecaptchaError] = useState<string | null>(null)
@@ -45,7 +42,7 @@ export default function SigninForm() {
     setRecaptchaError(null)
     setError(null)
     let isNum: boolean = false
-    if(!isNaN(Number(data.emailOrPhoneNumber))) {
+    if(!isNaN(Number(data.email))) {
       isNum = true
     }
     const token = RecaptchaForm(setRecaptchaError)
@@ -54,8 +51,7 @@ export default function SigninForm() {
     }
     setLoad(true)
     const res = await Signin({
-      email: isNum ? "" : data.emailOrPhoneNumber,
-      telefone: isNum ? data.emailOrPhoneNumber : "",
+      email: isNum ? "" : data.email,
       senha: data.password,
       token: token,
     })
@@ -73,7 +69,11 @@ export default function SigninForm() {
       window.grecaptcha.reset()
     }
     if(res == "contato não cadastrado" || res == "senha errada") {
-      setError(res)
+      if (res == "contato não cadastrado") {
+        setError("email não cadastrado")
+      } else {
+        setError(res)
+      }
     }
     if(res == 500) {
       setStatus(status)
@@ -92,9 +92,9 @@ export default function SigninForm() {
         <section className={styles.section}>
           <form className={`${styles.form} ${styles.formSignin}`} onSubmit={handleSubmit(handleForm)}>
             <h1>Entrar</h1>
-            <label htmlFor="emailOrPhoneNumber">E-mail ou telefone</label>
-            <input {...register("emailOrPhoneNumber")} type="text" id="emailOrPhoneNumber" placeholder="email ou telefone(+55 somente)" max={255}/>
-            {errors.emailOrPhoneNumber?.message ? <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p> : error == "contato não cadastrado" && <p className={styles.error}>{error}</p>}
+            <label htmlFor="email">E-mail</label>
+            <input {...register("email")} type="text" id="email" placeholder="email" max={255}/>
+            {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : error == "email não cadastrado" && <p className={styles.error}>{error}</p>}
             <label htmlFor="password">Senha</label>
             <Password {...register("password")} id="password" placeholder="senha"/> 
             {error == "senha errada" && <p className={styles.error}>senha inválida</p>}

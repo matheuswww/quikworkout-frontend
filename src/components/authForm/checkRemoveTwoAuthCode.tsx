@@ -14,7 +14,6 @@ import Recaptcha from '../recaptcha/recaptcha'
 import RecaptchaForm from '@/funcs/recaptchaForm'
 
 interface props {
-  email: boolean
   cookie: string
 }
 
@@ -95,7 +94,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
     if(prevTime) {
       elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000)
       if(elapsedTime > 60 * 6) {
-        localStorage.removeItem("timeSendRemovewwwwwwTwoAuthCode")
+        localStorage.removeItem("timeSendRemoveTwoAuthCode")
         window.location.href = "/auth/entrar"
       }
     } else {
@@ -116,7 +115,7 @@ export default function CheckRemoveTwoAuthCodeForm({...props}:props) {
       {load && <SpinLoading />}
       <main className={`${styles.main} ${load && styles.lowOpacity}`}>
         <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
-          <h1>Verifique seu {props.email ? "email" : "SMS"}</h1>
+          <h1>Verifique seu email</h1>
           <input {...register("code")} type="number" placeholder="insira seu código" />
           {errors.code?.message ? <p className={styles.error}>{errors.code.message}</p> : error && <p className={styles.error}>{error}</p>}
           {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}

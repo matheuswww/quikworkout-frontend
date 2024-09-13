@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import RecaptchaForm from "@/funcs/recaptchaForm"
 import Recaptcha from "../recaptcha/recaptcha"
-import { ValidateEmail, ValidatePhoneNumber } from "@/funcs/validateEmailAndPhoneNumber"
+import { ValidateEmail } from "@/funcs/validateEmail"
 import UpdateProfile from "@/api/auth/updateProfile"
 import Password from "../authForm/password"
 import { deleteCookie } from "@/action/deleteCookie"
@@ -22,16 +22,13 @@ const schema = z.object({
   }, {
     message: "nome precisa ter entre 2 e 20 caracteres",
   }),
-  emailOrPhoneNumber: z.string().optional().refine((value) => {
+  email: z.string().optional().refine((value) => {
   if(value && value != "") {
-    if(value.includes("@")) {
-      return ValidateEmail(value)
-    }
-    return ValidatePhoneNumber(value)
+    return ValidateEmail(value)
   }
   return true
   },{
-    message: "email ou telefone inválido"
+    message: "email inválido"
   })
 })
 
@@ -63,7 +60,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
 
   useEffect(() => {
     if(type == "name") {
-      setValue("emailOrPhoneNumber", "")
+      setValue("email", "")
     }
     if(type == "contact") {
       setValue("name", "")
@@ -75,10 +72,10 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
     setResponseError(null)
     setPopupError(false)
 
-    if(data.emailOrPhoneNumber == "" && data.name == "") {
+    if(data.email == "" && data.name == "") {
       if(type == "contact") {
-        setResponseError("email ou telefone inválido")
-        setError("emailOrPhoneNumber", {
+        setResponseError("email inválido")
+        setError("email", {
           message: ""
         })
       } else {
@@ -100,13 +97,11 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
       return
     }
     const cookie = cookieName+"="+cookieVal
-    const newEmail = data.emailOrPhoneNumber ? data.emailOrPhoneNumber.includes("@") ? data.emailOrPhoneNumber : "" : ""
-    const newTelefone = data.emailOrPhoneNumber ? !data.emailOrPhoneNumber.includes("@") ? data.emailOrPhoneNumber : "" : ""
+    const newEmail = data.email ? data.email.includes("@") ? data.email : "" : ""
     const newName = data.name ? data.name : ""
 
     const res = await UpdateProfile(cookie, {
       email: newEmail,
-      telefone: newTelefone,
       nome: newName,
       senha: data.password,
       token: token
@@ -115,7 +110,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
       setResponseError("senha inválida")
     }
     if(res == "contato já utilizado") {
-      setResponseError(res)
+      setResponseError("email já utilizado")
     }
     if(res == 500) {
       setPopupError(true)
@@ -133,11 +128,9 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
         return {
           status: 200,
           data: {
-            email: newEmail != "" || newTelefone != "" ? newEmail : d.data.email,
+            email: newEmail != "" ? newEmail : d.data.email,
             nome: newName != "" ? newName : d.data.nome,
-            telefone: newTelefone != "" && newTelefone != "" ? newTelefone : d.data.telefone,
             twoAuthEmail: d.data.twoAuthEmail,
-            twoAuthTelefone: d.data.twoAuthTelefone,
             verificado: d.data.verificado,
           }
         }
@@ -156,9 +149,9 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
   return (
     <form className={`${styles.form}`} id={`${load && styles.lowOpacity}`} ref={modalRef} tabIndex={0} onSubmit={handleSubmit(handleForm)}>
       {type == "contact" ? <div>
-          <label htmlFor="new_contact">Novo contato(email ou telefone)</label>
-          <input {...register("emailOrPhoneNumber")} id="new_contact" placeholder="email ou telefone(+55 somente)"/>
-          {errors?.emailOrPhoneNumber?.message && <p className={styles.error}>{errors.emailOrPhoneNumber.message}</p>}
+          <label htmlFor="new_contact">Novo email</label>
+          <input {...register("email")} id="new_contact" placeholder="email"/>
+          {errors?.email?.message && <p className={styles.error}>{errors.email.message}</p>}
         </div>
         :
         <div>
@@ -172,7 +165,7 @@ export default function UpdateProfileForm({setPopupError,setLoad,cookieName,cook
         <Password {...register("password")} id="password" placeholder="senha"/>
         {errors.password?.message && <p className={styles.error}>{errors.password.message}</p>}
       </div>
-      {!errors.password?.message && !errors.emailOrPhoneNumber?.message && !errors.name?.message && responseError && <p className={styles.error}>{responseError}</p>}
+      {!errors.password?.message && !errors.email?.message && !errors.name?.message && responseError && <p className={styles.error}>{responseError}</p>}
       {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
       {activeRecaptcha == "updateProfile" && <Recaptcha className={styles.recaptcha} />}
       <button type="submit" className={`${styles.button} ${styles.confirm}`}>Confirmar</button>
