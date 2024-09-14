@@ -16,7 +16,6 @@ import { deleteCookie } from "@/action/deleteCookie"
 import UpdateClothing, { updateClothingParams } from "@/api/manager/clothing/updateClothing"
 import UpdateClothingInventory, { updateClothingInventoryParams, updateInventory } from "@/api/manager/clothing/updateClothingInventory"
 import Inventory from "./inventory"
-import { app } from "@/api/path"
 import { refresh } from "@/action/refresh"
 
 interface props {
@@ -167,7 +166,8 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
       closeModalDeleteClothingRef.current.click()
     }
     if(res == 200) {
-      await refresh(app)
+      await refresh("/")
+      
     }
     window.location.reload()
   }
@@ -337,7 +337,8 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
       return
     }
     if(res == 200) {
-      await refresh(app)
+      await refresh("/")
+      
       setSuccess(true)
     }
     setLoad(false)
@@ -358,7 +359,8 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
       return
     }
     if(res == 200) {
-      await refresh(app)
+      await refresh("/")
+      
       setSuccess(true)
       updateClothingInventory.map((i,indexInventory) => {
         data.inventario[changedInventory[indexInventory]].p = i.p

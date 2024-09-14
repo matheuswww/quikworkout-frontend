@@ -57,7 +57,7 @@ export default async function GetAllClothing(params: params):Promise<response> {
         "Content-Type": "application/json"
       },
       next: {
-        revalidate: 60 * 10
+        revalidate: 60 * 10,
       }
     }).then(res => res)
     let status:status
