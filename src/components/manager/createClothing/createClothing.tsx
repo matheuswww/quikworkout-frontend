@@ -32,7 +32,7 @@ export interface inventory {
 }
 
 const schema = z.object({
-  nome: z.string().min(1, "é necessário pelo menos 1 caracter").max(25, "nome deve ter no maxímo 80 caracteres"),
+  nome: z.string().min(1, "é necessário pelo menos 1 caracter").max(15, "nome deve ter no maxímo 15 caracteres"),
   descricao: z.string().min(1, "é necessário pelo menos 1 caracter").max(200, "descricação deve ter no maxímo 200 caracteres"),
   preco: z.string().refine((val) => {
     if(val.includes(",")) {
@@ -48,8 +48,8 @@ const schema = z.object({
   },{
     message: "preço inválido"
   }),
-  categoria: z.string().min(1, "é necessário pelo menos 1 caracter").max(25, "categoria deve ter no maxímo 25 caracteres"),
-  material: z.string().min(1, "é necessário pelo menos 1 caracter").max(25, "material deve ter no maxímo 25 caracteres")
+  categoria: z.string().min(1, "é necessário pelo menos 1 caracter").max(15, "categoria deve ter no maxímo 15 caracteres"),
+  material: z.string().min(1, "é necessário pelo menos 1 caracter").max(15, "material deve ter no maxímo 15 caracteres")
 })
 
 type FormProps = z.infer<typeof schema>

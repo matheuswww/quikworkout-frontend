@@ -110,14 +110,14 @@
 
 .name {
   font-family: var(--inkfree);
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   color: white;
   width: max-content;
 }
 
 .price {
   font-family: var(--inkfree);
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   color: white;
   justify-self: end;
 }
@@ -126,6 +126,7 @@
   grid-column: span 2;
   grid-row: span 2;
   word-wrap: break-word;
+  margin-top: 7px;
 }
 
 .expand {
@@ -232,7 +233,7 @@
   background-color: white;
 }
 
-.name,.description, .gender,.category,.material {
+.name, .gender,.category,.material {
   margin-right: 30px;
 }
 
@@ -446,7 +447,7 @@
   }
 
   .name,.price {
-    font-size: 2rem;
+    font-size: 1.7rem;
   }
 
   .gender p:nth-child(1), .material p:nth-child(1), .category p:nth-child(1), .sizes p:nth-child(1),.colors  p:nth-child(1), .counter p:nth-child(1) {

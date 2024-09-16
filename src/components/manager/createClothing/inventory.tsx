@@ -15,8 +15,8 @@ interface props {
 }
 
 const schema = z.object({
-  cor: z.string().min(1, "é necessário pelo menos 1 caracter").max(25, "cor deve ter no maxímo 25 caracteres"),
-  imgDesc: z.string().min(1, "é necessário pelo menos 1 caracter").max(50, "descricação da imagem deve ter no maxímo 50 caracteres"),
+  cor: z.string().min(1, "é necessário pelo menos 1 caracter").max(15, "cor deve ter no maxímo 15 caracteres"),
+  imgDesc: z.string().min(1, "é necessário pelo menos 1 caracter").max(60, "descricação da imagem deve ter no maxímo 60 caracteres"),
   p: z.string().refine((val) => !(Number(val) < 0) && !isNaN(Number(val)),{
     message: "valor inválido"
   }),
