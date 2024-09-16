@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import styles from './products.module.css'
 import { dataGetClothingCart } from "@/api/clothing/getClothingCart"
 import ClothingImg from 'next/image'
@@ -6,6 +6,8 @@ import formatPrice from "@/funcs/formatPrice"
 import { getOrderDetailResponse } from "@/api/clothing/getOrderDetail"
 import Recaptcha from "../recaptcha/recaptcha"
 import Link from "next/link"
+import ArrowUp from "next/image"
+import ArrowDown from "next/image"
 
 interface props {
   clothing: dataGetClothingCart[] | null | undefined
@@ -21,6 +23,7 @@ interface props {
 }
 
 export default function Products({clothing, totalPrice, freight, responseError, retryPaymentData, setTotalPriceWithFreight, totalPriceWithFreight, recaptchaError, privacyError, setPrivacy}:props) {
+  const [products, setProducts] = useState<boolean>(true)
   const productsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -59,23 +62,21 @@ export default function Products({clothing, totalPrice, freight, responseError, 
   return (
     <>
     <section className={`${styles.section}`}>
-      <div ref={productsRef}>
-        <p className={styles.price}>Preço total: R${totalPrice}</p>
-        {Number(totalPrice.includes(",") ? Number(totalPrice.replace(",",".")) : Number(totalPrice)) >= 200 ? <p style={{marginBottom: "10px"}} className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p style={{marginBottom: "10px"}} className={styles.price}>Digite seu cep acima para visualizar seu preço total juntamente com o frete</p> : <p style={{marginBottom: "10px"}} className={styles.price}>Preço total com frete R${totalPriceWithFreight}</p>}
-        <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
-        { <p className={styles.error}>{responseError}</p> }
-        <div className={styles.privacy}>
-          <label htmlFor="privacy">Aceitar <Link href="/politica-privacidade-pagamento" target="_blank">política de privacidade</Link></label>
-          <input type="checkbox" id="privacy" onClick={() => setPrivacy((p) => !p)} />
-        </div>
-        {recaptchaError && <p style={{marginBottom: "15px"}} className={styles.error}>{recaptchaError}</p>}
-        {privacyError && <p style={{marginBottom: "15px"}} className={styles.error}>{privacyError}</p>}
-        <button style={{marginLeft: "12px",marginTop: "0px"}} type="submit" className={styles.button}>Finalizar compra</button>
+      <div style={{display: "flex"}}>
+        {
+          products ? 
+          <button className={styles.arrow} id="arrowProducts" type="button" onClick={(() => setProducts((a) => !a))} aria-label="diminuir sessão de roupas"><ArrowUp src="/img/arrowUp.png" alt="seta para cima" width={24} height={24} /></button>
+          :
+          <button className={styles.arrow} id="arrowProducts" type="button" onClick={(() => setProducts((a) => !a))} aria-label="expandir sessão de roupas"><ArrowDown src="/img/arrowDown.png" alt="seta para baixo" width={24} height={24}/></button>
+        }
+        <label htmlFor="arrowProducts" className={styles.label} >Roupa(s)</label>
+      </div>
+      {products && <div ref={productsRef} className={styles.products}>
         {clothing?.map((infos) => {
           return (
             <div className={`${styles.clothing}`} key={infos.roupa_id+infos.cor+infos.tamanho}>
               <ClothingImg src={infos.imagem} alt={infos.alt} width={80} height={85} className={`${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}/>
-              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
+              <div className={`${styles.values}`}>
                 <p className={styles.field}>Nome: </p>
                 <p className={styles.value}>{infos.nome}</p>
               </div>
@@ -85,15 +86,15 @@ export default function Products({clothing, totalPrice, freight, responseError, 
               </div>
               <div className={`${styles.values}`}>
                 <p className={styles.field}>Tamanho: </p>
-                <p className={styles.value}>{infos.tamanho}</p>
+                <p className={styles.value}>{infos.tamanho.toUpperCase()}</p>
               </div>
               <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Quantidade: </p>
                 <p className={styles.value}>{infos.quantidade}</p>
               </div>
-              <div className={`${styles.values} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
+              <div className={`${styles.values} ${styles.clothingPrice} ${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}>
                 <p className={styles.field}>Preço: </p>
-                <p className={styles.value}>R${formatPrice(infos.preco)}</p>
+                <p className={`${styles.value}`}>R${formatPrice(infos.preco)}</p>
               </div>
               <div className={`${styles.values}`}>
                 {(infos.excedeEstoque || !infos.disponivel) && <p className={styles.alert}>{!infos.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${infos.quantidadeDisponivel}`}</p>}
@@ -116,21 +117,30 @@ export default function Products({clothing, totalPrice, freight, responseError, 
                 </div>
                 <div className={`${styles.values}`}>
                   <p className={styles.field}>Tamanho: </p>
-                  <p className={styles.value}>{infos.tamanho}</p>
+                  <p className={styles.value}>{infos.tamanho.toUpperCase()}</p>
                 </div>
                 <div className={`${styles.values}`}>
                   <p className={styles.field}>Quantidade: </p>
                   <p className={styles.value}>{infos.quantidade}</p>
                 </div>
-                <div className={`${styles.values}`}>
+                <div className={`${styles.values} ${styles.clothingPrice}`}>
                   <p className={styles.field}>Preço: </p>
-                  <p className={styles.value}>R${formatPrice(infos.preco)}</p>
+                  <p className={`${styles.value}`}>R${formatPrice(infos.preco)}</p>
                 </div>
               </div>
             )
           })
         )}
+      </div>}
+      <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
+      { <p className={styles.error}>{responseError}</p> }
+      <div className={styles.privacy}>
+        <label htmlFor="privacy">Aceitar <Link href="/politica-privacidade-pagamento" target="_blank">política de privacidade</Link></label>
+        <input type="checkbox" id="privacy" onClick={() => setPrivacy((p) => !p)} />
       </div>
+      {recaptchaError && <p style={{marginBottom: "15px"}} className={styles.error}>{recaptchaError}</p>}
+      {privacyError && <p style={{marginBottom: "15px"}} className={styles.error}>{privacyError}</p>}
+      <button style={{marginLeft: "12px",marginTop: "0px"}} type="submit" className={styles.button}>Finalizar compra</button>
     </section>
     </>
   )

@@ -106,8 +106,33 @@
   width: 85px;
 }
 
+.price {
+  margin-top: 10px;
+  margin-left: 5px;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  width: 280px;
+  animation: .5s forwards enter;
+}
+
+.totalPrice {
+  margin-top: 25px;
+}
+
 .load {
   color: white;
+}
+
+@keyframes enter {
+  from {
+    transform: translate3d(-50px,0,0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0px,0,0);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 405px) {

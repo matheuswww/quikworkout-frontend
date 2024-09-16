@@ -198,8 +198,8 @@ export default function GetClothingCartForm({...props}: props) {
           {data?.status != 500 && data?.status != 404 && <>
             <div>
               <h1 className={styles.title}>Minha bolsa</h1>
-              {data?.clothing && <>
-                {totalPrice != 0 && <p className={styles.totalPrice}>Preço total da bolsa: R${formatPrice(Math.round((totalPrice)*100) / 100)}</p>}
+              {totalPrice && data?.clothing && <>
+                {totalPrice != 0 && <p className={styles.totalPrice}>Preço: R${formatPrice(Math.round((totalPrice)*100) / 100)}</p>}
                 <Link href={`/finalizar-compra?page=${Math.ceil((data?.clothing.length / 10)) - 1}`} className={styles.finishOrder}>Finalizar todas as compras</Link>
               </>}
             </div>
@@ -212,8 +212,8 @@ export default function GetClothingCartForm({...props}: props) {
               <SkeletonImage src={data.imagem} alt={data.alt} className={`${styles.image} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} width={75} height={85} quality={100}/>
               <div className={styles.infos}>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>preço total:&nbsp;</p>
-                  <p className={styles.interRegular}>R${formatPrice(Math.round((data.preco*data.quantidade) * 100)/100)}</p>
+                  <p className={styles.inkfree}>preço:&nbsp;</p>
+                  <p className={styles.interRegular}>R${formatPrice(data.preco)}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
                   <p className={styles.inkfree}>categoria:&nbsp;</p>

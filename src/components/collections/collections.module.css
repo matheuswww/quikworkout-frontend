@@ -11,6 +11,15 @@
   height: max-content;
 }
 
+.skeleton {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .collections {
   max-width: 1000px;
   height: max-content;

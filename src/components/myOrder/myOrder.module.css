@@ -198,6 +198,7 @@
   display: flex;
 }
 
+
 .clothing {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -211,6 +212,7 @@
 
 .clothing img {
   border-radius: 5px;
+  height: max-content;
 }
 
 .error {

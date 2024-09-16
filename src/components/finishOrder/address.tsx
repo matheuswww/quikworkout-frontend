@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './address.module.css'
-import { Dispatch, MutableRefObject, useEffect, useRef, useState } from "react"
+import { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react"
 import ArrowUp from 'next/image'
 import ArrowDown from 'next/image'
 import { z } from 'zod'
@@ -60,23 +60,25 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 interface props {
-  setAddress: Dispatch<enderecoContato>
+  setAddress: Dispatch<SetStateAction<enderecoContato | null>>
   address: enderecoContato | null
   addressRef: MutableRefObject<HTMLElement | null>
   cookieName?: string
   cookieVal?: string
   setLoad: Dispatch<boolean>
   setAdressStatus: Dispatch<500 | null>
+  addressForm: boolean
+  setAddressForm: Dispatch<SetStateAction<boolean>>
 }
 
-export default function Address({ setAddress, address, addressRef, cookieName, cookieVal, setLoad,setAdressStatus }:props) {
+export default function Address({ setAddress, address, addressRef, cookieName, cookieVal, setLoad,setAdressStatus, addressForm, setAddressForm }:props) {
   const router = useRouter()
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FormProps>({
     mode: "onBlur",
     reValidateMode: "onBlur",
     resolver: zodResolver(schema)
   })
-  const [addressForm, setAddressForm] = useState<boolean>(true)
+
   const [delivery, setDelivery] = useState<"E" | "X" | "R">("E")
   const [saved, setSaved] = useState<boolean>(false)
   const [addressSaved, setAddressSaved] = useState<getAddressData[] | null>(null)
@@ -130,6 +132,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
     const regionCode = data.regionCode.slice(0,2)
     const DDD = data.phoneNumber.slice(0,2)
     const number = data.phoneNumber.substring(2)
+    data.cpfCnpj = data.cpfCnpj.replaceAll(".","").replaceAll("-","")
     if(data.cep.includes("-")) {
       data.cep = data.cep.replace("-","")
     }
@@ -265,7 +268,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
             <button type="submit" id="submit" className={styles.button}>Salvar endereço e contato</button>
           </form>
           : 
-            address && 
+            address && addressForm && 
             <>
               <div className={styles.values}>
                 <p className={styles.field}>Nome: </p>
@@ -315,7 +318,7 @@ export default function Address({ setAddress, address, addressRef, cookieName, c
                 <p className={styles.field}>Tipo de entrega: </p>
                 <p className={styles.value}>{delivery == "E" ? "entrega normal" : delivery == "R" ? "retirar" : delivery == "X" && "entrega expressa"}</p>
               </div>
-              <button className={styles.button} onClick={() => setSaved(false)} style={{marginLeft: "12px"}}>Editar endereço e contato</button>
+              <button className={styles.button} onClick={() => {setSaved(false);setAddress(null)}} style={{marginLeft: "12px"}}>Editar endereço e contato</button>
             </>
           }
       </section>

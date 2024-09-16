@@ -258,12 +258,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     <button onClick={(event: SyntheticEvent) => copyLink(event, i)} className={styles.button}>Copiar link de pagamento</button>
                   </div>
                 }
-                {paymentInfo[i]?.boleto?.pdf &&
-                  <div className={`${styles.values} ${styles.infos} ${styles.boleto}`}>
-                    <p>Baixar boleto: </p>
-                    <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
-                  </div>
-                }
                 {infos?.pacotes[0]?.codigoRastreio != "" ?
                   <>
                     {infos.pacotes.length > 1 && <p className={styles.p}>Você possui {infos.pacotes.length} pacotes a caminho</p>}
@@ -409,12 +403,16 @@ export default function MyOrder({cookieName,cookieVal}:props) {
               : paymentInfo[i]?.boleto ? 
               <div className={`${styles.payment} ${styles.displayNone}`} id={`item_paymentInfo_${i}`}>
                 <div className={`${styles.values} ${styles.infos}`}>
-                  <p>Nome: </p>
-                  <p>{paymentInfo[i].boleto?.titular.nome}</p>
-                </div>
-                <div className={`${styles.values} ${styles.infos}`}>
                   <p>Tipo de pagamento: </p>
                   <p>boleto</p>
+                </div>
+                <div className={`${styles.values} ${styles.infos}`}>
+                  <p>Baixar boleto: </p>
+                  <Link className={styles.link} href={paymentInfo[i].boleto?.pdf as string} target="_blank" download="boleto em pdf">baixar boleto</Link>
+                </div>
+                <div className={`${styles.values} ${styles.infos}`}>
+                  <p>Nome: </p>
+                  <p>{paymentInfo[i].boleto?.titular.nome}</p>
                 </div>
                 <div className={`${styles.values} ${styles.infos}`}>
                   <p>Cpf/Cnpj: </p>
@@ -513,6 +511,10 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                           <div key={clothing.id+clothing.tamanho+clothing.cor}>
                               <ClothingImg src={clothing.imagem} alt={clothing.alt} width={80} height={85} />
                               <div className={`${styles.values}`}>
+                                <p className={styles.field}>Preço: </p>
+                                <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
+                              </div>
+                              <div className={`${styles.values}`}>
                                 <p className={styles.field}>Nome: </p>
                                 <p className={styles.value}>{clothing.nome}</p>
                               </div>
@@ -527,10 +529,6 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                               <div className={`${styles.values}`}>
                                 <p className={styles.field}>Tamanho: </p>
                                 <p className={styles.value}>{clothing.tamanho}</p>
-                              </div>
-                              <div className={`${styles.values}`}>
-                                <p className={styles.field}>Preço: </p>
-                                <p className={styles.value}>R${formatPrice(clothing.preco)}</p>
                               </div>
                           </div>
                         )

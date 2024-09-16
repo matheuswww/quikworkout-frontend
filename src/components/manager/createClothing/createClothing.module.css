@@ -189,6 +189,8 @@
 .image {
   margin: 5px;
   border-radius: 5px;
+  width: 70px;
+  height: max-content;
 }
 
 .p {
@@ -205,6 +207,7 @@
 
 .inventoryItem {
   margin-left: 8px;
+  width: 200px;
 }
 
 .error {
@@ -288,6 +291,9 @@
     width: 375px;
   }
   .form input {
+    width: 300px;
+  }
+  .inventoryItem {
     width: 300px;
   }
 }

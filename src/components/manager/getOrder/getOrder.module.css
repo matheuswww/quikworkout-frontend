@@ -152,6 +152,8 @@
 
 .clothing img {
   border-radius: 5px;
+  width: 70px;
+  height: max-content;
 }
 
 .displayNone {

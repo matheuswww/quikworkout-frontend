@@ -7,7 +7,6 @@
 
 .section {
   margin-bottom: 15px;
-  margin-top: 30px;
   animation: enter forwards .5s;
 }
 
@@ -32,16 +31,23 @@
 .clothing {
   display: grid;
   grid-template-columns: 95px 1fr 10px 10px;
-  grid-template-rows: repeat(3, auto);
+  grid-template-rows: repeat(4, auto) 45px;
   margin-left: 12px;
   border-bottom: 1px solid #454545;
-  padding: 10px 0px;
+  padding-top: 10px;
 }
 
 .clothing img {
   grid-row: span 4;
   border-radius: 5px;
   align-self: center;
+  width: 70px;
+  height: max-content;
+}
+
+.clothingPrice {
+  align-self: center;
+  height: max-content;
 }
 
 .values {
@@ -49,7 +55,6 @@
   margin-top: 8px;
   width: 173px;
   min-width: 170px;
-  margin-left: 12px;
 }
 
 .field,.value,.alert {
@@ -62,15 +67,6 @@
 
 .field {
   color: white;
-}
-
-.price {
-  margin-top: 10px;
-  margin-left: 12px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
-  width: 280px;
 }
 
 .button {
@@ -153,6 +149,42 @@
   width: 15px;
 }
 
+.arrow {
+  background-color: transparent;
+  border: none;
+  justify-self: start;
+  margin-top: 15px;
+}
+
+.arrow img {
+  color: white;
+  background: transparent;
+  border-radius: 100%;
+  margin-right: 5px;
+}
+
+.label {
+  font-size: .9rem;
+  color: #c8c8c8;
+  font-family: var(--interSemiBold);
+  margin-top: 19px;
+}
+
+.products {
+  margin-left: 12px;
+}
+
+@keyframes enter {
+  from {
+    transform: translate3d(-50px,0,0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0px,0,0);
+    opacity: 1;
+  }
+}
+
 @media (hover: hover) { 
   .button:hover {
     cursor: pointer;
@@ -175,8 +207,7 @@
     transform-origin:0 0;
     width: initial;
     margin-top: 0px;
-    padding-top: 18px;
-    padding-bottom: 4px;
+    padding-top: 26px;
   }
 }
 

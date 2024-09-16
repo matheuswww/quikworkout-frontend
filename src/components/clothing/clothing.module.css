@@ -38,6 +38,12 @@
 .clothing {
   object-fit: cover;
   border-radius: 5px;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .slide {
@@ -238,7 +244,7 @@
 }
 
 .indexImages {
-  align-self: start;
+  align-self: center;
 }
 
 .indexImages.load {
@@ -263,8 +269,7 @@
 .indexImages li {
   position: relative;
   list-style: none;
-  width: 62px;
-  height: 65px;
+  width: 55px;
   margin-top: 10px;
   margin-left: 10px;
 }
@@ -468,7 +473,6 @@
 @media (min-width: 500px) {
   .images {
     width: 360px;
-    margin-top: 30px;
   }
 
   .clothing {
@@ -495,14 +499,8 @@
    .images {
     width: 560px;
     margin-left: 15px;
-    margin-top: 30px;
-    align-self: start;
   }
 
-  .indexImages  {
-    margin-top: 30px;
-  }
-  
   .clothing {
     width: 290px;
     height: 420px;

@@ -30,19 +30,19 @@ export default function Collections() {
             <li className={styles.product}>
               <Link className={styles.card} href="#">
               <p>Cropped</p>
-              <SkeletonImage src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton} />
+              <SkeletonImage draggable={false} src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton} />
               </Link>
             </li>
             <li className={styles.product}>
               <Link className={styles.card} href="#">
               <p>Cropped</p>
-              <SkeletonImage src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton}/>
+              <SkeletonImage draggable={false} src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton}/>
               </Link>
             </li>
             <li className={styles.product}>
               <Link className={styles.card} href="#">
               <p>Cropped</p>
-              <SkeletonImage src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton}/>
+              <SkeletonImage draggable={false} src="/img/cropped.png" width={145} height={200} alt="mulher olhando para baixo vestindo uma roupa escrito just workout" className={styles.skeleton}/>
               </Link>
             </li>
           </ul>

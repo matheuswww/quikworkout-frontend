@@ -10,31 +10,6 @@
   position: relative;
 }
 
-.more::after,.less::after {
-  content: "";
-  display: block;
-  background-color: white;
-  width: 10px;
-  height: 2px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-}
-
-.more::before {
-  content: "";
-  display: block;
-  background-color: white;
-  width: 10px;
-  height: 2px;
-  position: absolute;
-  left: 27%;
-  top: 46%;
-  transform: rotate(88deg);
-}
-
-
 .count {
   display: inline;
   position: relative;
@@ -50,14 +25,13 @@
     width: 28px;
     height: 26px;
   }
-
-  .more::before {
-    left: 29%;
-  }
 }
 @media (min-width: 400px) {
   .counter {
     font-size: 1rem;
+  }
+  .more img,.less img {
+    margin-top: 1px;
   }
 }
 

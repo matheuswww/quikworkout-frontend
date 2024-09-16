@@ -109,6 +109,10 @@
   grid-column: span 2;
 }
 
+.item p {
+  word-break: break-all;
+}
+
 .delete {
   position: absolute;
   top: 0px;
@@ -168,6 +172,9 @@
 .image {
   align-self: center;
   border-radius: 5px;
+  height: auto;
+  width: 75px;
+  margin-top: 7px;
 }
 
 .inkfree {
@@ -304,8 +311,7 @@
     font-size: .9rem;
   }
   .image {
-    width: 110px;
-    height: 110px;
+    width: 95px;
   }
   .delete,.edit {
     width: 30px;
@@ -338,7 +344,6 @@
   }
   .image {
     width: 136px;
-    height: 138px;
   }
   .item a {
     color: white;

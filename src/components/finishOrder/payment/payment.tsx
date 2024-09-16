@@ -25,11 +25,11 @@ interface props {
   responseError3ds: string | null
   setIdTo3ds: Dispatch<SetStateAction<string | null>>
   price: number
+  payment: boolean
+  setPayment: Dispatch<SetStateAction<boolean>>
 }
 
-export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef,retryPayment, address, addressRef, responseError3ds, setIdTo3ds, price }:props) {
-  const [payment, setPayment] = useState<boolean>(true)
-  
+export default function Payment({ cookieName, cookieVal, setError, setLoad, load, setCard, card, paymentType, setPaymentType, setBoleto, boleto, responseError,paymentRef,retryPayment, address, addressRef, responseError3ds, setIdTo3ds, price, payment, setPayment }:props) {
   return (
     <section className={styles.section} ref={paymentRef}>
       <div style={{display: "flex"}}>

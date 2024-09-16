@@ -70,6 +70,9 @@ export default function FinishPurchaseForm({...props}: props) {
 
   const addressRef = useRef<HTMLElement | null>(null)
   const paymentRef = useRef<HTMLElement | null>(null)
+
+  const [payment, setPayment] = useState<boolean>(true)
+  const [addressForm, setAddressForm] = useState<boolean>(true)
   
   useEffect(() => {
     if(!end) {
@@ -394,6 +397,20 @@ export default function FinishPurchaseForm({...props}: props) {
     setPopupError(false)
     setResponsePaymentError(null)
     setResponseError3ds(null)
+    if(paymentType == null || (card == null && boleto == null && paymentType != "pix")) {
+      if(paymentRef.current instanceof HTMLElement) {
+        !payment && setPayment(true)
+        paymentRef.current.scrollIntoView({behavior:"smooth",block:"center"})
+        return
+      }
+    }
+    if(address == null) {
+      if(addressRef.current instanceof HTMLElement) {
+        !address && setAddressForm(true)
+        addressRef.current.scrollIntoView({behavior:"smooth",block:"center"})
+        return
+      }
+    }
     const token = RecaptchaForm(setRecaptchaError)
     if(token == "") {
       return
@@ -404,40 +421,18 @@ export default function FinishPurchaseForm({...props}: props) {
     }
     const cookie = props.cookieName+"="+props.cookieVal
     if(!retryPaymentData && !retryPaymentId) {
-    const clothing: clothing[] = []
-    data?.clothing && data.clothing.map((infos) => {
-      if(!infos.excedeEstoque || infos.disponivel) {
-        clothing.push({
-          cor: infos.cor,
-          quantidade: infos.quantidade,
-          roupaId: infos.roupa_id,
-          tamanho: infos.tamanho,
-          preco: infos.preco
-        })
-      }
-    })
-      if(paymentType == null || (card == null && boleto == null && paymentType != "pix")) {
-        if(paymentRef.current instanceof HTMLElement) {
-          const button = paymentRef.current.querySelector("#submit")
-          if(button instanceof HTMLButtonElement) {
-            button.click()
-          } else {
-            paymentRef.current.scrollIntoView({behavior:"smooth",block:"center"})
-          }
-          return
+      const clothing: clothing[] = []
+      data?.clothing && data.clothing.map((infos) => {
+        if(!infos.excedeEstoque || infos.disponivel) {
+          clothing.push({
+            cor: infos.cor,
+            quantidade: infos.quantidade,
+            roupaId: infos.roupa_id,
+            tamanho: infos.tamanho,
+            preco: infos.preco
+          })
         }
-      }
-      if(address == null) {
-        if(addressRef.current instanceof HTMLElement) {
-          const button = addressRef.current.querySelector("#submit")
-          if(button instanceof HTMLButtonElement) {
-            button.click()
-          } else {
-            addressRef.current.scrollIntoView({behavior:"smooth",block:"center"})
-          }
-          return
-        }
-      }
+      })
       if(address != null && paymentType != null && data && data.clothing) {
         setLoad(true)
         let vlrFrete = await calcFreight()
@@ -698,8 +693,14 @@ export default function FinishPurchaseForm({...props}: props) {
           {((data?.status == 200 && data.clothing) || (retryPaymentData?.status == 200 && paymentTypeRetryPayment)) && addressStatus != 500 ?
             <>
               {(!retryPaymentData?.data && !retryPaymentId) && <CalcFreightForm popupError={popupError} setPopupError={setPopupError} totalPrice={totalPrice} setFreight={setFreight} load={load} setLoad={setLoad} end={end} clothing={data?.clothing} setDelivery={setDelivery} delivery={delivery} />}
-              <Payment price={Math.round((totalPrice) * 100)/100} responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
-              {(!paymentTypeRetryPayment || paymentTypeRetryPayment == "BOLETO") && <Address setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
+              <p className={`${styles.price} ${styles.totalPrice}`}>Preço: R${formatPrice(totalPrice)}</p>
+              {totalPrice >= 200 ? <p style={{marginBottom: "10px"}} className={styles.price}>Frete grátis</p> : !totalPriceWithFreight ? <p style={{marginBottom: "10px"}} className={styles.price}>Digite seu cep acima para visualizar seu preço juntamente com o frete</p> : 
+                <>
+                  <p style={{marginBottom: "10px"}} className={styles.price}>Total: R${totalPriceWithFreight}</p>
+                </>
+              }
+              <Payment payment={payment} setPayment={setPayment} price={Math.round((totalPrice) * 100)/100} responseError3ds={responseError3ds} setIdTo3ds={setIdTo3ds} addressRef={addressRef} address={address} retryPayment={paymentTypeRetryPayment} paymentRef={paymentRef} responseError={responsePaymentError} setBoleto={setBoleto} paymentType={paymentType} setPaymentType={setPaymentType} boleto={boleto} setCard={setCard} card={card} load={load} setLoad={setLoad} setError={setPopupError} cookieName={props.cookieName} cookieVal={props.cookieVal} />
+              {(!paymentTypeRetryPayment || paymentTypeRetryPayment == "BOLETO") && <Address addressForm={addressForm} setAddressForm={setAddressForm} setAdressStatus={setAddressStatus} setLoad={setLoad} cookieName={props.cookieName} cookieVal={props.cookieName} addressRef={addressRef} setAddress={setAddress} address={address}/>}
               <form onSubmit={handleSubmit}>
                 <Products privacyError={privacyError} setPrivacy={setPrivacy} recaptchaError={recaptchaError} setTotalPriceWithFreight={setTotalPriceWithFreight} totalPriceWithFreight={totalPriceWithFreight} retryPaymentData={retryPaymentData} responseError={responseError} freight={freight} clothing={data?.clothing} totalPrice={(formatPrice(Math.round((totalPrice) * 100)/100))} />
               </form> 

@@ -305,7 +305,7 @@ export default function Clothing({...props}: props) {
               <input className={styles.checkbox} type="checkbox" id="X" value="X" onChange={() => setDelivery("X")} checked={delivery === "X"}/>
             </div>
             <div>
-              <label htmlFor="R">retirar</label>
+              <label htmlFor="R">retirar{"(correios)"}</label>
               <input className={styles.checkbox} type="checkbox" id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
             </div>
             {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
@@ -315,14 +315,14 @@ export default function Clothing({...props}: props) {
         </form>
         <section>
         {data?.status == 404 && notFound()}
-        <ul className={`${styles.indexImages} ${data?.clothing && styles.load}`} ref={indexImages} aria-hidden="true">
+        <ul className={`${styles.indexImages} ${data?.clothing && styles.load}`} ref={indexImages}>
         {data?.clothing ? data.clothing.inventario.map(({ images, imgDesc, cor }) => {
             return (
               (color == cor && windowWidth) &&
                 images?.map(( src, index ) => {
                     return (
                       <li key={src}>
-                        { <button className={index == 0 ? styles.activeThumb : ""} id={index.toString()} aria-hidden="true" tabIndex={-1}><IndexSlideImage src={src} loading="lazy" alt={imgDesc} width={290} height={460} key={data.clothing?.id} draggable={false} aria-hidden="true"/></button> }
+                        {<button className={index == 0 ? styles.activeThumb : ""} aria-hidden="true" id={index.toString()} tabIndex={-1}><IndexSlideImage src={src} aria-hidden="true" loading="lazy" alt={imgDesc} width={290} height={460} key={data.clothing?.id} draggable={false}/></button> }
                       </li>
                     )
                   })

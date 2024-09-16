@@ -324,7 +324,7 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
         </div>
       }
       {((paymentType == "credit_card" || paymentType == "debit_card") && responseError) && <p className={styles.error} style={{marginLeft: "12px",wordBreak:"break-all"}}>{responseError}</p>}
-      <button className={styles.button} onClick={() => setSaved(false)} style={{marginLeft: "12px"}}>Editar dados do cartão</button>
+      <button className={styles.button} onClick={() => {setSaved(false);setCard(null)}} style={{marginLeft: "12px"}}>Editar dados do cartão</button>
     </div>
   )
 }

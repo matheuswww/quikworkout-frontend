@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { boleto } from '@/api/clothing/payOrderInterfaces'
 import { regions } from '../../regionCode'
+import { ValidateCnpj, ValidateCpf } from '../validateCpfCnpj'
 
 interface props {
   showBoleto: boolean
@@ -57,6 +58,22 @@ const schema = z.object({
 }, {
   path: [ 'cep' ],
   message: "cep inválido"
+}).refine((fields) => {
+  if(fields.cpfCnpj.includes(".")) {
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll(".","")
+  }
+  if(fields.cpfCnpj.includes("-")) {
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll("-","")
+  }
+  if(fields.cpfCnpj.length == 11) {
+    return ValidateCpf(fields.cpfCnpj)
+  }
+  if(fields.cpfCnpj.length == 14) {
+    return ValidateCnpj(fields.cpfCnpj)
+  }
+}, {
+   path: ["cpfCnpj"],
+   message: "cpf ou cnpj inválido"
 })
 
 type FormProps = z.infer<typeof schema>
@@ -76,6 +93,12 @@ export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto
     if(data.cep.includes("-")) {
       data.cep = data.cep.replace("-","")
     }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(data.dueDate)) {
+      const [ano, mes, dia] = data.dueDate.split('-')
+      data.dueDate = `${ano}-${mes}-${dia}`
+    }
+    data.cpfCnpj = data.cpfCnpj.replaceAll(".","").replaceAll("-","")
+
     setBoleto({
       dataVencimento: data.dueDate,
       titularBoleto: {
@@ -203,7 +226,7 @@ export default function Boleto({ showBoleto,setPaymentType,paymentType,setBoleto
         <p className={styles.value}>{boleto.titularBoleto.endereco.cep}</p>
       </div>
       {(paymentType == "boleto" && responseError) && <p className={styles.error} style={{marginLeft: "12px",wordBreak:"break-all"}}>{responseError}</p>}
-      <button className={styles.button} onClick={() => setSaved(false)}>Editar dados do boleto</button>
+      <button className={styles.button} onClick={() => {setSaved(false);setBoleto(null)}}>Editar dados do boleto</button>
     </div>
   )
 } 
