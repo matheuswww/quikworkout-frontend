@@ -25,7 +25,7 @@ const schema = z.object({
   instructionLine1: z.string().min(2, "é necessário pelo menos 2 caracteres").max(75, "é permitido no máximo 75 caracteres"),
   instructionLine2: z.string().min(2, "é necessário pelo menos 2 caracteres").max(75, "é permitido no máximo 75 caracteres"),
   street: z.string().min(1, "rua precisa ter pelo menos 1 carácter").max(160, "é permitido no máximo 160 caracteres"),
-  residenceNumber: z.string().min(1, "número de residência precisa ter pelo menos 1 carácter").max(20, "é permitido no máximo 20 caracteres"),
+  residenceNumber: z.string().min(1, "número de residência precisa ter pelo menos 1 carácter").max(8, "é permitido no máximo 8 caracteres"),
   complement: z.string().min(1, "complemento precisa ter pelo menos 1 carácter").max(40, "é permitido no máximo 40 caracteres"),
   neighbordhood: z.string().min(1, "bairro precisa ter pelo menos 1 carácter").max(60, "é permitido no máximo 60 caracteres"),
   city: z.string().min(1, "cidade precisa ter pelo menos 1 carácter").max(90, "é permitido no máximo 90 caracteres"),

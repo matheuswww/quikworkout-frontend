@@ -21,7 +21,7 @@ const schema = z.object({
   phoneNumber: z.string().min(10, "telefone inválido").regex(/^(\+55\s?)?(\(?[1-9]{2}\)?|\d{2})\s?\d{4,5}(-?\d{4})$/, "telefone inválido"),
   cpfCnpj: z.string().min(11, "cpf ou cnpj inválido").max(14, "cpf ou cnpj inválido"),
   street: z.string().min(1, "rua precisa ter pelo menos 1 carácter").max(160, "é permitido no máximo 160 caracteres"),
-  residenceNumber: z.string().min(1, "número de residência precisa ter pelo menos 1 carácter").max(20, "é permitido no máximo 20 caracteres"),
+  residenceNumber: z.string().min(1, "número de residência precisa ter pelo menos 1 carácter").max(8, "é permitido no máximo 8 caracteres"),
   complement: z.string().min(1, "complemento precisa ter pelo menos 1 carácter").max(40, "é permitido no máximo 40 caracteres"),
   neighbordhood: z.string().min(1, "bairro precisa ter pelo menos 1 carácter").max(60, "é permitido no máximo 60 caracteres"),
   city: z.string().min(1, "cidade precisa ter pelo menos 1 carácter").max(90, "é permitido no máximo 90 caracteres"),
