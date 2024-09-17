@@ -207,7 +207,21 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         console.error('Clipboard API is not supported.');
       }
     }
-  }  
+  }
+
+  function copyCode(event: SyntheticEvent, code: string) {
+    event.preventDefault();
+    if (event.target instanceof HTMLElement) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code)
+          .then(() => window.alert("código de rastreio copiado"))
+          .catch(err => console.error('Failed to copy the code: ', err))
+      } else {
+        console.error('Clipboard API is not supported.');
+      }
+    }
+  }
+
   return (
    <>
     <header>
@@ -303,8 +317,9 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                                 <Link className={styles.link} href={"https://www.kangu.com.br/rastreio"} target="_blank">rastrear pacote</Link> 
                                </div>
                                <div className={`${styles.values} ${styles.infos}`}>
-                                <p className={styles.value}>Código de rastreio: </p>
+                                <label htmlFor="tracking" className={styles.labelTrackingCode}>Código de rastreio: </label>
                                 <p>{codigoRastreio}</p>
+                                <button onClick={(e) => copyCode(e, codigoRastreio)} id="tracking" aria-label="copiar código de rastreio" className={styles.copyCode}><Image src="/img/copy.png" height={22} width={21} alt="icone para copiar valor"/></button>
                                </div>
                             </div>
                           }

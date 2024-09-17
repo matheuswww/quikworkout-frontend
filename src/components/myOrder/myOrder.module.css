@@ -282,6 +282,23 @@
   animation-delay: -0.15s;
 }
 
+.copyCode {
+  background: transparent;
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+  border: none;
+  cursor: pointer;
+  border: 100%;
+}
+
+.labelTrackingCode {
+  margin-top: 15px;
+  font-family: var(--interSemiBold);
+  font-size: .9rem;
+  color: #c8c8c8;
+}
+
 @keyframes ldsRing {
   0% {
     transform: rotate(0deg);
@@ -336,6 +353,15 @@
 @media (max-width: 800px) {
   .section {
     margin-top: 60px;
+  }
+}
+
+@media (min-width: 650px) {
+  .section {
+    width: 470px;
+  }
+  .item {
+    width: 400px;
   }
 }
 
