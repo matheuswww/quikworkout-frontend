@@ -115,7 +115,7 @@ export default function CancelOrderForm({cookieName,cookieVal}:props) {
           </form>
           {(data?.order?.pedido[0].status_pagamento == "pago" || data?.order?.pedido[0].status_pagamento == "autorizado" || data?.order?.pedido[0].status_pagamento == "em análise" || data?.order?.pedido[0].status_pagamento == "aguardando") && 
             <form className={styles.form} onSubmit={handleDeleteOrder}>
-              <button className={styles.button}>Deletar pedido</button>
+              <button className={styles.button}>Cancelar pedido</button>
             </form>
           }
           {data?.order?.pedido[0].cancelamento == "" && data.order.pedido[0].status_pagamento == "cancelado" &&

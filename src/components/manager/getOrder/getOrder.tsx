@@ -76,7 +76,9 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
         
         if((res.status == 404 || res.status == 500) && !data?.order) {
-          setEnd(true)
+          if(res.status == 404 && res.order && res.order?.pedido.length >= 2) {
+            setEnd(true)
+          }
           setLoad(false)
           setNewPageLoad(false)
           setData(res)

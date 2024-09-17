@@ -5,6 +5,7 @@ import { managerClothing } from "./pathClothing"
 type statusCode = 200 | 404 | 500 | 401
 
 export interface getOrderAdmin {
+  res: any
   status: statusCode
   order: order | null
 }

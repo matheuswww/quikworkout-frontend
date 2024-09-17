@@ -240,18 +240,18 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                   <p>ID do pedido: </p>
                   <p>{infos.pedido_id.substring(5)}</p>
                 </div>
+                {infos.status_pagamento != "pago" &&
+                <div className={styles.values}>
+                  <p>Status do pagamento: </p>
+                  <p>{infos.status_pagamento}</p>
+                </div>
+                }
                 {
                   infos.motivoCancelamentoEnvio && infos.motivoCancelamentoEnvio != "" && 
                   <div className={`${styles.values}`}>
                     <p>Motivo do cancelamento: </p>
                     <p>{infos.motivoCancelamentoEnvio}</p>
                   </div>
-                }
-                {infos.status_pagamento != "pago" &&
-                <div className={styles.values}>
-                  <p>Status do pagamento: </p>
-                  <p>{infos.status_pagamento}</p>
-                </div>
                 }
                 <div className={styles.values}>
                   <p>Preço: </p>
@@ -272,7 +272,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
                     <button onClick={(event: SyntheticEvent) => copyLink(event, i)} className={styles.button}>Copiar link de pagamento</button>
                   </div>
                 }
-                {infos?.pacotes[0]?.codigoRastreio != "" ?
+                {infos?.pacotes[0]?.codigoRastreio != "" && infos.status_pagamento != "cancelado" ?
                   <>
                     {infos.pacotes.length > 1 && <p className={styles.p}>Você possui {infos.pacotes.length} pacotes a caminho</p>}
                     {infos.pacotes.map(({rastreio,codigoRastreio},v) => {
