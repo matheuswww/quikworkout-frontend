@@ -138,6 +138,8 @@ export default function Clothing({...props}: props) {
 
   async function handleSubmitCalcFreight(formData: FormProps) {
     if(data?.clothing?.id && count) {
+      setPopUpError(false)
+      setError(null)
       setLoad(true)
       if(formData.cep.includes("-")) {
         formData.cep = formData.cep.replace("-","")

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export default function middleware(request: NextRequest) {
   const url = new URL(request.url)
   if(
-    url.pathname == "/auth/entrar"
+    url.pathname == "/auth/entrar" || url.pathname == "/auth/cadastrar"
   ) {
     return CheckUserProfileCookieNotExist(request)
   }
@@ -22,7 +22,7 @@ export default function middleware(request: NextRequest) {
   if(url.pathname == "/auth/resetar-senha") {
     return ResetPasswordURL(request)
   }
-  if(url.pathname == "/manager-quikworkout/criar-roupa" || url.pathname == "/manager-quikworkout/roupas") {
+  if(url.pathname == "/manager-quikworkout/criar-roupa" || url.pathname == "/manager-quikworkout" || url.pathname == "/manager-quikworkout/cancelar-pedido" || url.pathname == "/manager-quikworkout/roupas") {
     return CheckAdminProfileExist(request)
   }
 }
@@ -72,9 +72,9 @@ function ResetPasswordURL(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/criar-dois-fatores','/auth/entrar',
+  matcher: ['/auth/criar-dois-fatores','/auth/entrar','/auth/cadastrar',
   '/auth/validar-codigo-dois-fatores','/auth/resetar-senha', 
   '/usuario/minha-bolsa', '/finalizar-compra', 
   '/usuario/meus-pedidos','/usuario/minha-conta',
-  '/manager-quikworkout/criar-roupa']
+  '/manager-quikworkout/criar-roupa','/manager-quikworkout/','/manager-quikworkout/cancelar-pedido','/manager-quikworkout/roupas']
 }

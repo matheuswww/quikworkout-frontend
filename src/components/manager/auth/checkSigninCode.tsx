@@ -80,7 +80,7 @@ export default function CheckSigninCodeForm({...props}:props) {
       setLoad(false)
     } else {
       localStorage.removeItem("timeSendSigninCode")
-      window.location.href = "/"
+      window.location.href = "/manager-quikworkout"
       return
     }
   }

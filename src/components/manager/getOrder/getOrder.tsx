@@ -202,16 +202,12 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
                     return (
                       <React.Fragment key={"vol"+j}>
                         <div className={styles.volumesInfo}>
-                          <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "volume", styles.displayNone)}>{order.pacotes.length > 1 ? `Volume ${pacote.numeroPacote + 1}` : `Volume`}</button>
+                          <button className={styles.buttonExpand} onClick={() => handleArrowClick((id), "volume", styles.displayNone)}>{order.pacotes.length > 1 ? `Pacote ${pacote.numeroPacote + 1}` : `Volume`}</button>
                           <Expand src="/img/arrowUp.png" alt="expandir informações de volumes" width={30} height={30} className={`${styles.expand}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowUp_volume_${(id)}`} />
                           <Expand src="/img/arrowDown.png" alt="diminuir informações de volumes" width={30} height={30} className={`${styles.expand} ${styles.displayNone}`} onClick={() => handleArrowClick((id), "volume", styles.displayNone)} id={`arrowDown_volume_${(id)}`}/>
                         </div>
                           <div className={`${styles.volumes} ${styles.displayNone}`} id={`item_volume_`+(id)}>
                             <div className={styles.volume}>
-                                <div className={`${styles.values}`}>
-                                  <p className={styles.field}>Número pacote: </p>
-                                  <p className={styles.value}>{pacote.numeroPacote + 1}</p>
-                                </div>
                                 <div className={`${styles.values}`}>
                                   <p className={styles.field}>Altura: </p>
                                   <p className={styles.value}>{pacote.altura}</p>
