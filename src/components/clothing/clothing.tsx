@@ -308,14 +308,14 @@ export default function Clothing({...props}: props) {
               <label htmlFor="R">retirar{"(correios)"}</label>
               <input className={styles.checkbox} type="checkbox" id="R" value="R" onChange={() => setDelivery("R")} checked={delivery === "R"}/>
             </div>
-            {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`R$${formatPrice(freightData.vlrFrete)}`}</p>}
+            {freightData?.vlrFrete && data?.clothing && <p className={styles.freightPrice}>{`Frete: R$${formatPrice(freightData.vlrFrete)}`}</p>}
             {freightData?.prazoEnt && <p className={styles.freightPrice}>Prazo de entrega: {freightData.prazoEnt} dias úteis</p>}
             <button type="submit" disabled={load} className={styles.calcFreightButton}>Calcular frete</button>
             <button aria-label="fechar" ref={closeRef} type="button" className={styles.close}><span aria-hidden="true">x</span></button>
         </form>
         <section>
         {data?.status == 404 && notFound()}
-        <ul className={`${styles.indexImages} ${data?.clothing && styles.load}`} ref={indexImages}>
+        <ul className={`${styles.indexImages} ${data?.clothing && styles.load}`} ref={indexImages} aria-hidden="true" >
         {data?.clothing ? data.clothing.inventario.map(({ images, imgDesc, cor }) => {
             return (
               (color == cor && windowWidth) &&

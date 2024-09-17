@@ -231,6 +231,12 @@
   opacity: .5;
 }
 
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (hover: hover) {
   .button:hover {
     cursor: pointer;

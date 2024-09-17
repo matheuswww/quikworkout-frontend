@@ -91,7 +91,7 @@ export default function Clothings({...props}: props) {
       <Menu cookieName={props.cookieName} cookieVal={props.cookieVal} />
       {popupError && <PopupError handleOut={() => setPopupError(false)} />}
       {load && <SpinLoading />}
-      <Success setSuccess={setSuccess} success={success} msg="Criado com sucesso"/>
+      <Success setSuccess={setSuccess} success={success} msg="Alterado com sucesso"/>
       <main className={`${styles.main} ${load && styles.opacity} ${(data?.status == 500 || data?.status == 404) && styles.mainError}`}>
         <section>
           {(data?.status != 404 && data?.status != 500) && <h1 className={styles.title}>Roupas</h1>}

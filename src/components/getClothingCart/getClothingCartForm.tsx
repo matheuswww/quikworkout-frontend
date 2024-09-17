@@ -1,6 +1,7 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Edit from 'next/image'
+import Delete from 'next/image'
 import styles from './getClothingCartForm.module.css'
 import Link from 'next/link'
 import SkeletonImage from '../skeletonImage/skeletonImage'
@@ -212,39 +213,39 @@ export default function GetClothingCartForm({...props}: props) {
               <SkeletonImage src={data.imagem} alt={data.alt} className={`${styles.image} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} width={75} height={85} quality={100}/>
               <div className={styles.infos}>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>preço:&nbsp;</p>
+                  <p className={styles.inkfree}>Preço:&nbsp;</p>
                   <p className={styles.interRegular}>R${formatPrice(data.preco)}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>categoria:&nbsp;</p>
+                  <p className={styles.inkfree}>Categoria:&nbsp;</p>
                   <p className={styles.interRegular}>{data.categoria}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>quantidade:&nbsp;</p>
+                  <p className={styles.inkfree}>Quantidade:&nbsp;</p>
                   <p className={styles.interRegular}>{data.quantidade}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>genêro:&nbsp;</p>
+                  <p className={styles.inkfree}>Genêro:&nbsp;</p>
                   <p className={styles.interRegular}>{data.sexo == "M" ? "masculino" : data.sexo == "F" ? "feminino" : "unissex"}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>cor:&nbsp;</p>
+                  <p className={styles.inkfree}>Cor:&nbsp;</p>
                   <p className={styles.interRegular}>{data.cor}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>material:&nbsp;</p>
+                  <p className={styles.inkfree}>Material:&nbsp;</p>
                   <p className={styles.interRegular}>{data.material}</p>
                 </div>
                 <div className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>
-                  <p className={styles.inkfree}>tamanho:&nbsp;</p>
-                  <p className={styles.interRegular}>{data.tamanho}</p>
+                  <p className={styles.inkfree}>Tamanho:&nbsp;</p>
+                  <p className={styles.interRegular}>{data.tamanho.toUpperCase()}</p>
                 </div>
               </div>
               <p className={`${styles.description} ${styles.interRegular} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}>{data.descricao}</p>
               <Link href={`/finalizar-compra?clothing_id=${data.roupa_id}&color=${data.cor}&size=${data.tamanho}`} className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity} ${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}>Finalizar compra</Link>
               {(data.excedeEstoque || !data.disponivel) && <p className={styles.alert}>{!data.disponivel ? `roupa indisponível` : `quantidade pedida indisponível,quantidade disponível: ${data.quantidadeDisponivel}`}</p>}
-              <button className={`${styles.delete} ${styles.buttonOpen}`} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="remover produto de minha bolsa" disabled={(openDeleteClothingCart || openEditClothingCart || load)}><span aria-hidden="true">x</span></button>
-              <button className={`${styles.edit} ${styles.buttonOpen} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="editar produto" disabled={(data.excedeEstoque || !data.disponivel || openDeleteClothingCart || openEditClothingCart || load)}><Edit src="/img/edit.png" width={12} height={12} alt="editar produto" className={`${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}/></button>
+              <button className={`${styles.delete} ${styles.buttonOpen}`} onClick={() => handleDeleteClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="remover produto de minha bolsa" disabled={load}><Delete src="/img/close.png" width={18} height={18} alt="deletar produto do carrinho"/></button>
+              <button className={`${styles.edit} ${styles.buttonOpen} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`} onClick={() => handleEditClothingCart(data.roupa_id, data.cor, data.tamanho, data.quantidadeDisponivel, data.quantidade, index)} aria-label="editar produto do carrinho" disabled={(data.excedeEstoque || !data.disponivel || openDeleteClothingCart || openEditClothingCart || load)}><Edit src="/img/edit.png" width={12} height={12} alt="editar produto" className={`${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}/></button>
             </div>
             )
           })}

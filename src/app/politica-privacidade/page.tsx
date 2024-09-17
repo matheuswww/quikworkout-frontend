@@ -27,8 +27,8 @@ export default function Page() {
 
               <strong className={styles.strong}>Direitos do Titular dos Dados:</strong><br/>
               Você tem o direito de acessar e corrigir os seus dados a qualquer momento.<br/>
-              Caso deseje desativar sua conta, seus dados serão preservados de forma segura, mas o acesso será restrito. A exclusão completa dos dados pessoais pode não ser possível devido a obrigações legais relacionadas a pedidos de compras ou outras transações.<br/>
-              Em caso de dúvidas ou solicitações relacionadas aos seus dados pessoais, entre em contato conosco pelo "email aqui".<br/><br/>
+              A exclusão completa dos dados pessoais pode não ser possível devido a obrigações legais relacionadas a pedidos de compras ou outras transações.<br/>
+              Em caso de dúvidas ou solicitações relacionadas aos seus dados pessoais, entre em contato conosco contact@quikworkout.com.br<br/><br/>
 
               <strong className={styles.strong}>Ao continuar, você declara que leu e concorda com os termos acima, e consente com o tratamento dos seus dados pessoais conforme descrito.</strong>
           </p>

@@ -28,6 +28,7 @@
   text-transform: uppercase;
   width: 100%;
   align-self: end;
+  animation: 1s forwards enter;
 }
 
 .button {
@@ -43,7 +44,7 @@
   text-transform: uppercase;
   align-self: center;
   cursor: pointer;
-  animation: up .5s forwards linear;
+  animation: 1s forwards enter;
 }
 
 .phrase1 {
@@ -66,6 +67,17 @@
 
 .header div {
   position: absolute !important;
+}
+
+@keyframes enter {
+  from {
+    transform: translate3d(-50px,0,0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0px,0,0);
+    opacity: 1;
+  }
 }
 
 @media (min-width:350px) {

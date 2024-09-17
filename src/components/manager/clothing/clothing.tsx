@@ -17,6 +17,7 @@ import UpdateClothing, { updateClothingParams } from "@/api/manager/clothing/upd
 import UpdateClothingInventory, { updateClothingInventoryParams, updateInventory } from "@/api/manager/clothing/updateClothingInventory"
 import Inventory from "./inventory"
 import { refresh } from "@/action/refresh"
+import Delete from "next/image"
 
 interface props {
   data: clothing
@@ -460,7 +461,7 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
           {responseError && <p className={styles.error}>{responseError}</p>}
           <button type="submit" disabled={load || success} className={`${styles.button} ${styles.submit} ${success && styles.buttonOpacity}`}>Salvar</button>
         </div>
-        <button aria-label="fechar" type="button" disabled={load || success} className={`${styles.close} ${styles.button} ${(success) && styles.buttonOpacity}`} ref={buttonToOpenModalDeleteClothingRef} onClick={() => handleModalClick(modalDeleteClothingRef, buttonToOpenModalDeleteClothingRef, closeModalDeleteClothingRef, styles.active, "block")}><span aria-hidden="true">x</span></button>
+        <button aria-label="fechar" type="button" disabled={load || success} className={`${styles.close} ${styles.button} ${(success) && styles.buttonOpacity}`} ref={buttonToOpenModalDeleteClothingRef} onClick={() => handleModalClick(modalDeleteClothingRef, buttonToOpenModalDeleteClothingRef, closeModalDeleteClothingRef, styles.active, "block")}><Delete src="/img/close.png" width={18} height={20} alt="deletar produto do carrinho"/></button>
       </form>
     </>
   )

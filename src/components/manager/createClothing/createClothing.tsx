@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"
 import PopupError from "@/components/popupError/popupError"
 import Success from "@/components/successs/success"
 import Menu from "../menu/menu"
+import { refresh } from "@/action/refresh"
 
 interface props {
   cookieName?: string
@@ -124,6 +125,7 @@ export default function CreateClothingForm({...props}:props) {
     }
     if(res == 201) {
       setSuccess(true)
+      await refresh("/")
     }
     setLoad(false)
   }

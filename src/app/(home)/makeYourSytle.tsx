@@ -4,7 +4,7 @@ export default function MakeYourSyle() {
   function handleClick() {
     const main = document.querySelector("main")
     if (main instanceof HTMLElement) {
-      main.scrollIntoView({behavior:"smooth",block:"center"})
+      main.scrollIntoView({behavior:"smooth",block:"start"})
     }
   }
   return (

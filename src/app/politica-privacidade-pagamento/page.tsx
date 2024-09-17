@@ -23,9 +23,6 @@ export default function Page() {
             <strong className={styles.strong}>Segurança e Confidencialidade:</strong><br />
             Garantimos que os seus dados serão mantidos em segurança e não serão compartilhados com terceiros, exceto com o PagBank, conforme descrito acima, para a realização do pagamento, e com a Kangu, para a entrega do pacote. Não utilizamos os seus dados para outras finalidades além das mencionadas.<br /><br />
 
-            <strong className={styles.strong}>Direitos do Titular dos Dados:</strong><br />
-            Você tem o direito de acessar, corrigir, ou excluir os seus dados a qualquer momento. Em caso de dúvidas ou solicitações relacionadas aos seus dados pessoais, entre em contato conosco pelo [seu e-mail de contato].<br /><br />
-
             <strong className={styles.strong}>Ao continuar, você declara que leu e concorda com os termos acima, e consente com o tratamento dos seus dados pessoais conforme descrito para a finalidade de concluir esta compra.</strong>
           </p>
         </section>

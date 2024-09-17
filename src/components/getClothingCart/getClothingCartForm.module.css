@@ -121,14 +121,12 @@
   height: 24px;
   border-radius: 100%;
   background: #373737;
-  padding-left: 1px;
   color: #dbdbdb;
   font-size: 1.2rem;
   border: 1px solid white;
-}
-
-.delete span {
-  padding-right: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .edit {
@@ -140,8 +138,10 @@
   border-radius: 100%;
   background: #373737;
   font-size: 1.2rem;
-  padding-top: 1px;
   border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .name {
@@ -320,7 +320,6 @@
   .edit img {
     width: 14px;
     height: 14px;
-    margin-top: 4px;
   }
   .delete img {
     font-size: 1.3rem;
