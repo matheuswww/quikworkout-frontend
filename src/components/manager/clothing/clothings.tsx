@@ -27,8 +27,9 @@ export default function Clothings({...props}: props) {
   const [success, setSuccess] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!end) {
+    if(!end && !newPageLoad) {
       (async function() {
+        setPopupError(false)
         if(props.cookieName == undefined || props.cookieVal == undefined) {
           router.push("/manager-quikworkout/auth")
           return
@@ -46,8 +47,14 @@ export default function Clothings({...props}: props) {
         if(data?.clothing && res.status == 404) {
           setEnd(true)
           setLoad(false)
-          setNewPage(false)
           setNewPageLoad(false)
+          return
+        }
+        if(data?.clothing && res.status == 500) {
+          setPopupError(true)
+          setLoad(false)
+          setNewPageLoad(false)
+          setNewPage(false)
           return
         }
         if(res.status == 401) {
@@ -67,7 +74,9 @@ export default function Clothings({...props}: props) {
           setData(res)
         }
         setNewPage(false)
-        setNewPageLoad(false)
+        setTimeout(() => {
+          setNewPageLoad(false)
+        }, 50);
         setLoad(false)
       }())
     }
@@ -110,6 +119,7 @@ export default function Clothings({...props}: props) {
             </div>
           }
           {data?.status == 500 && <p className={styles.error}>Parece que houve um erro! Tente recarregar a página</p>}
+          {<span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>}
           {newPageLoad && 
             <div className={styles.ldsRing} aria-label="carregando" tabIndex={0}>
               <div aria-hidden="true">
@@ -122,7 +132,6 @@ export default function Clothings({...props}: props) {
               </div>
             </div>
           }
-          <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
         </section>
       </main>
     </>

@@ -61,6 +61,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
         if(getOrder && res.status == 404) {
           setEnd(true)
           setLoad(false)
+          setNewPage(false)
           setNewPageLoad(false)
           return
         }
@@ -108,7 +109,9 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           }
         }
         setStaus(res.status)
-        setNewPageLoad(false)
+        setTimeout(() => {
+          setNewPageLoad(false) 
+        },50);
         setNewPage(false)
         setLoad(false)
       }())

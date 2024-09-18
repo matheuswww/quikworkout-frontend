@@ -50,6 +50,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
   useEffect(() => {
     if(!end && !newPageLoad) {
       (async function() {
+        setPopupError(false)
         if(cookieName == undefined || cookieVal == undefined) {
           router.push("/manager-quikworkout/auth")
           return
@@ -76,28 +77,34 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
         
         if((res.status == 404 || res.status == 500) && !data?.order) {
-          if(res.status == 404 && res.order && res.order?.pedido.length >= 2) {
+          if(res.status == 404) {
             setEnd(true)
           }
           setLoad(false)
+          setNewPage(false)
           setNewPageLoad(false)
           setData(res)
           return
         }
-        if(data?.order && data.status == 500) {
+        if(data?.order && res.status == 500) {
           setPopupError(true)
         }
         if (data?.order && res.status == 404) {
           setEnd(true)
         }
         if(!data?.order?.pedido && res.status == 200) {
+          if(res.order && res.order?.pedido.length <= 2) {
+            setEnd(true)
+          }
           setData(res)
         } else if(data?.order?.pedido && res.status == 200 && res.order?.pedido) {
           data.order?.pedido.push(...res.order.pedido)
           setData(data)
         }
 
-        setNewPageLoad(false)
+        setTimeout(() => {
+          setNewPageLoad(false)
+        }, 50);
         setNewPage(false)
         setLoad(false)
       }())
@@ -293,7 +300,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             </div>
             )
           })}
-        <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
+        <span aria-hidden={true} id="final" className={`${data?.order && styles.show}`}></span>
         {newPageLoad && 
             <div className={styles.ldsRing} aria-label="carregando" tabIndex={0}>
               <div aria-hidden="true">

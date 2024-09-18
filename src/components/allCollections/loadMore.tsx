@@ -19,7 +19,7 @@ export default function LoadMore({cursor}:props) {
   const [end, setEnd] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!end && newPage) {
+    if(!end && !load) {
       (async function() {
         let newCursor = cursor
         if(data?.clothing) {
@@ -47,7 +47,9 @@ export default function LoadMore({cursor}:props) {
           setData(res)
         }
         setNewPage(false)
-        setLoad(false)
+        setTimeout(() => {
+          setLoad(false)
+        }, 50);
       }())
     }
   },[newPage])

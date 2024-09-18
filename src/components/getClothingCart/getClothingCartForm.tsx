@@ -44,7 +44,7 @@ export default function GetClothingCartForm({...props}: props) {
   const [refresh,setRefresh] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!end) {
+    if(!end && !newPageLoad) {
       (async function() {
         if(props.cookieName == undefined || props.cookieVal == undefined) {
           router.push("/auth/entrar")
@@ -86,7 +86,10 @@ export default function GetClothingCartForm({...props}: props) {
         } else {
           setData(res)
         }
-        setNewPageLoad(false)
+        setNewPage(false)
+        setTimeout(() => {
+          setNewPageLoad(false)
+        }, 50);
         setLoad(false)
       }())
     }
@@ -151,7 +154,7 @@ export default function GetClothingCartForm({...props}: props) {
     const final = document.querySelector("#final")
     if(final instanceof HTMLSpanElement) {
       const observer = new IntersectionObserver((entries) => {
-        if(entries.some((entry) => entry.isIntersecting)) {          
+        if(entries.some((entry) => entry.isIntersecting)) { 
           if(final.classList.contains(styles.show)) {
             setNewPage(true)
           }
@@ -249,7 +252,7 @@ export default function GetClothingCartForm({...props}: props) {
             </div>
             )
           })}
-          <span aria-hidden={true} id="final" className={`${data?.clothing && styles.show}`}></span>
+          <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
           {data?.status == 404 && 
             <>
               <p className={styles.p} style={{marginTop: "25px"}}>Nenhum produto foi encontrado</p>
