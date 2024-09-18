@@ -40,8 +40,6 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
         if(isNaN(Number(id))) {
           return
         }
-        console.log(i.value);
-        
         if(packages) {
           const newPk = packages
           newPk.push({
@@ -68,8 +66,7 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
       return
     }
     setLoad(true)
-    console.log(packages);
-    
+
     const cookie = cookieName+"="+cookieVal
     const res = await UpdateTrackingCode(cookie, {
       pedido_id: order_id,

@@ -75,7 +75,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
           router.push("/manager-quikworkout/auth")
           return
         }
-        
+
         if((res.status == 404 || res.status == 500) && !data?.order) {
           if(res.status == 404) {
             setEnd(true)
@@ -93,7 +93,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
           setEnd(true)
         }
         if(!data?.order?.pedido && res.status == 200) {
-          if(res.order && res.order?.pedido.length <= 2) {
+          if(res.order && res.order?.pedido.length - 1 <= 2) {
             setEnd(true)
           }
           setData(res)
@@ -300,7 +300,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
             </div>
             )
           })}
-        <span aria-hidden={true} id="final" className={`${data?.order && styles.show}`}></span>
+        <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
         {newPageLoad && 
             <div className={styles.ldsRing} aria-label="carregando" tabIndex={0}>
               <div aria-hidden="true">
@@ -313,7 +313,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
               </div>
             </div>
           }
-          {end && <p className={styles.end}>Todos os pedidos foram carregados</p>}
+          {end && data?.status != 404 && data?.order?.pedido.length != 0 && <p className={styles.end}>Todos os pedidos foram carregados</p>}
         </section>
       </main>
     </>
