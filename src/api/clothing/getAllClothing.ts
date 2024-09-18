@@ -17,7 +17,7 @@ interface params {
 
 type status = 200 | 404 | 400 | 500
 
-interface response {
+export interface responseGetAllClothing {
   status: status
   clothing: data[] | null
 }
@@ -41,11 +41,12 @@ interface data {
   categoria: string,
   material: string,
   preco: number,
+  criadoEm: string
   inventario: inventario[]
 }
 
 
-export default async function GetAllClothing(params: params):Promise<response> {
+export default async function GetAllClothing(params: params):Promise<responseGetAllClothing> {
   let url = api
   url+=clothingPath+"/getClothing"
   params.corPrincipal = "true"

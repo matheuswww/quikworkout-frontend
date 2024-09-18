@@ -4,6 +4,7 @@ import Link from "next/link";
 import SkeletonImage from "../skeletonImage/skeletonImage";
 import formatPrice from "@/funcs/formatPrice";
 import FilterButton from "./filterButton";
+import LoadMore from "./loadMore";
 
 interface props {
   searchParams: {
@@ -62,17 +63,19 @@ export default async function AllCollections({searchParams}:props) {
                 }
                 return(
                   <Link href={"/roupa/"+clothing.nome+"/"+clothing.descricao+"/"+clothing.id+"?img="+image} key={clothing.id} className={styles.card}>
-                    <SkeletonImage src={images[0]} alt={clothing.inventario[indexInventory].imgDesc} width={225} height={300} className={styles.clothing} />
-                    <div className={styles.clothingInfos}>
-                      <p className={styles.name}>{clothing.nome}</p>
+                  <SkeletonImage src={images[0]} alt={clothing.inventario[indexInventory].imgDesc} width={225} height={300} className={styles.clothing} />
+                  <div className={styles.clothingInfos}>
+                  <p className={styles.name}>{clothing.nome}</p>
                       <p className={styles.price}>R${formatPrice(clothing.preco)}</p>
-                    </div>
+                      </div>
                   </Link>
                 )
               }
-            }
+            },
           ) : <div className={styles.notFound}><p>Nenhuma roupa foi encontrada</p></div> : <p className={styles.error}>Oops, parece que houve um erro, tente recarregar a página</p>}
+          {data.clothing && <LoadMore cursor={data.clothing[data.clothing.length - 1].criadoEm}/>}
         </div>
+        <span aria-hidden={true} id="final" className={`${data && styles.show}`}></span>
       </section>
      </>
   )

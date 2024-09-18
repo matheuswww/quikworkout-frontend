@@ -46,6 +46,7 @@ export default function Clothings({...props}: props) {
         if(data?.clothing && res.status == 404) {
           setEnd(true)
           setLoad(false)
+          setNewPage(false)
           setNewPageLoad(false)
           return
         }
@@ -65,6 +66,7 @@ export default function Clothings({...props}: props) {
         } else {
           setData(res)
         }
+        setNewPage(false)
         setNewPageLoad(false)
         setLoad(false)
       }())
