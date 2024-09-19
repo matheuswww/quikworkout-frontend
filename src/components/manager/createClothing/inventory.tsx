@@ -80,6 +80,7 @@ export default function Inventory({setInventory, inventory, closeRef, modalRef}:
     const g = Number(data.g)
     const gg = Number(data.gg)
     const images: Blob[] = Array.from(data.file)
+    let err = false
     const newImages = images.map((i, index) => {
       let fileType = null
       if(i.type == "image/png") {
@@ -91,10 +92,16 @@ export default function Inventory({setInventory, inventory, closeRef, modalRef}:
       if(i.type == "image/jpg") {
         fileType = ".jpg"
       }
-      
+      if(fileType == null) {
+        setError("é permitido somente arquivos png,jpeg ou jpg")
+        err = true
+      }
       const newFileName = data.cor+index+fileType
       return new File([i], newFileName, { type: i.type })
     })
+    if(err) {
+      return
+    }
     const newInventory:inventory = {
       cor: data.cor,
       p: p,
