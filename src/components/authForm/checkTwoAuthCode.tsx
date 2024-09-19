@@ -107,7 +107,7 @@ export default function CheckTwoAuthCodeForm({ ...props }: props) {
    <main className={`${styles.main} ${load && styles.lowOpacity}`}>
     <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
      <h1>Autenticação de dois fatores</h1>
-     <label htmlFor="code">Enviamos um código de dois fatores para você</label>
+     <label htmlFor="code">Enviamos um código para você</label>
      <input
       {...register('code')}
       id="code"

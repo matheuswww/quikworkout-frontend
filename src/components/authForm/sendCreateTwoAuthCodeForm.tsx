@@ -169,7 +169,7 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
       <section className={styles.section}>
        <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
         <h1>Criar autenticação de dois fatores</h1>
-        <label htmlFor="email">E-mail de dois fatores</label>
+        <label htmlFor="email">E-mail para envio do código de autenticação</label>
         <input
          {...register('email')}
          type="text"
