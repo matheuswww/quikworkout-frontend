@@ -181,7 +181,7 @@ export default function FinishPurchaseForm({...props}: props) {
             const id = "ORDE_"+props.retryPaymentId
             
             setPaymentTypeRetryPayment(props.paymentTypeRetryPayment)
-            setRetryPaymentId(props.retryPaymentId)
+            setRetryPaymentId(id)
             const res = await GetOrderDetail(cookie, id, paymentType)
             
             if(res.status == 200 && res.data && typeof res.data == "object") {
@@ -532,6 +532,8 @@ export default function FinishPurchaseForm({...props}: props) {
               pt = paymentType.toUpperCase()
             }
             window.history.pushState({}, "", "?retry_payment_id="+orderId.substring(5)+"&paymentType="+pt)
+            console.log(orderId);
+            
             setPaymentTypeRetryPayment(pt)
             setRetryPaymentId(orderId)
             setResponseError(beforeOrderId)
@@ -614,12 +616,13 @@ export default function FinishPurchaseForm({...props}: props) {
           newCard.id3DS = id
         }
       }
-
+      console.log(retryPaymentId);
+      
       const res = await RetryPayment(cookie, {
         novoTipoPagamento: newPayment,
         boleto: boleto,
         cartao: newCard,
-        pedido_id: "ORDE_"+retryPaymentId,
+        pedido_id: retryPaymentId,
         precoTotal: tp,
         roupa: clothing,
         tipoPagamento: paymentTypeRetryPayment,
