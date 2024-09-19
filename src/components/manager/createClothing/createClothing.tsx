@@ -90,6 +90,10 @@ export default function CreateClothingForm({...props}:props) {
     const imgs:Blob[] = []
     inventory.forEach((i) => {
       i.images.map((img) => {
+        if(img.type != "PNG" && img.type != "JPEG" && img.type != "JPG") {
+          setError("é permitido somente arquivos png,jpeg ou jpg")
+          return
+        }
         imgs.push(img)
       })
     })
