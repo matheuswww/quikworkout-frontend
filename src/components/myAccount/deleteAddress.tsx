@@ -53,8 +53,7 @@ export default function DeleteAddressForm({
 
  return (
   <form
-   className={styles.deleteAddress}
-   id={`${load && styles.lowOpacity}`}
+   className={`${styles.deleteAddress} ${load && styles.lowOpacity}`}
    ref={modalRef}
    onSubmit={handleDeleteAddressForm}
   >

@@ -190,8 +190,7 @@ export default function UpdateProfileForm({
 
  return (
   <form
-   className={`${styles.form}`}
-   id={`${load && styles.lowOpacity}`}
+   className={`${styles.form} ${load && styles.lowOpacity}`}
    ref={modalRef}
    tabIndex={0}
    onSubmit={handleSubmit(handleForm)}
