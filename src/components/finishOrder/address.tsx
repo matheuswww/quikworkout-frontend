@@ -44,7 +44,7 @@ const schema = z
   cpfCnpj: z
    .string()
    .min(11, 'cpf ou cnpj inválido')
-   .max(14, 'cpf ou cnpj inválido'),
+   .max(18, 'cpf ou cnpj inválido'),
   street: z
    .string()
    .min(1, 'rua precisa ter pelo menos 1 carácter')
@@ -76,11 +76,14 @@ const schema = z
    if (fields.cpfCnpj.includes('-')) {
     fields.cpfCnpj = fields.cpfCnpj.replaceAll('-', '');
    }
+   if (fields.cpfCnpj.includes('/')) {
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/','')
+   }
    if (fields.cpfCnpj.length == 11) {
     return ValidateCpf(fields.cpfCnpj);
    }
    if (fields.cpfCnpj.length == 14) {
-    return ValidateCnpj(fields.cpfCnpj);
+     return ValidateCnpj(fields.cpfCnpj);
    }
   },
   {
@@ -208,7 +211,7 @@ export default function Address({
   const regionCode = data.regionCode.slice(0, 2);
   const DDD = data.phoneNumber.slice(0, 2);
   const number = data.phoneNumber.substring(2);
-  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '');
+  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '').replaceAll('/','');
   if (data.cep.includes('-')) {
    data.cep = data.cep.replace('-', '');
   }

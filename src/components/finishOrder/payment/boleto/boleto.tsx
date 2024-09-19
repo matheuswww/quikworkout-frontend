@@ -38,7 +38,7 @@ const schema = z
   cpfCnpj: z
    .string()
    .min(11, 'cpf ou cnpj inválido')
-   .max(14, 'cpf ou cnpj inválido'),
+   .max(18, 'cpf ou cnpj inválido'),
   dueDate: z.string(),
   instructionLine1: z
    .string()
@@ -116,6 +116,9 @@ const schema = z
    if (fields.cpfCnpj.includes('-')) {
     fields.cpfCnpj = fields.cpfCnpj.replaceAll('-', '');
    }
+   if (fields.cpfCnpj.includes('/')) {
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/','')
+   }
    if (fields.cpfCnpj.length == 11) {
     return ValidateCpf(fields.cpfCnpj);
    }
@@ -161,7 +164,7 @@ export default function Boleto({
    const [ano, mes, dia] = data.dueDate.split('-');
    data.dueDate = `${ano}-${mes}-${dia}`;
   }
-  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '');
+  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '').replaceAll('/','');
 
   setBoleto({
    dataVencimento: data.dueDate,

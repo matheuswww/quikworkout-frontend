@@ -630,7 +630,6 @@ export default function FinishPurchaseForm({ ...props }: props) {
        '',
        '?retry_payment_id=' + orderId.substring(5) + '&paymentType=' + pt,
       );
-      console.log(orderId);
 
       setPaymentTypeRetryPayment(pt);
       setRetryPaymentId(orderId);
@@ -728,7 +727,6 @@ export default function FinishPurchaseForm({ ...props }: props) {
      newCard.id3DS = id;
     }
    }
-   console.log(retryPaymentId);
 
    const res = await RetryPayment(cookie, {
     novoTipoPagamento: newPayment,
