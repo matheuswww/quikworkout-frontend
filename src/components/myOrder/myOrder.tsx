@@ -210,7 +210,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
    return;
   }
   const res = await getOrderDetail(tipoPagamento, pedido_id);
-
+  
   if (res) {
    setPaymentInfo((pi) => {
     if (typeof res.data == 'object' && res.data != null && pi[index]) {
@@ -511,7 +511,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
            </div>
            <div className={`${styles.values} ${styles.infos}`}>
             <p>Telefone: </p>
-            <p>{infos.telefone}</p>
+            <p>{infos.telefone.slice(2)}</p>
            </div>
            <div className={`${styles.values} ${styles.infos}`}>
             <p>Serviço de entrega: </p>
@@ -668,10 +668,6 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
            <div className={`${styles.values} ${styles.infos}`}>
             <p>Número de residência: </p>
             <p>{paymentInfo[i].boleto?.titular.endereco.numeroResidencia}</p>
-           </div>
-           <div className={`${styles.values} ${styles.infos}`}>
-            <p>Complemento: </p>
-            <p>{paymentInfo[i].boleto?.titular.endereco.complemento}</p>
            </div>
            <div className={`${styles.values} ${styles.infos}`}>
             <p>Bairro: </p>
