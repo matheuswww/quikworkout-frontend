@@ -1,1 +1,3 @@
-user-agent: *Disallow: /manager/
+user-agent: *
+Allow: /
+Disallow: /manager-quikworkout/
