@@ -1,3 +1,4 @@
+import { api } from "@/api/path"
 import Clothing from "@/components/clothing/clothing"
 import Footer from "@/components/footer/footer"
 import { Metadata } from "next"
@@ -8,7 +9,6 @@ interface clothingProps {
     id: string
     name: string
     description: string
-    img: string
   },
   searchParams: {
     img: string
@@ -23,14 +23,13 @@ export function generateMetadata({...props}: clothingProps): Metadata {
     openGraph: {
       title: "Roupa "+props.params.name,
       description: decodeURIComponent(props.params.description),
-      images: atob(props.searchParams.img)
+      images: atob(props.searchParams.img).startsWith(api) ? atob(props.searchParams.img) : undefined
     }
   }
 }
 
 export default function Product({...props}: clothingProps) {
   const cookieInfos = cookies().get("userProfile")
-  
   return (
     <>
       <Clothing id={props.params.id} cookieName={cookieInfos?.name} cookieVal={cookieInfos?.value}/>
