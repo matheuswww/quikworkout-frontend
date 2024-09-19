@@ -59,7 +59,16 @@ function validateNumber(value: string): string {
   value = prevVal;
   return value;
  }
+ if(prevVal.includes(")") && !value.includes(")") && prevVal.length > 4) {
+  value = prevVal;
+   return value;
+ }
  if (prevVal.length > value.length) {
+ if(value.length == 5) {
+    value = value.slice(0,-2)
+    prevVal = value
+    return value
+  }
   if (value.length == 4) {
    value = value.slice(0, -1);
    prevVal = value;
@@ -81,7 +90,6 @@ function validateNumber(value: string): string {
    value = prevVal;
    return value;
   }
-
   prevVal = value;
   return value;
  }
