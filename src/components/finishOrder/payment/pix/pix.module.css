@@ -1,23 +1,23 @@
 .p {
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
-  margin-top: 8px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 0.9rem;
+ margin-top: 8px;
 }
 
 .div {
-  margin-left: 12px;
+ margin-left: 12px;
 }
 
 .displayNone {
-  display: none;
+ display: none;
 }
 
 .error {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  font-family: 'inter-SemiBold';
-  color: #ec5656;
-  word-break: break-all;
-  width: 250px;
+ margin-top: 10px;
+ font-size: 0.9rem;
+ font-family: 'inter-SemiBold';
+ color: #ec5656;
+ word-break: break-all;
+ width: 250px;
 }

@@ -1,141 +1,146 @@
 .selectCard {
-  margin-left: 12px;
+ margin-left: 12px;
 }
 
 .p {
-  margin-top: 15px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
+ margin-top: 15px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 0.9rem;
 }
 
 .button {
-  font-size: .9rem;
-  background: transparent;
-  border: 1px solid #969696;
-  height: 38px;
-  border-radius: 5px;
-  text-align: center;
-  color: #e4e4e4;
-  margin-top: 15px;
-  font-family: var(--interSemiBold);
-  width: 272px;
-  justify-self: center;
+ font-size: 0.9rem;
+ background: transparent;
+ border: 1px solid #969696;
+ height: 38px;
+ border-radius: 5px;
+ text-align: center;
+ color: #e4e4e4;
+ margin-top: 15px;
+ font-family: var(--interSemiBold);
+ width: 272px;
+ justify-self: center;
 }
 
 .section {
-  display: grid;
+ display: grid;
 }
 
 .form {
-  display: grid;
-  margin-left: 12px;
+ display: grid;
+ margin-left: 12px;
 }
 
 .label {
-  margin-top: 15px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
+ margin-top: 15px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 0.9rem;
 }
 
 .form input {
-  padding: 10px 0px;
-  padding-left: 8px;
-  width: 272px;
-  outline: none;
-  border: none;
-  margin-top: 5px;
-  font-family: var(--interSemiBold);
-  color: #c8c8c8;
-  background-color: transparent;
-  border-radius: 0px;
-  border-bottom: 1px solid white;
+ padding: 10px 0px;
+ padding-left: 8px;
+ width: 272px;
+ outline: none;
+ border: none;
+ margin-top: 5px;
+ font-family: var(--interSemiBold);
+ color: #c8c8c8;
+ background-color: transparent;
+ border-radius: 0px;
+ border-bottom: 1px solid white;
 }
 
 .displayNone {
-  display: none !important;
+ display: none !important;
 }
 
 .form select {
-  width: 100px;
-  height: 28px;
-  border-radius: 5px;
-  background-color: #19191d;
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 7px;
-  border: none;
-  border: 2px solid #ACACAC;
-  color: white;
-  margin-top: 10px;
+ width: 100px;
+ height: 28px;
+ border-radius: 5px;
+ background-color: #19191d;
+ display: flex;
+ justify-content: space-between;
+ padding: 0px 7px;
+ border: none;
+ border: 2px solid #acacac;
+ color: white;
+ margin-top: 10px;
 }
 
 .error {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  font-family: 'inter-SemiBold';
-  color: #ec5656;
-  width: 250px;
+ margin-top: 10px;
+ font-size: 0.9rem;
+ font-family: 'inter-SemiBold';
+ color: #ec5656;
+ width: 250px;
 }
 
 .values {
-  margin-top: 8px;
-  margin-left: 12px;
+ margin-top: 8px;
+ margin-left: 12px;
 }
 
-.field,.value {
-  margin-top: 15px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
-  display: inline;
-  word-break: break-all;
+.field,
+.value {
+ margin-top: 15px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 0.9rem;
+ display: inline;
+ word-break: break-all;
 }
 
 .field {
-  color: white;
+ color: white;
 }
 
 .visibility button {
-  background-color: transparent;
-  border: none;
+ background-color: transparent;
+ border: none;
 }
 
 .visibility {
-  display: inline;
+ display: inline;
 }
 
 .visibility button img {
-  margin-left: 4px;
-  position: relative;
-  top: 2px;
+ margin-left: 4px;
+ position: relative;
+ top: 2px;
 }
 
 #submit {
-  margin-left: 15px;
+ margin-left: 15px;
 }
 
 @media (min-width: 475px) {
-  .button,.form input,.error {
-    width: 358px;
-  }
+ .button,
+ .form input,
+ .error {
+  width: 358px;
+ }
 }
 
 @media (min-width: 580px) {
-  .button,.form input,.error {
-    width: 368px;
-  }
+ .button,
+ .form input,
+ .error {
+  width: 368px;
+ }
 }
 
-@media (hover: hover) { 
-  .button:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
+@media (hover: hover) {
+ .button:hover {
+  cursor: pointer;
+  background-color: var(--btnHover);
+ }
 }
 
 .button:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
+ cursor: pointer;
+ background-color: var(--btnClicked);
 }

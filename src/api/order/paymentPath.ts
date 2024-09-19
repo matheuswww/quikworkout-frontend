@@ -1,1 +1,1 @@
-export const paymentPath = "/payment"
+export const paymentPath = '/payment';

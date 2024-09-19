@@ -1,31 +1,32 @@
 {
-  "name": "quikworkout-frontend",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^3.3.4",
-    "next": "^14.0.4",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-hook-form": "^7.51.3",
-    "zod": "^3.23.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@typescript-eslint/eslint-plugin": "^8.6.0",
-    "@typescript-eslint/parser": "^8.5.0",
-    "eslint": "^9.10.0",
-    "eslint-plugin-react": "^7.36.1",
-    "globals": "^15.9.0",
-    "typescript": "^5",
-    "typescript-eslint": "^8.6.0"
-  }
+ "name": "quikworkout-frontend",
+ "version": "0.1.0",
+ "private": true,
+ "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+ },
+ "dependencies": {
+  "@hookform/resolvers": "^3.3.4",
+  "next": "^14.0.4",
+  "react": "^18",
+  "react-dom": "^18",
+  "react-hook-form": "^7.51.3",
+  "zod": "^3.23.4"
+ },
+ "devDependencies": {
+  "@types/node": "^20",
+  "@types/react": "^18",
+  "@types/react-dom": "^18",
+  "@typescript-eslint/eslint-plugin": "^8.6.0",
+  "@typescript-eslint/parser": "^8.5.0",
+  "eslint": "^9.10.0",
+  "eslint-plugin-react": "^7.36.1",
+  "globals": "^15.9.0",
+  "prettier": "^3.3.3",
+  "typescript": "^5",
+  "typescript-eslint": "^8.6.0"
+ }
 }

@@ -1,1 +1,1 @@
-export const managerAuth = "/auth"
+export const managerAuth = '/auth';

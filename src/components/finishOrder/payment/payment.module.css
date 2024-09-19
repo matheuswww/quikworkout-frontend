@@ -1,67 +1,67 @@
 .section {
-  width: 280px;
-  animation: .5s forwards enter;
+ width: 280px;
+ animation: 0.5s forwards enter;
 }
 
 .arrow {
-  background-color: transparent;
-  border: none;
-  justify-self: start;
-  margin-top: 15px;
+ background-color: transparent;
+ border: none;
+ justify-self: start;
+ margin-top: 15px;
 }
 
 .arrow img {
-  color: white;
-  background: transparent;
-  border-radius: 100%;
-  margin-right: 5px;
+ color: white;
+ background: transparent;
+ border-radius: 100%;
+ margin-right: 5px;
 }
 
 .p {
-  font-size: .9rem;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  margin-top: 19px;
+ font-size: 0.9rem;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ margin-top: 19px;
 }
 
 .label {
-  font-size: .9rem;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  margin-top: 19px;
+ font-size: 0.9rem;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ margin-top: 19px;
 }
 
 @media (min-width: 475px) {
-  .section {
-    width: 370px;
-  }
+ .section {
+  width: 370px;
+ }
 }
 
 @media (min-width: 580px) {
-  .section {
-    width: 380px;
-  }
+ .section {
+  width: 380px;
+ }
 }
 
-@media (hover: hover) { 
-  .arrow img:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
+@media (hover: hover) {
+ .arrow img:hover {
+  cursor: pointer;
+  background-color: var(--btnHover);
+ }
 }
 
 .arrow img:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
+ cursor: pointer;
+ background-color: var(--btnClicked);
 }
 
 @keyframes enter {
-  from {
-    transform: translate3d(-50px,0,0);
-    opacity: 0;
-  }
-  to {
-    transform: translate3d(0px,0,0);
-    opacity: 1;
-  }
+ from {
+  transform: translate3d(-50px, 0, 0);
+  opacity: 0;
+ }
+ to {
+  transform: translate3d(0px, 0, 0);
+  opacity: 1;
+ }
 }

@@ -1,72 +1,72 @@
 .ldsRing,
 .ldsRing div {
-  box-sizing: border-box;
+ box-sizing: border-box;
 }
 
 .ldsRing {
-  display: grid;
-  width: 80px;
-  height: 105px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: enter .5s forwards;
-  z-index: 1000;
+ display: grid;
+ width: 80px;
+ height: 105px;
+ position: fixed;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ animation: enter 0.5s forwards;
+ z-index: 1000;
 }
 
 .ldsRing div {
-  color: #d5d5d5;
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid currentColor;
-  border-radius: 50%;
-  animation: ldsRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: currentColor transparent transparent transparent;
+ color: #d5d5d5;
+ box-sizing: border-box;
+ display: block;
+ position: absolute;
+ width: 64px;
+ height: 64px;
+ margin: 8px;
+ border: 8px solid currentColor;
+ border-radius: 50%;
+ animation: ldsRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+ border-color: currentColor transparent transparent transparent;
 }
 
 .ldsRing p {
-  color: #d5d5d5;
-  height: max-content;
-  align-self: end;
-  color: white;
-  font-family: var(--interSemiBold);
-  position: absolute;
-  right: -3px;
+ color: #d5d5d5;
+ height: max-content;
+ align-self: end;
+ color: white;
+ font-family: var(--interSemiBold);
+ position: absolute;
+ right: -3px;
 }
 
 .ldsRing div:nth-child(1) {
-  animation-delay: -0.45s;
+ animation-delay: -0.45s;
 }
 
 .ldsRing div:nth-child(2) {
-  animation-delay: -0.3s;
+ animation-delay: -0.3s;
 }
 
 .ldsRing div:nth-child(3) {
-  animation-delay: -0.15s;
+ animation-delay: -0.15s;
 }
 
 @keyframes ldsRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+ 0% {
+  transform: rotate(0deg);
+ }
+ 100% {
+  transform: rotate(360deg);
+ }
 }
 
 @keyframes enter {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -150%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+ from {
+  opacity: 0;
+  transform: translate(-50%, -150%);
+ }
+ to {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+ }
 }

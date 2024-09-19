@@ -1,45 +1,45 @@
 .footer {
-  background: #00000080;
-  display: grid;
-  height: 115px;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  align-self: center;
-  border-top: 1px solid #797979;
-  width: 100%;
-  margin-top: 25px;
-  position: relative;
-  bottom: 0px;
+ background: #00000080;
+ display: grid;
+ height: 115px;
+ justify-content: center;
+ align-items: center;
+ padding: 10px;
+ align-self: center;
+ border-top: 1px solid #797979;
+ width: 100%;
+ margin-top: 25px;
+ position: relative;
+ bottom: 0px;
 }
 
 .footer div {
-  width: 248px;
-  text-align: center;
-  padding-top: 5px;
+ width: 248px;
+ text-align: center;
+ padding-top: 5px;
 }
 
 .icon {
-  justify-self: center;
+ justify-self: center;
 }
 
 .icon a img {
-  margin: 5px;
-  background-color: #a3a3a3;
-  padding: 5px;
-  border-radius: 100%;
-  transition: .5s;
+ margin: 5px;
+ background-color: #a3a3a3;
+ padding: 5px;
+ border-radius: 100%;
+ transition: 0.5s;
 }
 
 .icon a img:hover {
-  transform: translateY(-5px);
+ transform: translateY(-5px);
 }
 
 .footer p {
-  font-family: var(--inkfree);
-  color: white;
-  text-align: center;
-  width: 299px;
-  font-size: 1.2rem;
-  justify-self: center;
+ font-family: var(--inkfree);
+ color: white;
+ text-align: center;
+ width: 299px;
+ font-size: 1.2rem;
+ justify-self: center;
 }

@@ -1,27 +1,24 @@
-
-import { Metadata, Viewport } from 'next'
-import './globals.css'
+import { Metadata, Viewport } from 'next';
+import './globals.css';
 
 export const viewport: Viewport = {
-  userScalable: false
-}
+ userScalable: false,
+};
 
-export const metadata:Metadata = {
-  icons: {
-    icon: "/img/favicon.png"
-  }
-}
+export const metadata: Metadata = {
+ icons: {
+  icon: '/img/favicon.png',
+ },
+};
 
 export default function RootLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode
+ children: React.ReactNode;
 }) {
-  return (
-    <html lang="PT-BR">
-      <body className="body">
-        {children}
-      </body>
-    </html>
-  )
+ return (
+  <html lang="PT-BR">
+   <body className="body">{children}</body>
+  </html>
+ );
 }

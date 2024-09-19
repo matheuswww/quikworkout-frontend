@@ -1,81 +1,83 @@
 .container {
-  transition: .5s;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -35%);
-  width: 300px;
-  height: 145px;
-  background-color: #19191df7;
-  padding: 10px;
-  border-radius: 10px;
-  z-index: 999;
-  opacity: 0;
-  display: none;
-  border: 1px solid #797979;
+ transition: 0.5s;
+ position: fixed;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -35%);
+ width: 300px;
+ height: 145px;
+ background-color: #19191df7;
+ padding: 10px;
+ border-radius: 10px;
+ z-index: 999;
+ opacity: 0;
+ display: none;
+ border: 1px solid #797979;
 }
 
 .opacity {
-  opacity: .1;
-  pointer-events: none;
+ opacity: 0.1;
+ pointer-events: none;
 }
 
 #formOpacity {
-  opacity: .5;
-  pointer-events: none;
+ opacity: 0.5;
+ pointer-events: none;
 }
 
 .container.active {
-  opacity: 1;
-  transform: translate(-50%, -50%);
+ opacity: 1;
+ transform: translate(-50%, -50%);
 }
 
 .delete {
-  color: white;
-  text-decoration: none;
-  font-size: .9rem;
-  background: transparent;
-  padding: 10px;
-  font-family: 'inter-Regular';
-  border-radius: 5px;
-  text-align: center;
-  grid-column: span 2;
-  width: 100%;
-  justify-self: start;
-  display: block;
-  margin-top: 35px;
-  border: 1px solid white;
+ color: white;
+ text-decoration: none;
+ font-size: 0.9rem;
+ background: transparent;
+ padding: 10px;
+ font-family: 'inter-Regular';
+ border-radius: 5px;
+ text-align: center;
+ grid-column: span 2;
+ width: 100%;
+ justify-self: start;
+ display: block;
+ margin-top: 35px;
+ border: 1px solid white;
 }
 
 .container p {
-  color: #dbdbdb;
-  font-family: 'inter-SemiBold';
-  margin: 10px;
-  text-align: center;
+ color: #dbdbdb;
+ font-family: 'inter-SemiBold';
+ margin: 10px;
+ text-align: center;
 }
 
 .close {
-  border-radius: 50px;
-  width: 30px;
-  height: 27px;
-  border: none;
-  position: absolute;
-  right: -10px;
-  top: -5px;
-  background: #373737;
-  color: white;
-  border: 1px solid white;
-  font-size: 1.1rem;
+ border-radius: 50px;
+ width: 30px;
+ height: 27px;
+ border: none;
+ position: absolute;
+ right: -10px;
+ top: -5px;
+ background: #373737;
+ color: white;
+ border: 1px solid white;
+ font-size: 1.1rem;
 }
 
-@media (hover: hover) { 
-  .delete:hover,.close:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
-}
-
-.delete:active,.delete:hover {
+@media (hover: hover) {
+ .delete:hover,
+ .close:hover {
   cursor: pointer;
-  background-color: var(--btnClicked);
+  background-color: var(--btnHover);
+ }
+}
+
+.delete:active,
+.delete:hover {
+ cursor: pointer;
+ background-color: var(--btnClicked);
 }

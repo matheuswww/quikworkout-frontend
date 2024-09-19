@@ -1,1 +1,1 @@
-export const orderPath = "/order"
+export const orderPath = '/order';

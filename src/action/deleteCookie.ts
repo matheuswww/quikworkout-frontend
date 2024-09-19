@@ -1,7 +1,7 @@
-'use server'
+'use server';
 
-import { cookies } from "next/headers"
+import { cookies } from 'next/headers';
 
 export async function deleteCookie(key: string) {
-  cookies().delete(key)
+ cookies().delete(key);
 }

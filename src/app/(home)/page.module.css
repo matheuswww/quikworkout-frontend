@@ -1,126 +1,129 @@
 .main {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  justify-items: center;
-  background-image: linear-gradient(272deg, #000000, #19191d);
+ display: grid;
+ grid-template-columns: 1fr;
+ grid-template-rows: 1fr;
+ justify-items: center;
+ background-image: linear-gradient(272deg, #000000, #19191d);
 }
 
 .header {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr .6fr;
-  background-image: url("/img/background.jpg");
-  background-size: cover;
-  background-position: center top;
-  height: 100vh;
-  width: 100%;
-  aspect-ratio: 16/9
+ display: grid;
+ grid-template-columns: 1fr;
+ grid-template-rows: 1fr 0.6fr;
+ background-image: url('/img/background.jpg');
+ background-size: cover;
+ background-position: center top;
+ height: 100vh;
+ width: 100%;
+ aspect-ratio: 16/9;
 }
 
 .h1 {
-  display: flex;
-  flex-direction: column;
-  font-size: 2.8rem;
-  font-family: var(--interSemiBold);
-  padding-left: 8px;
-  font-weight: bold;
-  text-transform: uppercase;
-  width: 100%;
-  align-self: end;
-  animation: 1s forwards enter;
+ display: flex;
+ flex-direction: column;
+ font-size: 2.8rem;
+ font-family: var(--interSemiBold);
+ padding-left: 8px;
+ font-weight: bold;
+ text-transform: uppercase;
+ width: 100%;
+ align-self: end;
+ animation: 1s forwards enter;
 }
 
 .button {
-  width: 280px;
-  margin-bottom: 20px;
-  height: 80px;
-  background: #b6b6b60a;
-  font-family: var(--interSemiBold);
-  color: white;
-  font-size: 1rem;
-  border: 1px solid #9e9e9e;
-  justify-self: center;
-  text-transform: uppercase;
-  align-self: center;
-  cursor: pointer;
-  animation: 1s forwards enter;
+ width: 280px;
+ margin-bottom: 20px;
+ height: 80px;
+ background: #b6b6b60a;
+ font-family: var(--interSemiBold);
+ color: white;
+ font-size: 1rem;
+ border: 1px solid #9e9e9e;
+ justify-self: center;
+ text-transform: uppercase;
+ align-self: center;
+ cursor: pointer;
+ animation: 1s forwards enter;
 }
 
 .phrase1 {
-  color: white;
+ color: white;
 }
 
 .phrase2 {
-  color: rgba(0, 0, 0, 0);
-  -webkit-text-stroke: 1px white;
-  align-content: self-end;
+ color: rgba(0, 0, 0, 0);
+ -webkit-text-stroke: 1px white;
+ align-content: self-end;
 }
 
 .line {
-  display: block;
-  width: 65%;
-  height: 1px;
-  background-color: white;
-  align-self: end;
+ display: block;
+ width: 65%;
+ height: 1px;
+ background-color: white;
+ align-self: end;
 }
 
 .header div {
-  position: absolute !important;
+ position: absolute !important;
 }
 
 @keyframes enter {
-  from {
-    transform: translate3d(-50px,0,0);
-    opacity: 0;
-  }
-  to {
-    transform: translate3d(0px,0,0);
-    opacity: 1;
-  }
+ from {
+  transform: translate3d(-50px, 0, 0);
+  opacity: 0;
+ }
+ to {
+  transform: translate3d(0px, 0, 0);
+  opacity: 1;
+ }
 }
 
-@media (min-width:350px) {
-  .button {
-    width: 320px;
-    font-size: 1.2rem;
-  }
+@media (min-width: 350px) {
+ .button {
+  width: 320px;
+  font-size: 1.2rem;
+ }
 }
 
-@media (min-width:693px) {
-  .phrase1,.phrase2 {
-    padding-left: 35px;
-  }
+@media (min-width: 693px) {
+ .phrase1,
+ .phrase2 {
+  padding-left: 35px;
+ }
 }
 
-@media (min-width:693px) {
-  .header {
-    background-image: url("/img/background-big.jpg");
-    background-position: center;
-  }
+@media (min-width: 693px) {
+ .header {
+  background-image: url('/img/background-big.jpg');
+  background-position: center;
+ }
 }
 
-@media (min-width:890px) {
-  .phrase1,.phrase2 {
-    padding-left: 115px;
-  }
+@media (min-width: 890px) {
+ .phrase1,
+ .phrase2 {
+  padding-left: 115px;
+ }
 }
 
-@media (min-width:1100px) {
-  .phrase1,.phrase2 {
-    padding-left: 185px;
-  }
-  .header {
-    height: 700px;
-    grid-template-rows: 1fr .5fr;
-  }
-  .h1 {
-    font-size: 3rem;
-  }
+@media (min-width: 1100px) {
+ .phrase1,
+ .phrase2 {
+  padding-left: 185px;
+ }
+ .header {
+  height: 700px;
+  grid-template-rows: 1fr 0.5fr;
+ }
+ .h1 {
+  font-size: 3rem;
+ }
 }
 
-@media (min-width:1700px) {
-  .header {
-    height: 900px;
-  }
+@media (min-width: 1700px) {
+ .header {
+  height: 900px;
+ }
 }

@@ -1,44 +1,44 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ width: 100%;
+ height: 100vh;
 }
 
 .notFound {
-  font-size: 2rem;
-  font-family: var(--interSemiBold);
-  color: white;
+ font-size: 2rem;
+ font-family: var(--interSemiBold);
+ color: white;
 }
 
 .message {
-  font-size: 1.2rem;
-  font-family: var(--interSemiBold);
-  color: white;
-  margin-top: 5px;
+ font-size: 1.2rem;
+ font-family: var(--interSemiBold);
+ color: white;
+ margin-top: 5px;
 }
 
 .backHome {
-  width: 196px;
-  margin-top: 20px;
-  height: 56px;
-  font-family: var(--interSemiBold);
-  color: white;
-  border-radius: 10px;
-  background-color: #242424;
-  font-size: 1.1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  border: none;
+ width: 196px;
+ margin-top: 20px;
+ height: 56px;
+ font-family: var(--interSemiBold);
+ color: white;
+ border-radius: 10px;
+ background-color: #242424;
+ font-size: 1.1rem;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ text-decoration: none;
+ border: none;
 }
 
 @media (min-width: 385px) {
-  .message {
-    font-size: 1.5rem;
-    width: max-content;
-  }
+ .message {
+  font-size: 1.5rem;
+  width: max-content;
+ }
 }

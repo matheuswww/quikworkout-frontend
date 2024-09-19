@@ -1,1 +1,1 @@
-export const managerProfile = "/profile"
+export const managerProfile = '/profile';

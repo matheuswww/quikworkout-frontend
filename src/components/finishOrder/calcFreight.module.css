@@ -1,151 +1,157 @@
 .p {
-  font-size: .9rem;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  margin-top: 19px;
+ font-size: 0.9rem;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ margin-top: 19px;
 }
 
 .label {
-  font-size: .9rem;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  margin-top: 19px;
+ font-size: 0.9rem;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ margin-top: 19px;
 }
 
 .address {
-  width: 280px;
+ width: 280px;
 }
 
 .price {
-  font-size: .9rem;
-  margin-top: 10px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
+ font-size: 0.9rem;
+ margin-top: 10px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
+ display: flex;
+ flex-direction: column;
+ margin-left: 10px;
 }
 
 .section {
-  width: 280px;
-  animation: .5s forwards enter;
+ width: 280px;
+ animation: 0.5s forwards enter;
 }
 
 .cep {
-  padding: 8px;
-  width: 272px;
-  outline: none;
-  border: none;
-  margin-top: 5px;
-  font-family: var(--interSemiBold);
-  color: #c8c8c8;
-  background-color: transparent;
-  border-radius: 0px;
-  border-bottom: 1px solid white;
+ padding: 8px;
+ width: 272px;
+ outline: none;
+ border: none;
+ margin-top: 5px;
+ font-family: var(--interSemiBold);
+ color: #c8c8c8;
+ background-color: transparent;
+ border-radius: 0px;
+ border-bottom: 1px solid white;
 }
 
 .form label {
-  margin-top: 15px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: .9rem;
+ margin-top: 15px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 0.9rem;
 }
 
 .checkbox {
-  margin-left: 10px;
-  margin-top: 5px;
-  cursor: pointer;
+ margin-left: 10px;
+ margin-top: 5px;
+ cursor: pointer;
 }
 
 .calcFreight {
-  font-size: .9rem;
-  background: transparent;
-  border: 1px solid #969696;
-  height: 38px;
-  border-radius: 5px;
-  text-align: center;
-  color: #e4e4e4;
-  margin-top: 15px;
-  font-family: var(--interSemiBold);
-  width: 272px;
-  justify-self: center;
+ font-size: 0.9rem;
+ background: transparent;
+ border: 1px solid #969696;
+ height: 38px;
+ border-radius: 5px;
+ text-align: center;
+ color: #e4e4e4;
+ margin-top: 15px;
+ font-family: var(--interSemiBold);
+ width: 272px;
+ justify-self: center;
 }
 
 .error {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  font-family: 'inter-SemiBold';
-  color: #ec5656;
-  width: 276px;
+ margin-top: 10px;
+ font-size: 0.9rem;
+ font-family: 'inter-SemiBold';
+ color: #ec5656;
+ width: 276px;
 }
 
 .load {
-  opacity: .1;
+ opacity: 0.1;
 }
 
 .arrow {
-  background-color: transparent;
-  border: none;
-  justify-self: start;
-  margin-top: 15px;
+ background-color: transparent;
+ border: none;
+ justify-self: start;
+ margin-top: 15px;
 }
 
 .arrow img {
-  color: white;
-  background: transparent;
-  border-radius: 100%;
-  margin-right: 5px;
+ color: white;
+ background: transparent;
+ border-radius: 100%;
+ margin-right: 5px;
 }
 @media (min-width: 380px) {
-  .section {
-    width: 320px;
-  }
-  .cep, .calcFreight {
-    width: 310px;
-  }
+ .section {
+  width: 320px;
+ }
+ .cep,
+ .calcFreight {
+  width: 310px;
+ }
 }
 
 @media (min-width: 475px) {
-  .section {
-    width: 370px;
-  }
-  .cep, .calcFreight,.error {
-    width: 360px;
-  }
+ .section {
+  width: 370px;
+ }
+ .cep,
+ .calcFreight,
+ .error {
+  width: 360px;
+ }
 }
 
 @media (min-width: 580px) {
-  .section {
-    width: 380px;
-  }
-  .cep, .calcFreight, .error {
-    width: 370px;
-  }
+ .section {
+  width: 380px;
+ }
+ .cep,
+ .calcFreight,
+ .error {
+  width: 370px;
+ }
 }
 
-
-@media (hover: hover) { 
-  .calcFreight:hover, .arrow img:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
-}
-
-.calcFreight:active, .arrow img:active {
+@media (hover: hover) {
+ .calcFreight:hover,
+ .arrow img:hover {
   cursor: pointer;
-  background-color: var(--btnClicked);
+  background-color: var(--btnHover);
+ }
+}
+
+.calcFreight:active,
+.arrow img:active {
+ cursor: pointer;
+ background-color: var(--btnClicked);
 }
 
 @keyframes enter {
-  from {
-    transform: translate3d(-50px,0,0);
-    opacity: 0;
-  }
-  to {
-    transform: translate3d(0px,0,0);
-    opacity: 1;
-  }
+ from {
+  transform: translate3d(-50px, 0, 0);
+  opacity: 0;
+ }
+ to {
+  transform: translate3d(0px, 0, 0);
+  opacity: 1;
+ }
 }

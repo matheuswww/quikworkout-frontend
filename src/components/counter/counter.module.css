@@ -1,47 +1,52 @@
-.more,.less {
-  color: white;
-  background-color: transparent;
-  width: 26px;
-  height: 24px;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  border: 2px solid #ACACAC;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
+.more,
+.less {
+ color: white;
+ background-color: transparent;
+ width: 26px;
+ height: 24px;
+ font-size: 1.2rem;
+ border-radius: 5px;
+ border: 2px solid #acacac;
+ -webkit-tap-highlight-color: transparent;
+ position: relative;
 }
 
 .count {
-  display: inline;
-  position: relative;
-  top: -5px;
-  padding: 0px 5px;
-  color: white;
-  font-family: var(--interRegular);
-  font-size: 0.9rem;
+ display: inline;
+ position: relative;
+ top: -5px;
+ padding: 0px 5px;
+ color: white;
+ font-family: var(--interRegular);
+ font-size: 0.9rem;
 }
 
 @media (min-width: 400px) {
-  .more,.less {
-    width: 28px;
-    height: 26px;
-  }
+ .more,
+ .less {
+  width: 28px;
+  height: 26px;
+ }
 }
 @media (min-width: 400px) {
-  .counter {
-    font-size: 1rem;
-  }
-  .more img,.less img {
-    margin-top: 1px;
-  }
+ .counter {
+  font-size: 1rem;
+ }
+ .more img,
+ .less img {
+  margin-top: 1px;
+ }
 }
 
 @media (hover: hover) {
-  .more:hover,.less:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
+ .more:hover,
+ .less:hover {
+  cursor: pointer;
+  background-color: var(--btnHover);
+ }
 }
 
-.more:active,.less:active {
-  background-color: var(--btnClicked);
+.more:active,
+.less:active {
+ background-color: var(--btnClicked);
 }

@@ -1,69 +1,69 @@
 .main {
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+ height: 100vh;
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
 }
 
 .main.load {
-  opacity: .1;
+ opacity: 0.1;
 }
 
 .form {
-  margin: 15px;
+ margin: 15px;
 }
 
 .form h1 {
-  font-weight: lighter;
-  text-align: start;
-  font-family: var(--interSemiBold);
-  font-size: 2rem;
-  color: #c8c8c8;
+ font-weight: lighter;
+ text-align: start;
+ font-family: var(--interSemiBold);
+ font-size: 2rem;
+ color: #c8c8c8;
 }
 
 .form button {
-  margin-top: 5px;
-  height: 40px;
-  width: 250px;
-  border: none;
-  font-size: 1rem;
-  border-radius: 20px;
-  background-color: transparent;
-  font-family: var(--interSemiBold);
-  color: #c8c8c8;
-  transform: translateY(20px);
-  border: 1px solid white;
-  border-radius: 4px;
+ margin-top: 5px;
+ height: 40px;
+ width: 250px;
+ border: none;
+ font-size: 1rem;
+ border-radius: 20px;
+ background-color: transparent;
+ font-family: var(--interSemiBold);
+ color: #c8c8c8;
+ transform: translateY(20px);
+ border: 1px solid white;
+ border-radius: 4px;
 }
 
 .form p {
-  margin-top: 15px;
-  color: #c8c8c8;
-  font-family: var(--interSemiBold);
-  font-size: 1rem;
+ margin-top: 15px;
+ color: #c8c8c8;
+ font-family: var(--interSemiBold);
+ font-size: 1rem;
 }
 
-@media (hover: hover) { 
-  .form button:hover {
-    cursor: pointer;
-    background-color: var(--btnHover);
-  }
+@media (hover: hover) {
+ .form button:hover {
+  cursor: pointer;
+  background-color: var(--btnHover);
+ }
 }
 
 .form button:active {
-  cursor: pointer;
-  background-color: var(--btnClicked);
+ cursor: pointer;
+ background-color: var(--btnClicked);
 }
 
 @media (max-width: 535px) {
-  .form button {
-    width: 100%;
-  }
+ .form button {
+  width: 100%;
+ }
 }
 
 @media (max-height: 190px) {
-  .form {
-    height: 100%;
-  }
+ .form {
+  height: 100%;
+ }
 }

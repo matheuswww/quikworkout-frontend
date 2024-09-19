@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface card {
   bandeira: string
   ultimos_digitos: string
@@ -11,6 +12,7 @@ interface holder_card {
   name: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface boleto {
   dataVencimento: string
   linhasInstrucao: instructionsLines
@@ -44,6 +46,7 @@ interface instructionsLines {
   linha_2: string | null
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface pix {
   status: string
   mensagem: string
@@ -54,6 +57,7 @@ interface pix {
   dataExpiracao: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface getOrder {
   pedido_id: string
   status_pagamento: string

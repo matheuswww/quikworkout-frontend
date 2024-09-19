@@ -1,26 +1,26 @@
 .container {
-  width: 300px;
-  height: 55px;
-  background-color: #2b4b24;
-  padding: 5px;
-  border-radius: 5px;
-  position: fixed;
-  display: none;
-  transition: 1.2s;
-  top: 0px;
-  left: 50%;
-  transform: translate(-50%, -55px);
-  z-index: 999;
-  justify-content: center;
-  align-items: center;
+ width: 300px;
+ height: 55px;
+ background-color: #2b4b24;
+ padding: 5px;
+ border-radius: 5px;
+ position: fixed;
+ display: none;
+ transition: 1.2s;
+ top: 0px;
+ left: 50%;
+ transform: translate(-50%, -55px);
+ z-index: 999;
+ justify-content: center;
+ align-items: center;
 }
 
 .container.active {
-  transform: translate(-50%, 0px);
+ transform: translate(-50%, 0px);
 }
 
 .container p {
-  color: white;
-  font-family: var(--interSemiBold);
-  font-size: 1rem;
+ color: white;
+ font-family: var(--interSemiBold);
+ font-size: 1rem;
 }

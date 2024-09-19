@@ -1,1 +1,1 @@
-export const clothingPath = "/clothing"
+export const clothingPath = '/clothing';
