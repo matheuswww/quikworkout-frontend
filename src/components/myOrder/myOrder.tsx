@@ -47,7 +47,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           return
         }
         const cookie = cookieName+"="+cookieVal
-        var cursor: string | undefined
+        let cursor: string | undefined
         if(getOrder) {
           setNewPageLoad(true)
           const lastIndex = getOrder.length
@@ -76,7 +76,7 @@ export default function MyOrder({cookieName,cookieVal}:props) {
           return
         }
         if(res.data instanceof Array && res.status == 200) {
-          let array: payment[] = []
+          const array: payment[] = []
           for(let i = 0; i <= res.data.length - 1;i++) {
             if(res.data[i].tipo_pagamento == "PIX" && res.data[i].status_pagamento != "SUCESSO" && res.data[i].status_pagamento != "autorizado" && res.data[i].status_pagamento != "cancelado") {
               const res2 = await getOrderDetail(res.data[i].tipo_pagamento, res.data[i].pedido_id)

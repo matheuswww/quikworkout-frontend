@@ -8,7 +8,7 @@ export default function handleModalClick(modalRef:React.MutableRefObject<HTMLEle
     button = buttonRef
   }
   const main = document.body.querySelector("main")
-  let section = main instanceof HTMLElement && main.lastChild
+  const section = main instanceof HTMLElement && main.lastChild
   if (section instanceof HTMLElement && button instanceof HTMLElement && modalRef.current instanceof HTMLElement) {
     section.style.opacity = ".1"
     modalRef.current.style.display = display

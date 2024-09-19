@@ -57,7 +57,7 @@ export default function GetOrderAdmin({cookieName,cookieVal,updated}:props) {
         }
 
         const cookie = cookieName+"="+cookieVal
-        var cursor: string | undefined
+        let cursor: string | undefined
         if(data?.order?.pedido) {
           setNewPageLoad(true)
           const lastIndex = data.order.pedido.length

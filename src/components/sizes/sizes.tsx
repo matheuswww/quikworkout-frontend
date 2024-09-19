@@ -21,7 +21,7 @@ export default function Sizes({setSize, size, color, inventory}:props) {
   return (
     (color != null && inventory) && 
       inventory.map((i) => {
-        let items: ReactNode[] = []
+        const items: ReactNode[] = []
         if (i.cor == color) {
           if (i["p"] != 0) {
             items.push(

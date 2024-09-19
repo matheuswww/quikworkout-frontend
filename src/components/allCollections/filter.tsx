@@ -79,8 +79,8 @@ export default function Filter() {
   const formRef = useRef<HTMLFormElement | null>(null)
 
   function handleForm(data: FormProps) {
-    let baseUrl = window.location.origin + window.location.pathname.slice(0, -1)
-    let params = new URLSearchParams()
+    const baseUrl = window.location.origin + window.location.pathname.slice(0, -1)
+    const params = new URLSearchParams()
     
     if (data.maxPrice) params.append('precoMaximo', data.maxPrice.includes(",") ? data.maxPrice.replace(",",".") : data.maxPrice)
     if (data.minPrice) params.append('precoMinimo', data.minPrice.includes(",") ? data.minPrice.replace(",",".") : data.minPrice)
@@ -89,7 +89,7 @@ export default function Filter() {
     if (data.cor) params.append('cor', data.cor)
     if (data.m == true) params.append('m', data.m.toString())
     if (data.f == true) params.append('f', data.f.toString())
-    let newUrl = `${baseUrl}?${params.toString()}`;
+    const newUrl = `${baseUrl}?${params.toString()}`;
     window.location.href = newUrl
   }
 

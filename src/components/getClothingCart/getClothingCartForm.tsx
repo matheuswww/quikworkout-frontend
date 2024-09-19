@@ -51,7 +51,7 @@ export default function GetClothingCartForm({...props}: props) {
           return
         }
         const cookie = props.cookieName+"="+props.cookieVal
-        var cursor: string | undefined
+        let cursor: string | undefined
         if(data?.clothing) {
           setNewPageLoad(true)
           const lastIndex = data.clothing.length
@@ -110,7 +110,7 @@ export default function GetClothingCartForm({...props}: props) {
           return
         }
         const cookie = props.cookieName+"="+props.cookieVal
-        var cursor: string | undefined
+        let cursor: string | undefined
         if(data?.clothing) {
           const lastIndex = data.clothing.length
           if(lastIndex && lastIndex - 1 >= 0 && data.clothing) {

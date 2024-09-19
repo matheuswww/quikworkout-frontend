@@ -84,7 +84,7 @@ export default function CheckContactValidationCodeForm({...props}:props) {
   function handleClick(event: SyntheticEvent) {
     event.preventDefault()
     if(timer >= 60) {
-      var newUrl = window.location.pathname
+      const newUrl = window.location.pathname
       window.history.replaceState(null, "", newUrl);
       window.location.reload()
     }

@@ -64,7 +64,7 @@ function CheckTwoAuthCodeURL(request: NextRequest) {
 }
 
 function ResetPasswordURL(request: NextRequest) {
-  let cookie = request.cookies.get("userAuthResetPass")  
+  const cookie = request.cookies.get("userAuthResetPass")  
   if(cookie) {
     return NextResponse.next()
   }

@@ -34,10 +34,10 @@ export function slidesWithControll(
   })
   
   const onClick = function(event: Event) {
-    let prevElement = thumbs && thumbs[item].firstChild
+    const prevElement = thumbs && thumbs[item].firstChild
     if (prevElement instanceof HTMLElement && index && thumbs && event.target instanceof HTMLElement) {
       const thumbIndex = Number(event.target.id)
-      let currentElement = thumbs && thumbs[thumbIndex].firstChild
+      const currentElement = thumbs && thumbs[thumbIndex].firstChild
       prevElement.classList.remove(activeThumbClass)
       if(currentElement instanceof HTMLElement) {
         currentElement.classList.add(activeThumbClass)
@@ -97,14 +97,14 @@ export function slidesWithControll(
     }
     if (Math.abs(dist.movement) >= itemWidth) {
       if (event instanceof MouseEvent) {
-        var mouseUp = new MouseEvent('mouseup', {
+        const mouseUp = new MouseEvent('mouseup', {
           bubbles: false,
           cancelable: false,
           view: window
         })
         document.dispatchEvent(mouseUp)
       } else {
-        var touchEnd = new TouchEvent('touchend', {
+        const touchEnd = new TouchEvent('touchend', {
           bubbles: false,
           cancelable: false,
           view: window
@@ -164,7 +164,7 @@ export function slidesWithControll(
       }
     }
     if (thumbs && prevElement?.firstChild instanceof HTMLElement) {
-      let currentThumbElement = thumbs && thumbs[item]
+      const currentThumbElement = thumbs && thumbs[item]
       prevElement.firstChild.classList.remove(activeThumbClass)
       currentThumbElement.firstChild instanceof HTMLElement && currentThumbElement.firstChild.classList.add(activeThumbClass)
     }

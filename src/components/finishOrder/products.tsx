@@ -44,7 +44,7 @@ export default function Products({clothing, totalPrice, freight, responseError, 
       setTotalPriceWithFreight(formatPrice(Number(totalPrice)))
       return
     }
-    let total = Math.round((Number(val2)+Number(val)) * 100)/100
+    const total = Math.round((Number(val2)+Number(val)) * 100)/100
     if(!isNaN(total)) {
       setTotalPriceWithFreight(formatPrice(total))
       return

@@ -27,7 +27,7 @@ export default function UpdateTrackingCodeForm({modalRef,closeRef,cookieName,coo
     setPopupError(false)
     setResponseError(null)
     let rp: boolean = false
-    let packages: Array<packages> = []
+    const packages: Array<packages> = []
     if(modalRef.current instanceof HTMLFormElement) {
       const inputs = modalRef.current.querySelectorAll("input")
       inputs.forEach((i) => {

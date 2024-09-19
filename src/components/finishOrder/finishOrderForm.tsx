@@ -114,7 +114,7 @@ export default function FinishPurchaseForm({...props}: props) {
             })
             return
           }
-          var cursor: string | undefined
+          let cursor: string | undefined
           
           if(data?.clothing) {
             const lastIndex = data.clothing.length
@@ -259,8 +259,8 @@ export default function FinishPurchaseForm({...props}: props) {
 
   async function calcFreight(): Promise<number | null> {
     if(data && data.clothing && address) {
-      let clothingIds: string[] = []
-      let productQuantity: number[] = []
+      const clothingIds: string[] = []
+      const productQuantity: number[] = []
       data.clothing.map(({roupa_id,quantidade}) => {
         clothingIds.push(roupa_id)
         productQuantity.push(quantidade)
@@ -442,7 +442,7 @@ export default function FinishPurchaseForm({...props}: props) {
         if(totalPrice >= 200) {
           vlrFrete = 0
         }
-        let newCard = card
+        const newCard = card
         const tp = Math.round((totalPrice+vlrFrete)*100) / 100
         if (paymentType == "debit_card") {
           const id = await handle3DS(Math.round(tp * 100))
@@ -559,7 +559,7 @@ export default function FinishPurchaseForm({...props}: props) {
       }
       setLoad(true)
       let tp:number = 0
-      let clothing: clothing[] = []
+      const clothing: clothing[] = []
       if(retryPaymentData && typeof retryPaymentData.data == "object" && retryPaymentData.data) {
         retryPaymentData.data.pedido.pacotes.map(({...packages}) => {
           packages.roupa.map(({...infos}) => {
@@ -605,7 +605,7 @@ export default function FinishPurchaseForm({...props}: props) {
       if(paymentTypeRetryPayment != payment) {
         newPayment = payment
       }
-      let newCard = card
+      const newCard = card
       if (paymentType == "debit_card") {
         const id = await handle3DS(Math.round(tp * 100))
         if(typeof id != "string" || id == "") {

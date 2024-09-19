@@ -197,7 +197,7 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
       }
       const active = formRef.current.querySelector("#active"+index)
       let updateClothing: boolean = false
-      let updateClothingParams: updateClothingParams = { 
+      const updateClothingParams: updateClothingParams = { 
         id: data.id
       }
       if(data.nome != dataForm.nome) {
@@ -247,8 +247,8 @@ export default function Clothing({data,index,cookieName,cookieVal,setLoad,setPop
 
       let newColors: Array<string> | undefined
       let updateClothingInventory: boolean = false
-      let updateClothingInventoryParams: Array<updateInventory> = []
-      let changedInventory: Array<number> = []
+      const updateClothingInventoryParams: Array<updateInventory> = []
+      const changedInventory: Array<number> = []
       const seenColors = new Set()
       let error: boolean = false
       data.inventario.forEach(({...inventory}, indexInventory) => {

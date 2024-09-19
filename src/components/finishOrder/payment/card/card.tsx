@@ -98,7 +98,7 @@ const schema = z.object({
     let double = true
     for (let i = 0; i < number.length; i++) {
       if(double) {
-        let n = String(Number(number[i])*2)
+        const n = String(Number(number[i])*2)
         for (let j = 0; j < n.length; j++) {
           sum += Number(n[j])
         }
@@ -203,8 +203,8 @@ export default function Card({ setPaymentType,paymentType,showCard,setError,setL
 
   async function handleForm(data: FormProps) {
     data.cardNumber = data.cardNumber.replaceAll("-","").trim()
-    let expMonth = Number(data.expMonth)
-    let installments = Number(data.installments)
+    const expMonth = Number(data.expMonth)
+    const installments = Number(data.installments)
     if(!isNaN(expMonth) && !isNaN(installments)) {
       setCard({
         nome: data.holder,

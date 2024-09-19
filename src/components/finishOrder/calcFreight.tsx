@@ -59,8 +59,8 @@ export default function CalcFreightForm({ setDelivery, delivery, end, load, setL
       setError(null)
       setPopupError(false)
       setLoad(true)
-      let clothingIds: string[] = []
-      let productQuantity: number[] = []
+      const clothingIds: string[] = []
+      const productQuantity: number[] = []
       if(clothing) {
         clothing.map(({roupa_id,quantidade}) => {
           clothingIds.push(roupa_id)
