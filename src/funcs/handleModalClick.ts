@@ -58,12 +58,12 @@ export default function handleModalClick(
    ) {
     button.style.pointerEvents = 'initial';
     modalRef.current.style.display = 'none';
-   }
+  }
+  callbackOut && callbackOut();
+  document.removeEventListener('click', handleCloseModal);
   }, 500);
   if (section instanceof HTMLElement) {
    section.style.opacity = '1';
   }
-  callbackOut && callbackOut();
-  document.removeEventListener('click', handleCloseModal);
  }
 }

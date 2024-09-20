@@ -148,6 +148,7 @@ export default function UpdateProfileForm({
    senha: data.password,
    token: token,
   });
+ 
   if (res == 'senha errada') {
    setResponseError('senha inválida');
   }
@@ -162,9 +163,12 @@ export default function UpdateProfileForm({
    router.push('/auth/entrar');
    return;
   }
-
-  let reload = false;
+ 
   if (res == 200) {
+    if (data.email != '') {
+      window.location.reload()
+      return
+    }
    setData((d) => {
     if (d?.data) {
      return {
@@ -177,20 +181,19 @@ export default function UpdateProfileForm({
       },
      };
     }
-    reload = true;
-    if (!reload) {
-     window.location.reload();
-    }
+    window.location.reload();
     return d;
    });
    closeRef.current instanceof HTMLButtonElement && closeRef.current.click();
   }
+  
   setLoad(false);
  }
 
  return (
   <form
-   className={`${styles.form} ${load && styles.lowOpacity}`}
+   className={`${styles.form}`}
+   id={`${load && styles.lowOpacity1}`}
    ref={modalRef}
    tabIndex={0}
    onSubmit={handleSubmit(handleForm)}

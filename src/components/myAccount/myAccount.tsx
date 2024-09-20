@@ -255,7 +255,7 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
         )}
         {!data.data.verificado && (
          <Link href="/auth/validar-contato" className={styles.link}>
-          Confirmar email
+          Validar email
          </Link>
         )}
         {addressData && (

@@ -128,7 +128,7 @@ export default function ChangePasswordForm({
  return (
   <form
    className={`${styles.form}`}
-   id={`${load && styles.lowOpacity}`}
+   id={`${load && styles.lowOpacity2}`}
    ref={modalRef}
    tabIndex={0}
    onSubmit={handleSubmit(handleForm)}

@@ -32,9 +32,8 @@
  text-align: center;
 }
 
-.lowOpacity{
+.lowOpacity, #lowOpacity1,#lowOpacity2 {
  opacity: 0.1;
- pointer-events: none;
 }
 
 .vals p {
