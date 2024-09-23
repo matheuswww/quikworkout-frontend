@@ -90,6 +90,7 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
    const cookie = cookieName + '=' + cookieVal;
    const res = await GetAddress(cookie);
    if (typeof res.status == 'number' && res.status == 401) {
+    await deleteCookie(cookieName);
     router.push('/auth/entrar');
     return;
    }
@@ -248,7 +249,7 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
            </Link>
           </>
          )
-        ) : (
+        ) : data.data.verificado && (
          <Link href="/auth/criar-dois-fatores" className={styles.link}>
           Adicionar autenticação de dois fatores
          </Link>
