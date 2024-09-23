@@ -60,7 +60,7 @@ export default function CheckTwoAuthCodeForm({ ...props }: props) {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError(res);
+   setRecaptchaError("preencha o recaptcha novamente");
    setLoad(false);
    //@ts-ignore
    window.grecaptcha.reset();

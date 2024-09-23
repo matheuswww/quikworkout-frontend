@@ -76,7 +76,7 @@ export default function SignupForm() {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError(res);
+   setRecaptchaError("preencha o recaptcha novamente");
    //@ts-ignore
    window.grecaptcha.reset();
   }

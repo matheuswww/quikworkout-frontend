@@ -557,7 +557,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     });
 
     if (typeof res == 'string' && res == 'recaptcha inválido') {
-     setRecaptchaError(res);
+     setRecaptchaError("preencha o recaptcha novamente");
      //@ts-ignore
      window.grecaptcha.reset();
     }
@@ -744,7 +744,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     return;
    }
    if (typeof res == 'string' && res == 'recaptcha inválido') {
-    setRecaptchaError(res);
+    setRecaptchaError("preencha o recaptcha novamente");
     //@ts-ignore
     window.grecaptcha.reset();
    }
