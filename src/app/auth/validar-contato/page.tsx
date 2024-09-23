@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
- title: 'validação de contato',
+ title: 'Validação de contato',
  description: 'validação de contato',
  keywords:
   'validar contato, quikworkout, validar contato quikworkout, email, senha, validar email, validar senha',
