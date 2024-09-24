@@ -11,12 +11,19 @@
 }
 
 .main section {
+  margin-top: 60px;
+  display: grid;
+}
+
+.content {
  display: grid;
- margin-top: 60px;
  transition: 0.5s;
  background: #0a0a0a;
  padding: 15px 30px;
  border-radius: 10px;
+ justify-self: center;
+ height: max-content;
+ align-self: center;
 }
 
 .activeButton {
@@ -529,7 +536,7 @@
   width: 325px;
  }
 
- .main section {
+ .content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -537,6 +544,12 @@
   padding: 15px 5px;
   margin-top: 0px;
  }
+}
+
+@media (min-width: 950px) {
+  .main section {
+    margin-top: 35px;
+  }
 }
 
 @media (min-width: 1130px) {
@@ -576,14 +589,14 @@
   width: 370px;
  }
 
- .main section {
+ .content {
   width: 915px;
   margin-top: 0px;
  }
 }
 
 @media (max-width: 380px) {
- .main section {
+ .content {
   padding: 15px 5px;
  }
 }

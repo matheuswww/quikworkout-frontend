@@ -9,7 +9,7 @@ interface params {
  cursor?: string;
  precoMaximo?: number;
  precoMinimo?: number;
- Limite?: number;
+ limite?: number;
  corPrincipal?: string;
  m?: string;
  f?: string;
@@ -95,8 +95,8 @@ export default async function GetAllClothing(
 function getParams(params: params): string {
  let urlParams: string = '?';
 
- if (params.Limite !== undefined) {
-  urlParams += 'limite=' + params.Limite + '&';
+ if (params.limite !== undefined) {
+  urlParams += 'limite=' + params.limite + '&';
  }
  if (params.categoria !== undefined) {
   urlParams += 'categoria=' + params.categoria + '&';

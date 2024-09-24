@@ -102,8 +102,8 @@ export default function Menu(props: props) {
      <Logo
       src="/img/logo.png"
       alt="logo da quikworkout"
-      width={140}
-      height={50}
+      width={130}
+      height={45}
       className={styles.logo}
      />
     </Link>

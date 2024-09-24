@@ -420,10 +420,10 @@
  }
 }
 
-@media (max-width: 800px) {
- .section {
-  margin-top: 60px;
- }
+@media (max-width: 950px) {
+  .section {
+    margin-top: 65px;
+  }
 }
 
 .item a:active,

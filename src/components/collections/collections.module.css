@@ -88,15 +88,6 @@
  background-color: transparent;
 }
 
-.card:focus {
- transition: 0.5s;
- transform: translateY(-5px);
-}
-
-.card:focus img {
- opacity: 50%;
-}
-
 @media (min-width: 405px) {
  .card img {
   width: 180px;

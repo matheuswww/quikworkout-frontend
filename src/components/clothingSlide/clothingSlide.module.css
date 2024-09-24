@@ -1,0 +1,131 @@
+
+  .content {
+  position: relative;
+  max-width: 1000px;
+  height: max-content;
+  display: grid;
+  margin-top: 20px;
+ }
+ 
+ .card {
+  position: relative;
+  display: block;
+  background-color: transparent;
+  margin-top: 12px;  
+  margin-left: 11px;
+  -webkit-tap-highlight-color: transparent;
+  transition: 0.5s;
+  transform: translateY(5px);
+  width: max-content;
+  height: max-content;
+ }
+ 
+ .clothing {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+ }
+ 
+ .collections {
+  max-width: 1000px;
+  height: max-content;
+  display: grid;
+  justify-content: center;
+ }
+ 
+ .h2 {
+  position: relative;
+  margin-left: 12px;
+ }
+ 
+ .product {
+  height: 100%;
+  list-style: none;
+ }
+ 
+ .card img {
+  border-radius: 10px;
+ }
+ 
+ .slide {
+  height: 318px;
+  display: inline-flex;
+  overflow: hidden;
+  justify-content: center;
+  position: relative;
+ }
+ 
+ .wrapper {
+  height: 102%;
+  overflow: hidden;
+  max-width: 932px;
+ }
+ 
+ .card {
+  list-style: none;
+  text-decoration: none;
+ }
+ 
+ .card img {
+  object-fit: cover;
+ }
+ 
+ .wrapper ul li:last-child a {
+  margin-right: 11px;
+ }
+ 
+ .card:hover {
+  transition: 0.5s;
+  transform: translateY(-5px);
+ }
+
+ .clothingInfos {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: rgb(3 2 2 / 92%);
+  bottom: 64px;
+  width: 215px;
+  height: 60px;
+  border-radius: 0px 50px 0px 9px;
+  border: 1px solid black;
+ }
+ 
+ .name {
+  font-family: var(--inkfree);
+  font-size: 1.2rem;
+  padding-left: 20px;
+  color: white;
+ }
+ 
+ .price {
+  padding-top: 2px;
+  padding-left: 20px;
+  font-size: 0.8rem;
+  font-family: var(--interSemiBold);
+  color: #b4b4b4;
+ }
+ 
+ .lowOpacity {
+  opacity: .1;
+ }
+
+ .load {
+  height: 100%;
+  width: 100%;
+  background-color: red;
+  height: max-content;
+  margin-top: 64px;
+  height: 318px;
+ }
+
+ @media (min-width: 400px) {
+  .h2 {
+   font-size: 1.2rem;
+  }
+ }
+ 
