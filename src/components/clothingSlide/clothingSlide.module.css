@@ -14,8 +14,6 @@
   margin-top: 12px;  
   margin-left: 11px;
   -webkit-tap-highlight-color: transparent;
-  transition: 0.5s;
-  transform: translateY(5px);
   width: max-content;
   height: max-content;
  }
@@ -75,11 +73,6 @@
  
  .wrapper ul li:last-child a {
   margin-right: 11px;
- }
- 
- .card:hover {
-  transition: 0.5s;
-  transform: translateY(-5px);
  }
 
  .clothingInfos {

@@ -78,16 +78,6 @@
  margin-right: 11px;
 }
 
-.card:hover {
- transition: 0.5s;
- transform: translateY(-5px);
-}
-
-.card:hover img {
- opacity: 60%;
- background-color: transparent;
-}
-
 @media (min-width: 405px) {
  .card img {
   width: 180px;

@@ -45,13 +45,15 @@ const SkeletonImage = React.forwardRef<
 
  function handleLoad(event: React.SyntheticEvent<HTMLImageElement>) {
   event.currentTarget.style.opacity = 'revert-layer';
-  setLoad(false);
+  setTimeout(() => {
+    setLoad(false)
+  }, 1500);
  }
 
  return (
   <>
-   <Image {...props} ref={ref} onLoad={handleLoad} />
-   {load && <span className={`${load && styles.skeleton}`}></span>}
+   <Image style={{opacity: "0"}} {...props} ref={ref} onLoad={handleLoad} />
+   {load && <span className={`${styles.skeleton}`}></span>}
   </>
  );
 });

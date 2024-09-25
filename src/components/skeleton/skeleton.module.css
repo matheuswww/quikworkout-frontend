@@ -10,9 +10,11 @@
  );
  background-color: #0e0e0e;
  background-size: 200%;
- animation: skeleton 1.5s infinite linear;
+ animation: skeleton 1s infinite linear;
  border-radius: 7px;
  z-index: 2;
+ will-change: background-position;
+ transform: translateZ(0);
 }
 
 @keyframes skeleton {

@@ -44,7 +44,7 @@
 
 .clothing {
  object-fit: cover;
- border-radius: 5px;
+ border-radius: 7px;
  -webkit-user-drag: none;
  -webkit-touch-callout: none;
  -webkit-user-select: none;
@@ -69,7 +69,6 @@
  justify-self: center;
  text-align: center;
  position: relative;
- animation: enter 0.5s forwards;
 }
 
 .label {
@@ -102,17 +101,6 @@
  font-family: var(--interSemiBold);
  font-size: 0.8rem;
  margin-top: 5px;
-}
-
-@keyframes enter {
- from {
-  opacity: 0;
-  transform: translate3d(0, -50px, 0);
- }
- to {
-  opacity: 1;
-  transform: translate3d(0, 0px, 0) !important;
- }
 }
 
 .product {
@@ -263,10 +251,6 @@
 
 .indexImages {
  align-self: center;
-}
-
-.indexImages.load {
- animation: enter 0.5s forwards;
 }
 
 .indexImages li button img {

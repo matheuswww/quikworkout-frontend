@@ -13,9 +13,11 @@
  background-size: 200%;
  width: 100%;
  height: 100%;
- animation: skeleton 1.5s infinite linear;
+ animation: skeleton 1s infinite linear;
  border-radius: 7px;
  z-index: 2;
+ will-change: background-position;
+ transform: translateZ(0);
 }
 
 @keyframes skeleton {

@@ -8,7 +8,7 @@ import styles from './clothing.module.css';
 import stylesLoad from './clothingLoad.module.css';
 import { notFound, useRouter } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
-import { slideWithControl } from '@/funcs/slideWithControll';
+import { slideWithControll } from '@/funcs/slideWithControll';
 import Skeleton from '../skeleton/skeleton';
 import AddClothingToCart from '@/api/clothing/addClothingToCart';
 import SpinLoading from '../spinLoading/spinLoading';
@@ -262,7 +262,6 @@ export default function Clothing({ ...props }: props) {
  useEffect(() => {
   if (data == null) {
    (async function () {
-    setLoad(true);
     const res = await GetClothing(props.id);
     res.clothing?.inventario.map(({ ...inventory }) => {
      if (inventory.corPrincipal && color == null) {
@@ -275,7 +274,6 @@ export default function Clothing({ ...props }: props) {
     if (res.status === 500) {
      setPopUpError(true);
     }
-    setLoad(false);
     window.innerWidth >= 800 && setWindowWidth(true);
     window.addEventListener('resize', () => {
      if (window.innerWidth >= 800 && indexImages.current?.firstChild == null) {
@@ -308,7 +306,7 @@ export default function Clothing({ ...props }: props) {
      }
     }
    });
-   slideWithControl(
+   slideWithControll(
     slide.current,
     images.current,
     indexImages.current?.childNodes,
