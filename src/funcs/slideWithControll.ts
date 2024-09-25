@@ -9,7 +9,7 @@ let item = 0;
 let dist: Dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 };
 let index: HTMLElement | null = null;
 
-export function slideWithControl(
+export function slideWithControll(
  slide: HTMLElement,
  wrapper: HTMLElement,
  thumbs: NodeListOf<ChildNode> | undefined,

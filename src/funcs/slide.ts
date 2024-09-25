@@ -23,7 +23,7 @@ export default class slide {
  }
 
  updatePosition(clientX: number) {
-  const distX = (clientX - this.dist.startX) * 1.5;
+  const distX = (clientX - this.dist.startX) * 1.5;  
   this.dist.movement = distX;
   const limitLeft = 0;
   const limitRight = -(this.slide.offsetWidth - this.wrapper.offsetWidth);
@@ -35,13 +35,11 @@ export default class slide {
   this.moveSlide(newPosition);
  }
 
- onStart(event: MouseEvent | TouchEvent) {
-  event.preventDefault();
-  let moveType: 'mousemove' | 'touchmove';
-  if (event instanceof MouseEvent) {
+ onStart(event: MouseEvent | TouchEvent) {  
+   let moveType: 'mousemove' | 'touchmove';
+   if (event instanceof MouseEvent) {
    event.preventDefault();
    this.dist.startX = event.clientX;
-   this.wrapper.addEventListener('mousemove', this.onMove);
    moveType = 'mousemove';
   } else {
    this.dist.startX = event.changedTouches[0].clientX;
@@ -55,6 +53,7 @@ export default class slide {
    this.updatePosition(event.clientX);
   } else {
    this.updatePosition(event.changedTouches[0].clientX);
+   this.dist.movement = 0
   }
  }
 
@@ -63,10 +62,19 @@ export default class slide {
   if (event instanceof MouseEvent) {
    moveType = 'mousemove';
   } else {
-   moveType = 'touchmove';
+    moveType = 'touchmove';
   }
-  this.wrapper.removeEventListener(moveType, this.onMove);
+  this.wrapper.removeEventListener(moveType, this.onMove)
   this.dist.finalPosition = this.dist.movePosition;
+  if (Math.abs(this.dist.movement) > 0) {
+    this.wrapper.addEventListener('click', this.preventClick)
+   }
+  }
+  
+  preventClick(event: MouseEvent) {
+  event.preventDefault()
+  this.dist.movement = 0
+  this.wrapper.removeEventListener('click', this.preventClick)
  }
 
  addSlideEvents() {
@@ -80,6 +88,7 @@ export default class slide {
   this.onStart = this.onStart.bind(this);
   this.onMove = this.onMove.bind(this);
   this.onEnd = this.onEnd.bind(this);
+  this.preventClick = this.preventClick.bind(this);
  }
 
  init() {
