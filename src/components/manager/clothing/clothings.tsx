@@ -118,6 +118,8 @@ export default function Clothings({ ...props }: props) {
       ? data.clothing.map((clothing, index) => {
          return (
           <Clothing
+           allData={data.clothing}
+           setData={setData}
            setSuccess={setSuccess}
            load={load}
            success={success}

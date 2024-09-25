@@ -1,6 +1,6 @@
-import { clothing } from '@/api/manager/clothing/getClothing';
+import { clothing, getClothing } from '@/api/manager/clothing/getClothing';
 import styles from './clothing.module.css';
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import SkeletonImage from '@/components/skeletonImage/skeletonImage';
 import { slidesWithControll } from '@/funcs/slidesWithControll';
 import Image from 'next/image';
@@ -34,6 +34,8 @@ interface props {
  success: boolean;
  cookieName?: string;
  cookieVal?: string;
+ setData: Dispatch<SetStateAction<getClothing | null>>
+ allData: clothing[] | null
 }
 
 const schema = z.object({
@@ -84,11 +86,14 @@ export default function Clothing({
  success,
  load,
  setSuccess,
+ setData,
+ allData,
 }: props) {
  const router = useRouter();
  const [color, setColor] = useState<string | null>(null);
  const [mainColor, setMainColor] = useState<string | null>(null);
  const [responseError, setResponseError] = useState<string | null>(null);
+ const [colorChanged, setColorChanged] = useState<boolean>(false)
  const slide = useRef<HTMLUListElement | null>(null);
  const images = useRef<HTMLDivElement | null>(null);
  const modalColorRef = useRef<HTMLDivElement | null>(null);
@@ -130,12 +135,13 @@ export default function Clothing({
 
  useEffect(() => {
   data.inventario.map(({ corPrincipal, cor }) => {
-   if (corPrincipal && color == null) {
+   if (corPrincipal) {
     setColor(cor);
     setMainColor(cor);
    }
   });
- }, []);
+  setColorChanged(false)
+ }, [colorChanged]);
 
  function handleCheckBoxGender(val: string, index: number) {
   const m = document.querySelector('#M' + index);
@@ -216,7 +222,26 @@ export default function Clothing({
    closeModalDeleteClothingRef.current.click();
   }
   if (res == 200) {
-   await refresh('/');
+    const newAllData = allData?.filter((_,i) => {
+      if(i == index) {
+        return false
+      }
+      return true
+    })
+    if(newAllData && newAllData?.length > 1) {
+      setData({
+        clothing: newAllData,
+        status: 200,
+      })
+    } else {
+      setData({
+        clothing: null,
+        status: 404,
+      })
+    }
+    setSuccess(true)
+    setLoad(false)
+    return
   }
   window.location.reload();
  }
@@ -301,6 +326,7 @@ export default function Clothing({
    const changedInventory: Array<number> = [];
    const seenColors = new Set();
    let error: boolean = false;
+   let haveNewColor: boolean = false;
    data.inventario.forEach(({ ...inventory }, indexInventory) => {
     if (error) {
      return;
@@ -323,7 +349,6 @@ export default function Clothing({
      seenColors.add(color.value);
      seenColors.add(inventory.cor);
     }
-
     if (
      mainColor instanceof HTMLInputElement &&
      color instanceof HTMLInputElement &&
@@ -345,26 +370,31 @@ export default function Clothing({
      updateClothingInventory = true;
      updateClothingInventoryParams.push({
       cor: inventory.cor,
-      corPrincipal:
-       prevMainInventory != mainInventory &&
-       (mainInventory == indexInventory || prevMainInventory == indexInventory)
-        ? mainColor.checked
-        : inventory.corPrincipal,
+      corPrincipal: mainColor.checked,
       p: Number(p.value) - inventory.p,
       m: Number(m.value) - inventory.m,
       g: Number(g.value) - inventory.g,
       gg: Number(gg.value) - inventory.gg,
-      imgDesc: inventory.alt,
+      imgDesc: "",
      });
      changedInventory.push(indexInventory);
+     if (newColors == undefined) {
+      newColors = [];
+     }
      if (color.value != inventory.cor) {
-      if (newColors == undefined) {
-       newColors = [];
-      }
+      haveNewColor = true
       newColors.push(color.value);
+     } else {
+      newColors.push("")
      }
     }
    });
+   if(error) {
+    return
+   }
+   if(!haveNewColor) {
+    newColors = undefined
+   }
    if (responseError) {
     return;
    }
@@ -422,10 +452,37 @@ export default function Clothing({
   }
   if (res == 200) {
    await refresh('/');
-
    setSuccess(true);
+   const newData = data
+   const newAllData = allData
+   if(updateClothing.active) {
+    newData.ativo = updateClothing.active
+   }
+   if(updateClothing.categoria) {
+    newData.categoria = updateClothing.categoria
+   }
+   if(updateClothing.descricao) {
+    newData.descricao = updateClothing.descricao
+   }
+   if(updateClothing.material) {
+    newData.material = updateClothing.material
+   }
+   if(updateClothing.nome) {
+    newData.nome = updateClothing.nome
+   }
+   if(updateClothing.preco) {
+    newData.preco = updateClothing.preco
+   }
+   if(updateClothing.sexo) {
+    newData.sexo = updateClothing.sexo
+   }
+   newAllData && (newAllData[index] = newData)
+   setData({
+    clothing: newAllData,
+    status: 200
+   })
   }
-  setLoad(false);
+  setLoad(false)
  }
 
  async function handleUpdateClothingInventory(
@@ -435,6 +492,7 @@ export default function Clothing({
   changedInventory: Array<number>,
  ) {
   setLoad(true);
+  
   const res = await UpdateClothingInventory(
    cookie,
    updateClothingInventoryParam,
@@ -452,14 +510,34 @@ export default function Clothing({
   }
   if (res == 200) {
    await refresh('/');
-
-   setSuccess(true);
-   updateClothingInventory.map((i, indexInventory) => {
-    data.inventario[changedInventory[indexInventory]].p = i.p;
-    data.inventario[changedInventory[indexInventory]].m = i.m;
-    data.inventario[changedInventory[indexInventory]].g = i.g;
-    data.inventario[changedInventory[indexInventory]].gg = i.gg;
-   });
+   const newDataInventory = data
+   const newAllData = allData
+    changedInventory.map((indexInventory,indexUpdateInventory) => {
+      if(updateClothingInventoryParam.novoNomeCor && updateClothingInventoryParam.novoNomeCor[indexUpdateInventory]) {
+        setColorChanged(true)
+        newDataInventory.inventario[indexInventory].cor = updateClothingInventoryParam.novoNomeCor[indexUpdateInventory]
+      }
+      if(updateClothingInventory[indexUpdateInventory].p != data.inventario[indexInventory].p) {
+        newDataInventory.inventario[indexInventory].p = data.inventario[indexInventory].p + updateClothingInventory[indexUpdateInventory].p
+      }
+      if(updateClothingInventory[indexUpdateInventory].m != data.inventario[indexInventory].m) {
+        newDataInventory.inventario[indexInventory].m = data.inventario[indexInventory].m + updateClothingInventory[indexUpdateInventory].m
+      }
+      if(updateClothingInventory[indexUpdateInventory].g != data.inventario[indexInventory].g) {
+        newDataInventory.inventario[indexInventory].g = data.inventario[indexInventory].g + updateClothingInventory[indexUpdateInventory].g
+      }
+      if(updateClothingInventory[indexUpdateInventory].gg != data.inventario[indexInventory].gg) {
+        newDataInventory.inventario[indexInventory].gg = data.inventario[indexInventory].gg + updateClothingInventory[indexUpdateInventory].gg
+      }
+      newDataInventory.inventario[indexInventory].corPrincipal = updateClothingInventory[indexUpdateInventory].corPrincipal
+    })
+  
+  newAllData && (newAllData[index] = newDataInventory)  
+  setData({
+    clothing: newAllData,
+    status: 200
+  })
+  setSuccess(true);
   }
   setLoad(false);
  }
@@ -523,13 +601,11 @@ export default function Clothing({
      >
       {data.inventario.map(({ imagens, alt, cor }) => {
        return (
-        color == cor &&
-        imagens?.map((src, index) => {
-         return (
-          <li className={styles.product} key={src}>
+        color == cor && imagens && imagens[0] &&
+          <li className={styles.product} key={imagens[0]}>
            {
             <SkeletonImage
-             src={src}
+             src={imagens[0]}
              alt={alt}
              loading="lazy"
              width={290}
@@ -542,9 +618,9 @@ export default function Clothing({
             />
            }
           </li>
-         );
-        })
-       );
+     
+      
+       )
       })}
      </ul>
     </div>

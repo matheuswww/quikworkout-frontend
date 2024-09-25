@@ -3,6 +3,7 @@ import styles from './clothing.module.css';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { inventario } from '@/api/manager/clothing/getClothing';
+import { SyntheticEvent } from 'react';
 
 const schema = z.object({
  cor: z
@@ -42,8 +43,8 @@ export default function Inventory({
   register,
   formState: { errors },
  } = useForm<FormProps>({
-  mode: 'onChange',
-  reValidateMode: 'onChange',
+  mode: 'onBlur',
+  reValidateMode: 'onBlur',
   resolver: zodResolver(schema),
  });
 
@@ -66,6 +67,17 @@ export default function Inventory({
   }
  }
 
+ function handleChangeValue( 
+  event: SyntheticEvent,
+  itemIndex: number,
+  index: number,
+  val: string,) {
+  const el = document.querySelector('#'+val + index + itemIndex)
+  if (el instanceof HTMLInputElement && event.target instanceof HTMLInputElement) {
+    el.value = event.target.value
+  }
+ }
+
  return (
   <div key={'inventory' + index + indexInventory} className={styles.inventory}>
    <div className={styles.checkbox}>
@@ -85,6 +97,7 @@ export default function Inventory({
     id={'color' + index + indexInventory}
     defaultValue={inventory.cor}
     {...register('cor')}
+     onChange={(e) => handleChangeValue(e, indexInventory, index, "color")}
    />
    {errors.cor?.message && <p className={styles.error}>{errors.cor.message}</p>}
    <label htmlFor={'P' + index + indexInventory}>P</label>
@@ -93,6 +106,7 @@ export default function Inventory({
     defaultValue={inventory.p ? inventory.p : undefined}
     id={'P' + index + indexInventory}
     {...register('p')}
+     onChange={(e) => handleChangeValue(e, indexInventory, index, "P")}
    />
    {errors.p?.message && <p className={styles.error}>{errors.p.message}</p>}
    <label htmlFor={'M' + index + indexInventory}>M</label>
@@ -101,6 +115,7 @@ export default function Inventory({
     defaultValue={inventory.m ? inventory.m : undefined}
     id={'M' + index + indexInventory}
     {...register('m')}
+     onChange={(e) => handleChangeValue(e, indexInventory, index, "M")}
    />
    {errors.m?.message && <p className={styles.error}>{errors.m.message}</p>}
    <label htmlFor={'G' + index + indexInventory}>G</label>
@@ -109,6 +124,7 @@ export default function Inventory({
     defaultValue={inventory.g ? inventory.g : undefined}
     id={'G' + index + indexInventory}
     {...register('g')}
+     onChange={(e) => handleChangeValue(e, indexInventory, index, "G")}
    />
    {errors.g?.message && <p className={styles.error}>{errors.g.message}</p>}
    <label htmlFor={'GG' + index + indexInventory}>GG</label>
@@ -117,6 +133,7 @@ export default function Inventory({
     defaultValue={inventory.gg ? inventory.gg : undefined}
     {...register('gg')}
     id={'GG' + index + indexInventory}
+     onChange={(e) => handleChangeValue(e, indexInventory, index, "GG")}
    />
    {errors.gg?.message && <p className={styles.error}>{errors.gg.message}</p>}
   </div>
