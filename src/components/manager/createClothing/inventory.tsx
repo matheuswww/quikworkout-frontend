@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './createClothing.module.css';
-import { Dispatch, MutableRefObject, SetStateAction, useState } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from 'react';
 import { inventory } from './createClothing';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,8 @@ interface props {
  inventory: inventory[] | null;
  modalRef: MutableRefObject<HTMLFormElement | null>;
  closeRef: MutableRefObject<HTMLButtonElement | null>;
+ setReset: Dispatch<SetStateAction<boolean>>
+ resetForm: boolean
 }
 
 const schema = z.object({
@@ -80,10 +82,13 @@ export default function Inventory({
  inventory,
  closeRef,
  modalRef,
+ setReset,
+ resetForm
 }: props) {
  const {
   register,
   handleSubmit,
+  reset,
   formState: { errors },
  } = useForm<FormProps>({
   mode: 'onSubmit',
@@ -155,6 +160,13 @@ export default function Inventory({
    }
   }
  }
+
+ useEffect(() => {
+  if(resetForm) {
+    reset()
+    setReset(false)
+  }
+ },[resetForm])
 
  return (
   <>

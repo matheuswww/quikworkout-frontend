@@ -9,7 +9,7 @@ const schema = z.object({
  cor: z
   .string()
   .min(1, 'é necessário pelo menos 1 caracter')
-  .max(25, 'cor deve ter no maxímo 25 caracteres'),
+  .max(15, 'cor deve ter no maxímo 15 caracteres'),
  p: z.string().refine((val) => !(Number(val) < 0) && !isNaN(Number(val)), {
   message: 'valor inválido',
  }),
@@ -99,7 +99,7 @@ export default function Inventory({
     {...register('cor')}
      onChange={(e) => handleChangeValue(e, indexInventory, index, "color")}
    />
-   {errors.cor?.message && <p className={styles.error}>{errors.cor.message}</p>}
+   {errors.cor?.message && <p className={styles.error} id="error">{errors.cor.message}</p>}
    <label htmlFor={'P' + index + indexInventory}>P</label>
    <input
     type="number"
@@ -108,7 +108,7 @@ export default function Inventory({
     {...register('p')}
      onChange={(e) => handleChangeValue(e, indexInventory, index, "P")}
    />
-   {errors.p?.message && <p className={styles.error}>{errors.p.message}</p>}
+   {errors.p?.message && <p className={styles.error} id="error">{errors.p.message}</p>}
    <label htmlFor={'M' + index + indexInventory}>M</label>
    <input
     type="number"
@@ -117,7 +117,7 @@ export default function Inventory({
     {...register('m')}
      onChange={(e) => handleChangeValue(e, indexInventory, index, "M")}
    />
-   {errors.m?.message && <p className={styles.error}>{errors.m.message}</p>}
+   {errors.m?.message && <p className={styles.error} id="error">{errors.m.message}</p>}
    <label htmlFor={'G' + index + indexInventory}>G</label>
    <input
     type="number"
@@ -135,7 +135,7 @@ export default function Inventory({
     id={'GG' + index + indexInventory}
      onChange={(e) => handleChangeValue(e, indexInventory, index, "GG")}
    />
-   {errors.gg?.message && <p className={styles.error}>{errors.gg.message}</p>}
+   {errors.gg?.message && <p className={styles.error} id="error">{errors.gg.message}</p>}
   </div>
  );
 }

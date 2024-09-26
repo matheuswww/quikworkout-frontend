@@ -239,6 +239,8 @@ export default function Clothing({
         status: 404,
       })
     }
+    await refresh('/');
+    await refresh('/manager-quikworkout/roupas');
     setSuccess(true)
     setLoad(false)
     return
@@ -255,6 +257,10 @@ export default function Clothing({
   setPopupError(false);
   const cookie = cookieName + '=' + cookieVal;
   if (formRef.current instanceof HTMLFormElement) {
+   const err = formRef.current.querySelectorAll("#error")
+   if (err.length > 0) {
+    return
+   }
    const m = formRef.current.querySelector('#M' + index);
    const f = formRef.current.querySelector('#F' + index);
    const unisex = formRef.current.querySelector('#UNISEX' + index);
@@ -452,6 +458,7 @@ export default function Clothing({
   }
   if (res == 200) {
    await refresh('/');
+   await refresh('/manager-quikworkout/roupas');
    setSuccess(true);
    const newData = data
    const newAllData = allData
@@ -510,6 +517,7 @@ export default function Clothing({
   }
   if (res == 200) {
    await refresh('/');
+   await refresh('/manager-quikworkout/roupas');
    const newDataInventory = data
    const newAllData = allData
     changedInventory.map((indexInventory,indexUpdateInventory) => {

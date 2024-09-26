@@ -50,7 +50,9 @@ export default async function GetClothing(
     Cookie: cookie,
    },
    credentials: 'include',
-   cache: 'no-store',
+   next: {
+    revalidate: 60 * 10,
+   },
   }).then((res) => res);
   let status: statusCode;
   if (
