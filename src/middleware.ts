@@ -28,6 +28,11 @@ export default function middleware(request: NextRequest) {
  ) {
   return CheckAdminProfileExist(request);
  }
+ if(
+  url.pathname == '/manager-quikworkout/auth'
+ ) {
+  return CheckAdminProfileCookieNotExist(request);
+ }
 }
 
 function CheckAdminProfileExist(request: NextRequest) {
@@ -39,6 +44,15 @@ function CheckAdminProfileExist(request: NextRequest) {
   request.nextUrl.origin + '/manager-quikworkout/auth',
  );
 }
+
+function CheckAdminProfileCookieNotExist(request: NextRequest) {
+  const cookie = request.cookies.get('adminProfile');
+  console.log(cookie)
+  if (!cookie) {
+   return NextResponse.next();
+  }
+  return NextResponse.redirect(request.nextUrl.origin + '/manager-quikworkout/');
+ } 
 
 function CheckUserProfileCookieNotExist(request: NextRequest) {
  const cookie = request.cookies.get('userProfile');
@@ -91,5 +105,6 @@ export const config = {
   '/manager-quikworkout/',
   '/manager-quikworkout/cancelar-pedido',
   '/manager-quikworkout/roupas',
+  '/manager-quikworkout/auth'
  ],
 };

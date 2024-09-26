@@ -6,7 +6,7 @@ import GetClothing, {
 import SkeletonImage from '@/components/skeletonImage/skeletonImage';
 import styles from './clothing.module.css';
 import stylesLoad from './clothingLoad.module.css';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { slideWithControll } from '@/funcs/slideWithControll';
 import Skeleton from '../skeleton/skeleton';
@@ -26,6 +26,7 @@ import handleModalClick from '@/funcs/handleModalClick';
 import Menu from '../menu/menu';
 import Success from '../successs/success';
 import ClothingSlide from '../clothingSlide/clothingSlide';
+import { apiImg } from '@/api/path';
 
 interface props {
  id: string;
@@ -66,7 +67,7 @@ export default function Clothing({ ...props }: props) {
   reValidateMode: 'onSubmit',
   resolver: zodResolver(schema),
  });
-
+ const searchParams = useSearchParams()
  const router = useRouter();
  const [data, setData] = useState<getClothingByIdResponse | null>(null);
  const [load, setLoad] = useState<boolean>(false);
@@ -264,6 +265,23 @@ export default function Clothing({ ...props }: props) {
    setSize('gg');
   }
  }
+
+ useEffect(() => {
+  let image: string | undefined = undefined
+  try {
+    const imgParam = searchParams.get("img")
+    if(imgParam) {
+      const decodedImage = atob(imgParam)
+      image = decodedImage.startsWith(apiImg) ? decodedImage : undefined
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_) {
+    image = undefined
+  }
+  if(!image) {
+    notFound()
+  }
+},[])
 
  useEffect(() => {
   if (data == null) {

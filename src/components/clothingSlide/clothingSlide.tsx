@@ -16,12 +16,17 @@ interface props {
 export default function ClothingSlide({clothing}:props) {
  const [data, setData] = useState<responseGetAllClothing | null>(null)
  const [load, setLoad] = useState<boolean>(true)
+ const [section,setSection] = useState<HTMLElement | null>(null)
  const slide = useRef<HTMLUListElement | null>(null)
  const wrapper = useRef<HTMLDivElement | null>(null)
 
  useEffect(() => {
   (async function() {
     if(clothing?.clothing) {
+    const sectionEl = document.querySelector("section")  
+    if(sectionEl instanceof HTMLElement && !section) {
+      setSection(sectionEl)
+    }
     let category: string | undefined = undefined
     let material: string | undefined = undefined
     let gender: string | undefined = undefined
@@ -53,12 +58,16 @@ export default function ClothingSlide({clothing}:props) {
         res.status = 404
       }
     }
-    setData(res)
-    if((res.status == 404 || res.status == 500) && !data) {
+    setData(res)      
+    if(res.status == 200) {
+      if(section instanceof HTMLElement) {
+        section.style.marginTop = "revert-layer"
+      }
+    }
+    if((res.status == 404 || res.status == 500)) {
       setTimeout(() => {
         setLoad(false)
         if(window.innerWidth > 800) {
-          const section = document.querySelector("section")        
           if(section instanceof HTMLElement) {
             section.style.marginTop = "0px"
           }
