@@ -9,6 +9,10 @@
  position: absolute;
 }
 
+.container a {
+  height: max-content;
+}
+
 .menu {
  cursor: pointer;
  position: absolute;
