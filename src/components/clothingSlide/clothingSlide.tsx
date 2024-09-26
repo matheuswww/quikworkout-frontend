@@ -33,16 +33,39 @@ export default function ClothingSlide({clothing}:props) {
     } else {
       gender = clothing.clothing.sexo.toUpperCase()
     }
-    const data = await GetAllClothing({
-    limite: 5,
+    const res = await GetAllClothing({
+    limite: 6,
     categoria: category,
     material: material,
     sexo: gender
     })
-    if(data.clothing) {
-      data.clothing.sort(() => Math.random() - 0.5)
+    
+    if(res.clothing) {
+      res.clothing.sort(() => Math.random() - 0.5)
+      res.clothing = res.clothing.filter((d) => {
+        if(d.id == clothing.clothing?.id) {
+          return false
+        }
+        return true
+      })
+      if(res.clothing.length == 0) {
+        res.clothing = null
+        res.status = 404
+      }
     }
-    setData(data)
+    setData(res)
+    if((res.status == 404 || res.status == 500) && !data) {
+      setTimeout(() => {
+        setLoad(false)
+        if(window.innerWidth > 800) {
+          const section = document.querySelector("section")        
+          if(section instanceof HTMLElement) {
+            section.style.marginTop = "0px"
+          }
+        }
+      }, 600);
+      return
+    }
     setLoad(false)
     }
   }())
@@ -114,7 +137,7 @@ export default function ClothingSlide({clothing}:props) {
       })}
      </ul>
     </div>
-   </div> : load && <div aria-label="carregando"><Skeleton className={styles.load} /></div>}
+   </div> : load && <div aria-label="carregando"><Skeleton className={`${styles.load} ${(data?.status == 404 || data?.status == 500) && styles.out}`} /></div>}
   </>
  );
 }

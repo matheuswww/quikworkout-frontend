@@ -6,7 +6,7 @@
   display: grid;
   margin-top: 20px;
  }
- 
+
  .card {
   position: relative;
   display: block;
@@ -114,6 +114,12 @@
   height: max-content;
   margin-top: 64px;
   height: 318px;
+  transition: .5s;
+  opacity: 1;
+ }
+
+ .out {
+  opacity: 0;
  }
 
  @media (min-width: 400px) {
