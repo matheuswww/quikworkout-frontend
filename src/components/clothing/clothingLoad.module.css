@@ -20,7 +20,7 @@
  grid-template-rows: max-content max-content;
  background-color: transparent;
  justify-self: center;
- height: 385px;
+ height: 495px;
  width: 100%;
  justify-content: center;
  padding: 10px;
@@ -35,57 +35,69 @@
 .content {
  margin-top: 10px;
  width: 290px;
- height: 330px;
+ height: 435px;
 }
 
 @media (min-width: 400px) {
  .infos {
-  grid-template-columns: 205px 155px;
+  grid-template-columns: 170px 155px;
+  height: 496px;
  }
 
  .images {
-  margin-top: 45px;
-  width: 360px;
-  height: 495px;
+  width: 290px;
+  height: 460px;
  }
 
  .content {
-  width: 360px;
+  width: 325px;
+  height: 440px;
+  justify-self: center;
+  grid-column: span 2;
+ }
+
+ .price {
+  width: 156px
  }
 }
 
 @media (min-width: 500px) {
  .infos {
   grid-template-columns: 205px 155px;
+  height: 530px;
+ }
+
+ .images {
+  width: 360px;
  }
 
  .content {
-  width: 360px;
+  width: 358px;
+  height: 470px;
  }
 }
 
 @media (min-width: 800px) {
  .infos {
-  grid-template-columns: 170px 155px;
+  grid-template-columns: 168px 155px;
   padding: 0px;
-  height: 420px;
+  height: 470px;
  }
 
  .content {
-  height: 370px;
+  height: 428px;
  }
 
  .images {
-  width: 560px;
-  height: 420px;
+  width: 562px;
+  height: 425px;
   margin-left: 15px;
   margin-top: 0px;
  }
 
  .indexImages {
-  width: 75px;
-  height: 420px;
-  margin-top: -25px;
+  width: 64px;
+  height: 425px;
  }
 
  .name {
@@ -93,14 +105,14 @@
  }
 
  .price {
-  width: 190px;
+  width: 155px;
  }
 }
 
 @media (min-width: 1130px) {
  .images {
   width: 667px;
-  height: 475px;
+  height: 494px;
  }
 
  .content {
@@ -119,7 +131,7 @@
  }
 
  .indexImages {
-  height: 473px;
+  height: 494px;
   margin: 0px;
  }
 }

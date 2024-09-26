@@ -13,6 +13,7 @@
 .main section {
   margin-top: 60px;
   display: grid;
+  transition: .5s;
 }
 
 .content {
