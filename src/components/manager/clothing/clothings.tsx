@@ -70,11 +70,6 @@ export default function Clothings({ ...props }: props) {
       clothing: data.clothing,
       status: 200,
      });
-    } else {
-     setData({
-      clothing: null,
-      status: 404
-     });
     }
     setNewPage(false);
     setTimeout(() => {
