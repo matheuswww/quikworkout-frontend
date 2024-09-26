@@ -13,7 +13,8 @@ type responseErrors =
  | 'cep de destino inválido'
  | 'frete não disponível'
  | 'roupa não encontrada'
- | 'peso maxímo atingido';
+ | 'peso maxímo atingido'
+ | 'cubagem excedida';
 
 export interface calcFreightData {
  vlrFrete: number;
@@ -71,7 +72,8 @@ export default async function CalcFreight(
    (res.message == 'cep de destino inválido' ||
     res.message == 'frete não disponível' ||
     res.message == 'roupa não encontrada' ||
-    res.message == 'peso maxímo atingido')
+    res.message == 'peso maxímo atingido' ||
+    res.message == 'cubagem excedida')
   ) {
    return {
     data: res.message,

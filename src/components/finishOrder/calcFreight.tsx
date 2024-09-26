@@ -134,6 +134,12 @@ export default function CalcFreightForm({
      setFreight(null);
      return;
     }
+    if (res.data == 'cubagem excedida') {
+      setError("cubagem excedida, tente remover alguns items de sua bolsa");
+      setLoad(false);
+      setFreight(null);
+      return;   
+    }
     if (res.data?.vlrFrete) {
      setData(res.data);
      setFreight(formatPrice(res.data.vlrFrete));

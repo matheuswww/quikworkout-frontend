@@ -313,6 +313,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     roupa: clothingIds,
     servico: delivery,
    });
+
    if (res.status == 500) {
     setPopupError(true);
    }
@@ -333,6 +334,9 @@ export default function FinishPurchaseForm({ ...props }: props) {
     setResponseError(
      'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
     );
+   }
+   if (res.data == 'cubagem excedida') {
+    setResponseError("cubagem excedida, tente remover alguns items de sua bolsa");
    }
    if (
     typeof res.data == 'object' &&

@@ -34,7 +34,7 @@ export default function Products({
  setPrivacy,
 }: props) {
  const [products, setProducts] = useState<boolean>(true);
- const productsRef = useRef<HTMLDivElement | null>(null);
+ const errorRef = useRef<HTMLDivElement | null>(null);
 
  useEffect(() => {
   if (freight == null) {
@@ -65,7 +65,7 @@ export default function Products({
 
  useEffect(() => {
   if (responseError) {
-   productsRef.current?.scrollIntoView({
+   errorRef.current?.scrollIntoView({
     behavior: 'smooth',
     block: 'center',
    });
@@ -112,7 +112,7 @@ export default function Products({
      </label>
     </div>
     {products && (
-     <div ref={productsRef} className={styles.products}>
+     <div className={styles.products}>
       {clothing?.map((infos) => {
        return (
         <div
@@ -207,7 +207,7 @@ export default function Products({
      </div>
     )}
     <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
-    {<p className={styles.error}>{responseError}</p>}
+    {<p className={styles.error} ref={errorRef}>{responseError}</p>}
     <div className={styles.privacy}>
      <label htmlFor="privacy">
       Aceitar{' '}

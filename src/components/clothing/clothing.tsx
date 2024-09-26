@@ -200,10 +200,17 @@ export default function Clothing({ ...props }: props) {
     setFreightData(null);
     return;
    }
+   if(res.data == 'cubagem excedida') {
+    setError("cubagem excedida, tente diminuir a quantidade de roupas");
+    setLoad(false);
+    setFreightData(null);
+    return;
+   }
    if (res.data == 'roupa não encontrada') {
     setError(
      'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
     );
+  
     setLoad(false);
     setFreightData(null);
     return;
