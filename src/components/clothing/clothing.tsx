@@ -13,7 +13,6 @@ import Skeleton from '../skeleton/skeleton';
 import AddClothingToCart from '@/api/clothing/addClothingToCart';
 import SpinLoading from '../spinLoading/spinLoading';
 import PopupError from '../popupError/popupError';
-import IndexSlideImage from 'next/image';
 import Counter from '../counter/counter';
 import Sizes from '../sizes/sizes';
 import { ChangeColor, ModalColor } from '../modalColor/modalColor';
@@ -448,15 +447,15 @@ export default function Clothing({ ...props }: props) {
                 id={index.toString()}
                 tabIndex={-1}
               >
-                <IndexSlideImage
-                src={src}
-                aria-hidden="true"
-                loading="lazy"
-                alt={imgDesc}
-                width={290}
-                height={460}
-                key={data.clothing?.id}
-                draggable={false}
+                <SkeletonImage 
+                  src={src}
+                  aria-hidden="true"
+                  loading="lazy"
+                  alt={imgDesc}
+                  width={290}
+                  height={460}
+                  key={data.clothing?.id}
+                  draggable={false}
                 />
               </button>
               }

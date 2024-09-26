@@ -75,6 +75,10 @@
   margin-right: 11px;
  }
 
+ .wrapper ul li a {
+  height: 300px;
+ }
+
  .clothingInfos {
   position: relative;
   display: flex;
