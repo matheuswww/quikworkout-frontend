@@ -12,6 +12,7 @@
 
 .container a {
  height: max-content;
+ width: max-content;
 }
 
 .menu {
