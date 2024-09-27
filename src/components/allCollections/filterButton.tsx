@@ -1,9 +1,12 @@
 'use client';
+import { useRef } from 'react';
 import styles from './filter.module.css';
 
 export default function FilterButton() {
+ const buttonRef = useRef<HTMLButtonElement | null>(null)
  function handleClick() {
   const form = document.querySelector('#filter');
+  buttonRef.current instanceof HTMLButtonElement && (buttonRef.current.disabled = true)
   if (form instanceof HTMLFormElement) {
    if (form.classList.contains(styles.active)) {
     return;
@@ -28,6 +31,7 @@ export default function FilterButton() {
 
  function close(event: MouseEvent) {
   const form = document.querySelector('#filter');
+  buttonRef.current instanceof HTMLButtonElement && (buttonRef.current.disabled = false)
   if (form instanceof HTMLFormElement) {
    if (event.target instanceof HTMLElement) {
     if (
@@ -53,7 +57,7 @@ export default function FilterButton() {
   }
  }
  return (
-  <button className={styles.filterButton} onClick={handleClick}>
+  <button ref={buttonRef} className={styles.filterButton} onClick={handleClick}>
    Filtrar coleções
   </button>
  );
