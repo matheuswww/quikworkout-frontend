@@ -116,6 +116,8 @@ export default function Inventory({
   const g = Number(data.g);
   const gg = Number(data.gg);
   const images: Blob[] = Array.from(data.file);
+  images.reverse()
+  
   let err = false;
   const newImages = images.map((i, index) => {
    let fileType = null;
@@ -135,6 +137,7 @@ export default function Inventory({
    const newFileName = data.cor + index + fileType;
    return new File([i], newFileName, { type: i.type });
   });
+  console.log(newImages)
   if (err) {
    return;
   }
