@@ -53,7 +53,7 @@ const SkeletonImage = React.forwardRef<
  return (
   <>
    <Image style={{opacity: "0"}} {...props} ref={ref} onLoad={handleLoad} />
-   {load && <span className={`${styles.skeleton}`}></span>}
+   {load && <span tabIndex={0} aria-label="carregando imagem" className={`${styles.skeleton}`}></span>}
   </>
  );
 });

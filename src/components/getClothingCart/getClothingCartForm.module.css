@@ -288,6 +288,13 @@
  animation-delay: -0.15s;
 }
 
+.img {
+  position: relative;
+  align-self: center;
+  height: max-content;
+  width: max-content;
+}
+
 @keyframes ldsRing {
  0% {
   transform: rotate(0deg);

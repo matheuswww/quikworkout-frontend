@@ -287,6 +287,7 @@ export default function GetClothingCartForm({ ...props }: props) {
         >
          {data.nome}
         </p>
+        <div className={styles.img}>
         <SkeletonImage
          src={data.imagem}
          alt={data.alt}
@@ -295,6 +296,7 @@ export default function GetClothingCartForm({ ...props }: props) {
          height={85}
          quality={100}
         />
+        </div>
         <div className={styles.infos}>
          <div
           className={`${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}
