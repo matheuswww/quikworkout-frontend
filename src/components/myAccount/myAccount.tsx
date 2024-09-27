@@ -328,8 +328,7 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
                <p>{infos.cep}</p>
               </div>
               <button
-               aria-label="fecha
-                     r"
+               aria-label="fechar"
                type="button"
                disabled={activeModal}
                className={styles.close}
