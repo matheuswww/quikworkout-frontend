@@ -98,6 +98,15 @@
  justify-self: center;
 }
 
+@media (min-width: 380px) {
+  .button,
+  .form input,
+  .textarea,
+  .error{
+    width: 310px;
+  }
+ }
+
 @media (min-width: 475px) {
  .button,
  .form input,
