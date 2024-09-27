@@ -22,6 +22,7 @@ export function slidesWithControll(
   movePosition: 0,
  };
  let index: HTMLElement | null = null;
+ slide.style.willChange = "transform"
  let itemWidth =
   slide.children[0] instanceof HTMLElement ? slide.children[0].offsetWidth : 0;
  let middleOfItem = itemWidth / 2;

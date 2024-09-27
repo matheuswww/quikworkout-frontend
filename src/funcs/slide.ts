@@ -13,7 +13,16 @@ export default class slide {
   this.slide = slide;
   this.wrapper = wrapper;
   this.dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 };
-  window.onresize = () => this.updatePosition(0);
+  this.slide.style.willChange = "transform"
+  window.addEventListener("resize", () => {
+    this.updatePosition(this.slide.offsetWidth)
+    this.dist = {
+      finalPosition: 0,
+      movement: 0,
+      movePosition: 0,
+      startX: 0,
+    }
+  })
   this.init();
  }
 
@@ -49,6 +58,7 @@ export default class slide {
  }
 
  onMove(event: MouseEvent | TouchEvent) {
+  event.preventDefault()
   if (event instanceof MouseEvent) {
    this.updatePosition(event.clientX);
   } else {
