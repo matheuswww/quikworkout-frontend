@@ -530,7 +530,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
       newCard.id3DS = id;
      }
     }
-
+    
     const res = await PayOrder(cookie, {
      bairro: address.bairro,
      cep: address.cep,

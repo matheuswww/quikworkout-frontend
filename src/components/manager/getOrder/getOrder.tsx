@@ -402,13 +402,15 @@ export default function GetOrderAdmin({
          disabled={load}
          className={`${styles.add}`}
          onClick={(event: SyntheticEvent) => {
-          const packageNums = order.pacotes.map(({ ...pacotes }) => {
-           return {
-            package_number: pacotes.numeroPacote,
-           };
-          });
-          setPackageNumbers(packageNums);
-          setOrderId(order.pedido_id);
+          if(orderId != order.pedido_id) {
+            const packageNums = order.pacotes.map(({ ...pacotes }) => {
+              return {
+                package_number: pacotes.numeroPacote,
+              };
+              });
+              setPackageNumbers(packageNums);
+              setOrderId(order.pedido_id);
+          }
           let button: HTMLButtonElement | null = null;
           if (event.target instanceof HTMLImageElement) {
            if (event.target.parentElement instanceof HTMLButtonElement) {

@@ -3,6 +3,7 @@ import React, {
  MutableRefObject,
  SetStateAction,
  SyntheticEvent,
+ useEffect,
  useState,
 } from 'react';
 import styles from './getOrder.module.css';
@@ -45,37 +46,38 @@ export default function UpdateTrackingCodeForm({
   event.preventDefault();
   setPopupError(false);
   setResponseError(null);
-  let rp: boolean = false;
+  let err: boolean = false;
   const packages: Array<packages> = [];
+  const vals: Array<string> = []
   if (modalRef.current instanceof HTMLFormElement) {
    const inputs = modalRef.current.querySelectorAll('input');
    inputs.forEach((i) => {
+    if(err) {
+      return
+    }
     if (i.value.length < 10 || i.value.length > 10) {
      setResponseError('todos os códigos devem conter 10 caracteres');
-     rp = true;
+     err = true;
      return;
     }
     const id = i.id;
     if (isNaN(Number(id))) {
+     err = true
      return;
     }
-    if (packages) {
-     const newPk = packages;
-     newPk.push({
-      codigoRastreio: i.value,
-      numeroPacote: Number(id),
-     });
-     return newPk;
+    if(vals.indexOf(i.value) != -1) {
+      setResponseError('os códigos não podem ser iguais');
+      err = true;
+      return;
     }
-    return [
-     {
-      codigoRastreio: i.value,
-      numeroPacote: Number(id),
-     },
-    ];
+    vals.push(i.value)
+    packages.push({
+    codigoRastreio: i.value,
+    numeroPacote: Number(id),
+    });
    });
   }
-  if (rp || !packages) {
+  if (err || !packages) {
    return;
   }
   if (cookieName == undefined || cookieVal == undefined) {
@@ -104,6 +106,9 @@ export default function UpdateTrackingCodeForm({
   if (res == 404) {
    setResponseError('pedido não encontrado, tente recarregar a página');
   }
+  if(res == "código já existe") {
+    setResponseError(res)
+  }
   if (res == 200) {
    setSuccess(true);
    if (closeRef.current instanceof HTMLButtonElement) {
@@ -124,6 +129,10 @@ export default function UpdateTrackingCodeForm({
   }
   setLoad(false);
  }
+
+ useEffect(() => {
+  setResponseError(null)
+ },[packageNumbers])
 
  return (
   <form

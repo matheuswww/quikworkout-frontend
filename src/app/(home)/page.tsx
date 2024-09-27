@@ -8,7 +8,7 @@ import Footer from '@/components/footer/footer';
 import MakeYourSyle from './makeYourSytle';
 
 export const metadata: Metadata = {
- title: 'Home',
+ title: 'Quikworkout',
  description: 'Página inicial quikworkout, venha se vestir com estilo!',
  keywords: 'quikworkout, crossfit, academia, roupa crossfit, roupa academia',
 };
