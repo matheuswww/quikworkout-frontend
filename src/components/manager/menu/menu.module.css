@@ -7,9 +7,10 @@
  z-index: 2;
  overflow: hidden;
  position: absolute;
+ height: max-content;
 }
 
-.container a {
+.linkLogo {
   height: max-content;
   width: max-content;
 }

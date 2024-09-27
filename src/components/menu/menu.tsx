@@ -98,7 +98,7 @@ export default function Menu(props: props) {
  return (
   <>
    <div className={styles.container} ref={containerRef}>
-    <Link href="/">
+    <Link href="/" className={styles.linkLogo}>
      <Logo
       src="/img/logo.png"
       alt="logo da quikworkout"
