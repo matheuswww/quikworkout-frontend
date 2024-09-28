@@ -10,7 +10,6 @@ interface params {
  precoMaximo?: number;
  precoMinimo?: number;
  limite?: number;
- corPrincipal?: string;
  m?: string;
  f?: string;
 }
@@ -50,7 +49,6 @@ export default async function GetAllClothing(
 ): Promise<responseGetAllClothing> {
  let url = api;
  url += clothingPath + '/getClothing';
- params.corPrincipal = 'true';
  url += getParams(params);
  try {
   const res = await fetch(url, {
@@ -121,12 +119,6 @@ function getParams(params: params): string {
  }
  if (params.f !== undefined) {
   urlParams += 'f=' + params.f + '&';
- }
- if (params.cor !== undefined) {
-  urlParams += 'cor=' + params.cor + '&';
- }
- if (params.corPrincipal !== undefined) {
-  urlParams += 'corPrincipal=' + params.corPrincipal + '&';
  }
 
  urlParams = urlParams.slice(0, -1);
