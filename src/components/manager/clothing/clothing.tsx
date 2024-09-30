@@ -462,7 +462,7 @@ export default function Clothing({
    setSuccess(true);
    const newData = data;
    const newAllData = allData;
-   if (updateClothing.active) {
+   if (updateClothing.active != undefined) {
     newData.ativo = updateClothing.active;
    }
    if (updateClothing.categoria) {
