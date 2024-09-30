@@ -636,10 +636,13 @@ export default function FinishPurchaseForm({ ...props }: props) {
        '',
        '?retry_payment_id=' + orderId.substring(5) + '&paymentType=' + pt,
       );
-
+      if(beforeOrderId != "não foi possível pagar o pedido") {
+        setResponseError(beforeOrderId);
+      } else {
+        setPopupError(true)
+      }
       setPaymentTypeRetryPayment(pt);
       setRetryPaymentId(orderId);
-      setResponseError(beforeOrderId);
      }
      const quantityErrorPattern = /a quantidade do pedido \d+ excede o estoque/;
      if (
@@ -802,7 +805,12 @@ export default function FinishPurchaseForm({ ...props }: props) {
     if (typeof res == 'string' && res.includes('order_id:')) {
      const startIndex = res.indexOf('order_id:');
      const beforeOrderId = res.substring(0, startIndex).trim().replace(',', '');
-     setResponseError(beforeOrderId);
+     console.log(beforeOrderId)
+     if(beforeOrderId != "não foi possível pagar o pedido") {
+      setResponseError(beforeOrderId);
+    } else {
+      setPopupError(true)
+    }
     }
     const quantityErrorPattern = /a quantidade do pedido \d+ excede o estoque/;
     if (
