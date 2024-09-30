@@ -61,8 +61,8 @@ export default function handleModalClick(
    ) {
     button.style.pointerEvents = 'initial';
     modalRef.current.style.display = 'none';
-  }
-  callbackOut && callbackOut();
+   }
+   callbackOut && callbackOut();
   }, 500);
   if (section instanceof HTMLElement) {
    section.style.opacity = '1';

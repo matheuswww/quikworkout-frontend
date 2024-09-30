@@ -105,7 +105,7 @@ export default function SendRemoveTwoAuthCodeForm({ ...props }: props) {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError("preencha o recaptcha novamente");
+   setRecaptchaError('preencha o recaptcha novamente');
    //@ts-ignore
    window.grecaptcha.reset();
   }

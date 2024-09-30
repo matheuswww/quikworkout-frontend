@@ -13,7 +13,7 @@ export interface packages {
  codigoRastreio: string;
 }
 
-type updateTrackingCode = 401 | 404 | 500 | 200 | "código já existe";
+type updateTrackingCode = 401 | 404 | 500 | 200 | 'código já existe';
 
 export default async function UpdateTrackingCode(
  cookie: string,
@@ -31,13 +31,13 @@ export default async function UpdateTrackingCode(
    credentials: 'include',
    body: JSON.stringify(params),
   }).then((res) => {
-    status = res.status;
-    if (status != 200) {
-     return res.json();
-    }
+   status = res.status;
+   if (status != 200) {
+    return res.json();
+   }
   });
-  if (res?.message == "código já existe") {
-    return res.message
+  if (res?.message == 'código já existe') {
+   return res.message;
   }
   if (status == 200 || status == 401 || status == 500 || status == 404) {
    return status;

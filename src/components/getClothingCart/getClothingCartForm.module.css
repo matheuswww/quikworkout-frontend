@@ -289,10 +289,10 @@
 }
 
 .img {
-  position: relative;
-  align-self: center;
-  height: max-content;
-  width: max-content;
+ position: relative;
+ align-self: center;
+ height: max-content;
+ width: max-content;
 }
 
 @keyframes ldsRing {
@@ -428,9 +428,9 @@
 }
 
 @media (max-width: 950px) {
-  .section {
-    margin-top: 65px;
-  }
+ .section {
+  margin-top: 65px;
+ }
 }
 
 .item a:active,

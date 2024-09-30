@@ -13,16 +13,16 @@ export default class slide {
   this.slide = slide;
   this.wrapper = wrapper;
   this.dist = { finalPosition: 0, startX: 0, movement: 0, movePosition: 0 };
-  this.slide.style.willChange = "transform"
-  window.addEventListener("resize", () => {
-    this.updatePosition(this.slide.offsetWidth)
-    this.dist = {
-      finalPosition: 0,
-      movement: 0,
-      movePosition: 0,
-      startX: 0,
-    }
-  })
+  this.slide.style.willChange = 'transform';
+  window.addEventListener('resize', () => {
+   this.updatePosition(this.slide.offsetWidth);
+   this.dist = {
+    finalPosition: 0,
+    movement: 0,
+    movePosition: 0,
+    startX: 0,
+   };
+  });
   this.init();
  }
 
@@ -32,7 +32,7 @@ export default class slide {
  }
 
  updatePosition(clientX: number) {
-  const distX = (clientX - this.dist.startX) * 1.5;  
+  const distX = (clientX - this.dist.startX) * 1.5;
   this.dist.movement = distX;
   const limitLeft = 0;
   const limitRight = -(this.slide.offsetWidth - this.wrapper.offsetWidth);
@@ -44,9 +44,9 @@ export default class slide {
   this.moveSlide(newPosition);
  }
 
- onStart(event: MouseEvent | TouchEvent) {  
-   let moveType: 'mousemove' | 'touchmove';
-   if (event instanceof MouseEvent) {
+ onStart(event: MouseEvent | TouchEvent) {
+  let moveType: 'mousemove' | 'touchmove';
+  if (event instanceof MouseEvent) {
    event.preventDefault();
    this.dist.startX = event.clientX;
    moveType = 'mousemove';
@@ -58,12 +58,12 @@ export default class slide {
  }
 
  onMove(event: MouseEvent | TouchEvent) {
-  event.preventDefault()
+  event.preventDefault();
   if (event instanceof MouseEvent) {
    this.updatePosition(event.clientX);
   } else {
    this.updatePosition(event.changedTouches[0].clientX);
-   this.dist.movement = 0
+   this.dist.movement = 0;
   }
  }
 
@@ -72,19 +72,19 @@ export default class slide {
   if (event instanceof MouseEvent) {
    moveType = 'mousemove';
   } else {
-    moveType = 'touchmove';
+   moveType = 'touchmove';
   }
-  this.wrapper.removeEventListener(moveType, this.onMove)
+  this.wrapper.removeEventListener(moveType, this.onMove);
   this.dist.finalPosition = this.dist.movePosition;
   if (Math.abs(this.dist.movement) > 0) {
-    this.wrapper.addEventListener('click', this.preventClick)
-   }
+   this.wrapper.addEventListener('click', this.preventClick);
   }
-  
-  preventClick(event: MouseEvent) {
-  event.preventDefault()
-  this.dist.movement = 0
-  this.wrapper.removeEventListener('click', this.preventClick)
+ }
+
+ preventClick(event: MouseEvent) {
+  event.preventDefault();
+  this.dist.movement = 0;
+  this.wrapper.removeEventListener('click', this.preventClick);
  }
 
  addSlideEvents() {

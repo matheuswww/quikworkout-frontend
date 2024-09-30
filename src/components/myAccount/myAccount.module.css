@@ -32,7 +32,9 @@
  text-align: center;
 }
 
-.lowOpacity, #lowOpacity1,#lowOpacity2 {
+.lowOpacity,
+#lowOpacity1,
+#lowOpacity2 {
  opacity: 0.1;
 }
 

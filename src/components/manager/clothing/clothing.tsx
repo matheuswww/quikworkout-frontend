@@ -34,8 +34,8 @@ interface props {
  success: boolean;
  cookieName?: string;
  cookieVal?: string;
- setData: Dispatch<SetStateAction<getClothing | null>>
- allData: clothing[] | null
+ setData: Dispatch<SetStateAction<getClothing | null>>;
+ allData: clothing[] | null;
 }
 
 const schema = z.object({
@@ -93,7 +93,7 @@ export default function Clothing({
  const [color, setColor] = useState<string | null>(null);
  const [mainColor, setMainColor] = useState<string | null>(null);
  const [responseError, setResponseError] = useState<string | null>(null);
- const [colorChanged, setColorChanged] = useState<boolean>(false)
+ const [colorChanged, setColorChanged] = useState<boolean>(false);
  const slide = useRef<HTMLUListElement | null>(null);
  const images = useRef<HTMLDivElement | null>(null);
  const modalColorRef = useRef<HTMLDivElement | null>(null);
@@ -140,7 +140,7 @@ export default function Clothing({
     setMainColor(cor);
    }
   });
-  setColorChanged(false)
+  setColorChanged(false);
  }, [colorChanged]);
 
  function handleCheckBoxGender(val: string, index: number) {
@@ -222,28 +222,28 @@ export default function Clothing({
    closeModalDeleteClothingRef.current.click();
   }
   if (res == 200) {
-    const newAllData = allData?.filter((_,i) => {
-      if(i == index) {
-        return false
-      }
-      return true
-    })
-    if(newAllData && newAllData?.length > 1) {
-      setData({
-        clothing: newAllData,
-        status: 200,
-      })
-    } else {
-      setData({
-        clothing: null,
-        status: 404,
-      })
+   const newAllData = allData?.filter((_, i) => {
+    if (i == index) {
+     return false;
     }
-    await refresh('/');
-    await refresh('/manager-quikworkout/roupas');
-    setSuccess(true)
-    setLoad(false)
-    return
+    return true;
+   });
+   if (newAllData && newAllData?.length > 1) {
+    setData({
+     clothing: newAllData,
+     status: 200,
+    });
+   } else {
+    setData({
+     clothing: null,
+     status: 404,
+    });
+   }
+   await refresh('/');
+   await refresh('/manager-quikworkout/roupas');
+   setSuccess(true);
+   setLoad(false);
+   return;
   }
   window.location.reload();
  }
@@ -257,9 +257,9 @@ export default function Clothing({
   setPopupError(false);
   const cookie = cookieName + '=' + cookieVal;
   if (formRef.current instanceof HTMLFormElement) {
-   const err = formRef.current.querySelectorAll("#error")
+   const err = formRef.current.querySelectorAll('#error');
    if (err.length > 0) {
-    return
+    return;
    }
    const m = formRef.current.querySelector('#M' + index);
    const f = formRef.current.querySelector('#F' + index);
@@ -381,25 +381,25 @@ export default function Clothing({
       m: Number(m.value) - inventory.m,
       g: Number(g.value) - inventory.g,
       gg: Number(gg.value) - inventory.gg,
-      imgDesc: "",
+      imgDesc: '',
      });
      changedInventory.push(indexInventory);
      if (newColors == undefined) {
       newColors = [];
      }
      if (color.value != inventory.cor) {
-      haveNewColor = true
+      haveNewColor = true;
       newColors.push(color.value);
      } else {
-      newColors.push("")
+      newColors.push('');
      }
     }
    });
-   if(error) {
-    return
+   if (error) {
+    return;
    }
-   if(!haveNewColor) {
-    newColors = undefined
+   if (!haveNewColor) {
+    newColors = undefined;
    }
    if (responseError) {
     return;
@@ -460,36 +460,36 @@ export default function Clothing({
    await refresh('/');
    await refresh('/manager-quikworkout/roupas');
    setSuccess(true);
-   const newData = data
-   const newAllData = allData
-   if(updateClothing.active) {
-    newData.ativo = updateClothing.active
+   const newData = data;
+   const newAllData = allData;
+   if (updateClothing.active) {
+    newData.ativo = updateClothing.active;
    }
-   if(updateClothing.categoria) {
-    newData.categoria = updateClothing.categoria
+   if (updateClothing.categoria) {
+    newData.categoria = updateClothing.categoria;
    }
-   if(updateClothing.descricao) {
-    newData.descricao = updateClothing.descricao
+   if (updateClothing.descricao) {
+    newData.descricao = updateClothing.descricao;
    }
-   if(updateClothing.material) {
-    newData.material = updateClothing.material
+   if (updateClothing.material) {
+    newData.material = updateClothing.material;
    }
-   if(updateClothing.nome) {
-    newData.nome = updateClothing.nome
+   if (updateClothing.nome) {
+    newData.nome = updateClothing.nome;
    }
-   if(updateClothing.preco) {
-    newData.preco = updateClothing.preco
+   if (updateClothing.preco) {
+    newData.preco = updateClothing.preco;
    }
-   if(updateClothing.sexo) {
-    newData.sexo = updateClothing.sexo
+   if (updateClothing.sexo) {
+    newData.sexo = updateClothing.sexo;
    }
-   newAllData && (newAllData[index] = newData)
+   newAllData && (newAllData[index] = newData);
    setData({
     clothing: newAllData,
-    status: 200
-   })
+    status: 200,
+   });
   }
-  setLoad(false)
+  setLoad(false);
  }
 
  async function handleUpdateClothingInventory(
@@ -499,7 +499,7 @@ export default function Clothing({
   changedInventory: Array<number>,
  ) {
   setLoad(true);
-  
+
   const res = await UpdateClothingInventory(
    cookie,
    updateClothingInventoryParam,
@@ -518,34 +518,59 @@ export default function Clothing({
   if (res == 200) {
    await refresh('/');
    await refresh('/manager-quikworkout/roupas');
-   const newDataInventory = data
-   const newAllData = allData
-    changedInventory.map((indexInventory,indexUpdateInventory) => {
-      if(updateClothingInventoryParam.novoNomeCor && updateClothingInventoryParam.novoNomeCor[indexUpdateInventory]) {
-        setColorChanged(true)
-        newDataInventory.inventario[indexInventory].cor = updateClothingInventoryParam.novoNomeCor[indexUpdateInventory]
-      }
-      if(updateClothingInventory[indexUpdateInventory].p != data.inventario[indexInventory].p) {
-        newDataInventory.inventario[indexInventory].p = data.inventario[indexInventory].p + updateClothingInventory[indexUpdateInventory].p
-      }
-      if(updateClothingInventory[indexUpdateInventory].m != data.inventario[indexInventory].m) {
-        newDataInventory.inventario[indexInventory].m = data.inventario[indexInventory].m + updateClothingInventory[indexUpdateInventory].m
-      }
-      if(updateClothingInventory[indexUpdateInventory].g != data.inventario[indexInventory].g) {
-        newDataInventory.inventario[indexInventory].g = data.inventario[indexInventory].g + updateClothingInventory[indexUpdateInventory].g
-      }
-      if(updateClothingInventory[indexUpdateInventory].gg != data.inventario[indexInventory].gg) {
-        newDataInventory.inventario[indexInventory].gg = data.inventario[indexInventory].gg + updateClothingInventory[indexUpdateInventory].gg
-      }
-      newDataInventory.inventario[indexInventory].corPrincipal = updateClothingInventory[indexUpdateInventory].corPrincipal
-    })
-  
-  newAllData && (newAllData[index] = newDataInventory)  
-  setData({
+   const newDataInventory = data;
+   const newAllData = allData;
+   changedInventory.map((indexInventory, indexUpdateInventory) => {
+    if (
+     updateClothingInventoryParam.novoNomeCor &&
+     updateClothingInventoryParam.novoNomeCor[indexUpdateInventory]
+    ) {
+     setColorChanged(true);
+     newDataInventory.inventario[indexInventory].cor =
+      updateClothingInventoryParam.novoNomeCor[indexUpdateInventory];
+    }
+    if (
+     updateClothingInventory[indexUpdateInventory].p !=
+     data.inventario[indexInventory].p
+    ) {
+     newDataInventory.inventario[indexInventory].p =
+      data.inventario[indexInventory].p +
+      updateClothingInventory[indexUpdateInventory].p;
+    }
+    if (
+     updateClothingInventory[indexUpdateInventory].m !=
+     data.inventario[indexInventory].m
+    ) {
+     newDataInventory.inventario[indexInventory].m =
+      data.inventario[indexInventory].m +
+      updateClothingInventory[indexUpdateInventory].m;
+    }
+    if (
+     updateClothingInventory[indexUpdateInventory].g !=
+     data.inventario[indexInventory].g
+    ) {
+     newDataInventory.inventario[indexInventory].g =
+      data.inventario[indexInventory].g +
+      updateClothingInventory[indexUpdateInventory].g;
+    }
+    if (
+     updateClothingInventory[indexUpdateInventory].gg !=
+     data.inventario[indexInventory].gg
+    ) {
+     newDataInventory.inventario[indexInventory].gg =
+      data.inventario[indexInventory].gg +
+      updateClothingInventory[indexUpdateInventory].gg;
+    }
+    newDataInventory.inventario[indexInventory].corPrincipal =
+     updateClothingInventory[indexUpdateInventory].corPrincipal;
+   });
+
+   newAllData && (newAllData[index] = newDataInventory);
+   setData({
     clothing: newAllData,
-    status: 200
-  })
-  setSuccess(true);
+    status: 200,
+   });
+   setSuccess(true);
   }
   setLoad(false);
  }
@@ -609,26 +634,27 @@ export default function Clothing({
      >
       {data.inventario.map(({ imagens, alt, cor }) => {
        return (
-        color == cor && imagens && imagens[0] &&
-          <li className={styles.product} key={imagens[0]}>
-           {
-            <SkeletonImage
-             src={imagens[0]}
-             alt={alt}
-             loading="lazy"
-             width={290}
-             height={460}
-             className={styles.clothing}
-             key={data.id}
-             id={index.toString()}
-             draggable={false}
-             tabIndex={0}
-            />
-           }
-          </li>
-     
-      
-       )
+        color == cor &&
+        imagens &&
+        imagens[0] && (
+         <li className={styles.product} key={imagens[0]}>
+          {
+           <SkeletonImage
+            src={imagens[0]}
+            alt={alt}
+            loading="lazy"
+            width={290}
+            height={460}
+            className={styles.clothing}
+            key={data.id}
+            id={index.toString()}
+            draggable={false}
+            tabIndex={0}
+           />
+          }
+         </li>
+        )
+       );
       })}
      </ul>
     </div>

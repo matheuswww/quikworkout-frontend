@@ -48,12 +48,12 @@ export default function UpdateTrackingCodeForm({
   setResponseError(null);
   let err: boolean = false;
   const packages: Array<packages> = [];
-  const vals: Array<string> = []
+  const vals: Array<string> = [];
   if (modalRef.current instanceof HTMLFormElement) {
    const inputs = modalRef.current.querySelectorAll('input');
    inputs.forEach((i) => {
-    if(err) {
-      return
+    if (err) {
+     return;
     }
     if (i.value.length < 10 || i.value.length > 10) {
      setResponseError('todos os códigos devem conter 10 caracteres');
@@ -62,18 +62,18 @@ export default function UpdateTrackingCodeForm({
     }
     const id = i.id;
     if (isNaN(Number(id))) {
-     err = true
+     err = true;
      return;
     }
-    if(vals.indexOf(i.value) != -1) {
-      setResponseError('os códigos não podem ser iguais');
-      err = true;
-      return;
+    if (vals.indexOf(i.value) != -1) {
+     setResponseError('os códigos não podem ser iguais');
+     err = true;
+     return;
     }
-    vals.push(i.value)
+    vals.push(i.value);
     packages.push({
-    codigoRastreio: i.value,
-    numeroPacote: Number(id),
+     codigoRastreio: i.value,
+     numeroPacote: Number(id),
     });
    });
   }
@@ -106,8 +106,8 @@ export default function UpdateTrackingCodeForm({
   if (res == 404) {
    setResponseError('pedido não encontrado, tente recarregar a página');
   }
-  if(res == "código já existe") {
-    setResponseError(res)
+  if (res == 'código já existe') {
+   setResponseError(res);
   }
   if (res == 200) {
    setSuccess(true);
@@ -131,8 +131,8 @@ export default function UpdateTrackingCodeForm({
  }
 
  useEffect(() => {
-  setResponseError(null)
- },[packageNumbers])
+  setResponseError(null);
+ }, [packageNumbers]);
 
  return (
   <form

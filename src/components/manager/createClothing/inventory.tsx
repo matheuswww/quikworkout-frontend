@@ -1,7 +1,13 @@
 'use client';
 
 import styles from './createClothing.module.css';
-import { Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from 'react';
+import {
+ Dispatch,
+ MutableRefObject,
+ SetStateAction,
+ useEffect,
+ useState,
+} from 'react';
 import { inventory } from './createClothing';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -12,8 +18,8 @@ interface props {
  inventory: inventory[] | null;
  modalRef: MutableRefObject<HTMLFormElement | null>;
  closeRef: MutableRefObject<HTMLButtonElement | null>;
- setReset: Dispatch<SetStateAction<boolean>>
- resetForm: boolean
+ setReset: Dispatch<SetStateAction<boolean>>;
+ resetForm: boolean;
 }
 
 const schema = z.object({
@@ -83,7 +89,7 @@ export default function Inventory({
  closeRef,
  modalRef,
  setReset,
- resetForm
+ resetForm,
 }: props) {
  const {
   register,
@@ -116,8 +122,8 @@ export default function Inventory({
   const g = Number(data.g);
   const gg = Number(data.gg);
   const images: Blob[] = Array.from(data.file);
-  images.reverse()
-  
+  images.reverse();
+
   let err = false;
   const newImages = images.map((i, index) => {
    let fileType = null;
@@ -137,7 +143,7 @@ export default function Inventory({
    const newFileName = data.cor + index + fileType;
    return new File([i], newFileName, { type: i.type });
   });
-  console.log(newImages)
+  console.log(newImages);
   if (err) {
    return;
   }
@@ -165,11 +171,11 @@ export default function Inventory({
  }
 
  useEffect(() => {
-  if(resetForm) {
-    reset()
-    setReset(false)
+  if (resetForm) {
+   reset();
+   setReset(false);
   }
- },[resetForm])
+ }, [resetForm]);
 
  return (
   <>

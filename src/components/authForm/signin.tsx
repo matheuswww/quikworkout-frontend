@@ -73,7 +73,7 @@ export default function SigninForm() {
    return;
   }
   if (res == 'recaptcha inválido') {
-   setRecaptchaError("preencha o recaptcha novamente");
+   setRecaptchaError('preencha o recaptcha novamente');
    //@ts-ignore
    window.grecaptcha.reset();
   }

@@ -210,7 +210,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
    return;
   }
   const res = await getOrderDetail(tipoPagamento, pedido_id);
-  
+
   if (res) {
    setPaymentInfo((pi) => {
     if (typeof res.data == 'object' && res.data != null && pi[index]) {

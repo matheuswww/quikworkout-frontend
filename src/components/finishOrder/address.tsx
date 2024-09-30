@@ -77,13 +77,13 @@ const schema = z
     fields.cpfCnpj = fields.cpfCnpj.replaceAll('-', '');
    }
    if (fields.cpfCnpj.includes('/')) {
-    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/','')
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/', '');
    }
    if (fields.cpfCnpj.length == 11) {
     return ValidateCpf(fields.cpfCnpj);
    }
    if (fields.cpfCnpj.length == 14) {
-     return ValidateCnpj(fields.cpfCnpj);
+    return ValidateCnpj(fields.cpfCnpj);
    }
   },
   {
@@ -211,7 +211,10 @@ export default function Address({
   const regionCode = data.regionCode.slice(0, 2);
   const DDD = data.phoneNumber.slice(0, 2);
   const number = data.phoneNumber.substring(2);
-  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '').replaceAll('/','');
+  data.cpfCnpj = data.cpfCnpj
+   .replaceAll('.', '')
+   .replaceAll('-', '')
+   .replaceAll('/', '');
   if (data.cep.includes('-')) {
    data.cep = data.cep.replace('-', '');
   }

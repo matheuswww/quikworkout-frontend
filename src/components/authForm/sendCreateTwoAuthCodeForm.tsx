@@ -121,7 +121,7 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError("preencha o recaptcha novamente");
+   setRecaptchaError('preencha o recaptcha novamente');
    //@ts-ignore
    window.grecaptcha.reset();
   }
@@ -169,7 +169,9 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
       <section className={styles.section}>
        <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
         <h1>Criar autenticação de dois fatores</h1>
-        <label htmlFor="email">E-mail para envio do código de autenticação</label>
+        <label htmlFor="email">
+         E-mail para envio do código de autenticação
+        </label>
         <input
          {...register('email')}
          type="text"

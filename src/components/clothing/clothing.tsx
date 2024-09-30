@@ -67,7 +67,7 @@ export default function Clothing({ ...props }: props) {
   reValidateMode: 'onSubmit',
   resolver: zodResolver(schema),
  });
- const searchParams = useSearchParams()
+ const searchParams = useSearchParams();
  const router = useRouter();
  const [data, setData] = useState<getClothingByIdResponse | null>(null);
  const [load, setLoad] = useState<boolean>(false);
@@ -201,8 +201,8 @@ export default function Clothing({ ...props }: props) {
     setFreightData(null);
     return;
    }
-   if(res.data == 'cubagem excedida') {
-    setError("cubagem excedida, tente diminuir a quantidade de roupas");
+   if (res.data == 'cubagem excedida') {
+    setError('cubagem excedida, tente diminuir a quantidade de roupas');
     setLoad(false);
     setFreightData(null);
     return;
@@ -211,7 +211,7 @@ export default function Clothing({ ...props }: props) {
     setError(
      'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
     );
-  
+
     setLoad(false);
     setFreightData(null);
     return;
@@ -267,21 +267,21 @@ export default function Clothing({ ...props }: props) {
  }
 
  useEffect(() => {
-  let image: string | undefined = undefined
+  let image: string | undefined = undefined;
   try {
-    const imgParam = searchParams.get("img")
-    if(imgParam) {
-      const decodedImage = atob(imgParam)
-      image = decodedImage.startsWith(apiImg) ? decodedImage : undefined
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   const imgParam = searchParams.get('img');
+   if (imgParam) {
+    const decodedImage = atob(imgParam);
+    image = decodedImage.startsWith(apiImg) ? decodedImage : undefined;
+   }
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
-    image = undefined
+   image = undefined;
   }
-  if(!image) {
-    notFound()
+  if (!image) {
+   notFound();
   }
-},[])
+ }, []);
 
  useEffect(() => {
   if (data == null) {
@@ -450,233 +450,233 @@ export default function Clothing({ ...props }: props) {
      </button>
     </form>
     <section>
-      <div className={styles.content}>
+     <div className={styles.content}>
       {data?.status == 404 && notFound()}
       <ul
-        className={`${styles.indexImages} ${data?.clothing && styles.load}`}
-        ref={indexImages}
-        aria-hidden="true"
+       className={`${styles.indexImages} ${data?.clothing && styles.load}`}
+       ref={indexImages}
+       aria-hidden="true"
       >
-        {data?.clothing ? (
+       {data?.clothing ? (
         data.clothing.inventario.map(({ images, imgDesc, cor }) => {
-          return (
+         return (
           color == cor &&
           windowWidth &&
           images?.map((src, index) => {
-            return (
+           return (
             <li key={src}>
-              {
+             {
               <button
-                className={index == 0 ? styles.activeThumb : ''}
-                aria-hidden="true"
-                id={index.toString()}
-                tabIndex={-1}
+               className={index == 0 ? styles.activeThumb : ''}
+               aria-hidden="true"
+               id={index.toString()}
+               tabIndex={-1}
               >
-                <SkeletonImage 
-                  src={src}
-                  aria-hidden="true"
-                  loading="lazy"
-                  alt={imgDesc}
-                  width={290}
-                  height={460}
-                  key={data.clothing?.id}
-                  draggable={false}
-                />
+               <SkeletonImage
+                src={src}
+                aria-hidden="true"
+                loading="lazy"
+                alt={imgDesc}
+                width={290}
+                height={460}
+                key={data.clothing?.id}
+                draggable={false}
+               />
               </button>
-              }
+             }
             </li>
-            );
+           );
           })
-          );
+         );
         })
-        ) : (
+       ) : (
         <div
-          className={stylesLoad.indexImages}
-          aria-label="carregando conteúdo"
-          tabIndex={0}
+         className={stylesLoad.indexImages}
+         aria-label="carregando conteúdo"
+         tabIndex={0}
         >
-          <Skeleton className={stylesLoad.imageSkeleton} />
+         <Skeleton className={stylesLoad.imageSkeleton} />
         </div>
-        )}
+       )}
       </ul>
       <div
-        className={styles.images}
-        ref={images}
-        style={{ display: data?.clothing ? 'initial' : 'none' }}
+       className={styles.images}
+       ref={images}
+       style={{ display: data?.clothing ? 'initial' : 'none' }}
       >
-        <ul
+       <ul
         className={styles.slide}
         ref={slide}
         aria-label="slide que mostra a imagem de cada roupa"
         tabIndex={0}
-        >
+       >
         {data?.clothing &&
-          data.clothing.inventario[0].images == null &&
-          notFound()}
+         data.clothing.inventario[0].images == null &&
+         notFound()}
         {data?.clothing?.inventario.map(({ images, imgDesc, cor }) => {
-          return (
+         return (
           color == cor &&
           images?.map((src, index) => {
-            return (
+           return (
             <li className={styles.product} key={src}>
-              {
+             {
               <SkeletonImage
-                src={src}
-                alt={imgDesc}
-                loading="lazy"
-                width={290}
-                height={460}
-                className={styles.clothing}
-                key={data.clothing?.id}
-                id={index.toString()}
-                draggable={false}
-                tabIndex={0}
+               src={src}
+               alt={imgDesc}
+               loading="lazy"
+               width={290}
+               height={460}
+               className={styles.clothing}
+               key={data.clothing?.id}
+               id={index.toString()}
+               draggable={false}
+               tabIndex={0}
               />
-              }
+             }
             </li>
-            );
+           );
           })
-          );
+         );
         })}
-        </ul>
+       </ul>
       </div>
       {!data?.clothing && (
-        <div
+       <div
         className={stylesLoad.images}
         aria-label="carregando conteúdo"
         tabIndex={0}
-        >
+       >
         <Skeleton className={stylesLoad.imageSkeleton} />
-        </div>
+       </div>
       )}
       {data?.clothing ? (
-        <form
+       <form
         className={styles.infos}
         onSubmit={(event) => handleSubmitAddToCart(event)}
-        >
+       >
         <p className={styles.name} aria-label="nome da roupa">
-          {data.clothing.nome}
+         {data.clothing.nome}
         </p>
         <p className={styles.price} aria-label="preço da roupa">
-          R${formatPrice(data.clothing.preco)}
+         R${formatPrice(data.clothing.preco)}
         </p>
         <p className={styles.description} aria-label="descrição da roupa">
-          {data.clothing.descricao}
+         {data.clothing.descricao}
         </p>
         <div className={styles.gender}>
-          <p>genêro</p>
-          <p>
+         <p>genêro</p>
+         <p>
           {data.clothing.sexo == 'M'
-            ? 'masculino'
-            : data.clothing.sexo == 'F'
-              ? 'feminino'
-              : 'unissex'}
-          </p>
+           ? 'masculino'
+           : data.clothing.sexo == 'F'
+             ? 'feminino'
+             : 'unissex'}
+         </p>
         </div>
         <div className={styles.sizes}>
-          <p>tamanhos</p>
-          <Sizes
+         <p>tamanhos</p>
+         <Sizes
           color={color}
           inventory={data.clothing.inventario}
           setSize={setSize}
           size={size}
-          />
+         />
         </div>
         <div className={styles.category}>
-          <p>categoria</p>
-          <p>{data.clothing.categoria}</p>
+         <p>categoria</p>
+         <p>{data.clothing.categoria}</p>
         </div>
         <div className={styles.counter}>
-          <p>quantidades</p>
-          <Counter count={count} handleCount={handleCount} />
+         <p>quantidades</p>
+         <Counter count={count} handleCount={handleCount} />
         </div>
         <div className={styles.material} aria-label="material da roupa">
-          <p>material</p>
-          <p>{data.clothing.material}</p>
+         <p>material</p>
+         <p>{data.clothing.material}</p>
         </div>
         <div className={styles.colors} aria-label="cores da roupa">
-          <p>cores</p>
-          <ChangeColor
+         <p>cores</p>
+         <ChangeColor
           activeModal={activeModal}
           callbackOnEnter={() => setActiveModal(true)}
           callbackOnOut={() => setActiveModal(false)}
           buttonToOpenModalRef={buttonToOpenModalRef}
           color={color}
           modalRef={modalRef}
-          />
+         />
         </div>
         <div className={styles.freight}>
-          {data?.clothing &&
-          Math.round((data.clothing.preco * count * 100) / 100) < 200 ? (
+         {data?.clothing &&
+         Math.round((data.clothing.preco * count * 100) / 100) < 200 ? (
           <button
-            className={styles.calcFreight}
-            ref={buttonToOpenModalFreight}
-            type="button"
-            onClick={() =>
+           className={styles.calcFreight}
+           ref={buttonToOpenModalFreight}
+           type="button"
+           onClick={() =>
             handleModalClick(
-              calcFreightRef,
-              buttonToOpenModalFreight,
-              closeRef,
-              styles.active,
-              'flex',
-              () => setActiveModal(true),
-              () => setActiveModal(false),
+             calcFreightRef,
+             buttonToOpenModalFreight,
+             closeRef,
+             styles.active,
+             'flex',
+             () => setActiveModal(true),
+             () => setActiveModal(false),
             )
-            }
-            disabled={activeModal}
+           }
+           disabled={activeModal}
           >
-            Calcular frete
+           Calcular frete
           </button>
-          ) : (
+         ) : (
           <p className={styles.noFreight}>Frete grátis</p>
-          )}
-          {freightData && data && (
+         )}
+         {freightData && data && (
           <>
-            <div className={styles.freightPrice}>
+           <div className={styles.freightPrice}>
             <p className={styles.freightPrice}>
-              Frete: R${formatPrice(freightData.vlrFrete)}
+             Frete: R${formatPrice(freightData.vlrFrete)}
             </p>
             <p>Prazo de entrega: {freightData.prazoEnt} dias utéis</p>
-            </div>
+           </div>
           </>
-          )}
+         )}
         </div>
         <button
-          className={`${styles.button} ${styles.buy} ${success && styles.buttonOpacity}`}
-          disabled={load || success}
-          type="button"
-          onClick={handleBuy}
+         className={`${styles.button} ${styles.buy} ${success && styles.buttonOpacity}`}
+         disabled={load || success}
+         type="button"
+         onClick={handleBuy}
         >
-          <p>Comprar</p>
+         <p>Comprar</p>
         </button>
         <button
-          className={`${styles.button} ${success && styles.buttonOpacity}`}
-          disabled={load || success}
+         className={`${styles.button} ${success && styles.buttonOpacity}`}
+         disabled={load || success}
         >
-          <Shop
+         <Shop
           src={'/img/shop.png'}
           alt="imagem de uma bolsa"
           width={25}
           height={25}
           aria-label={`adicionar roupa com cor ${color}, tamanho ${size}, quantidade ${count} para meu carrinho`}
           className={styles.shop}
-          />
-          <p aria-hidden="true">Adicionar a bolsa</p>
+         />
+         <p aria-hidden="true">Adicionar a bolsa</p>
         </button>
-        </form>
+       </form>
       ) : (
-        <div
+       <div
         className={stylesLoad.infos}
         aria-label="carregando conteúdo"
         tabIndex={0}
-        >
+       >
         <Skeleton className={stylesLoad.name} />
         <Skeleton className={stylesLoad.price} />
         <Skeleton className={stylesLoad.content} />
-        </div>
+       </div>
       )}
-      </div>
-      <ClothingSlide clothing={data} />
+     </div>
+     <ClothingSlide clothing={data} />
     </section>
    </main>
   </>

@@ -237,23 +237,23 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
           </button>
          </div>
         }
-        {data.data.twoAuthEmail != '' ? (
-         data.data.twoAuthEmail != '' && (
-          <>
-           <div className={styles.vals}>
-            <p>Email de dois fatores: </p>
-            <p>{data.data.twoAuthEmail}</p>
-           </div>
-           <Link href="/auth/remover-dois-fatores" className={styles.link}>
-            Remover autenticação de dois fatores
-           </Link>
-          </>
-         )
-        ) : data.data.verificado && (
-         <Link href="/auth/criar-dois-fatores" className={styles.link}>
-          Adicionar autenticação de dois fatores
-         </Link>
-        )}
+        {data.data.twoAuthEmail != ''
+         ? data.data.twoAuthEmail != '' && (
+            <>
+             <div className={styles.vals}>
+              <p>Email de dois fatores: </p>
+              <p>{data.data.twoAuthEmail}</p>
+             </div>
+             <Link href="/auth/remover-dois-fatores" className={styles.link}>
+              Remover autenticação de dois fatores
+             </Link>
+            </>
+           )
+         : data.data.verificado && (
+            <Link href="/auth/criar-dois-fatores" className={styles.link}>
+             Adicionar autenticação de dois fatores
+            </Link>
+           )}
         {!data.data.verificado && (
          <Link href="/auth/validar-contato" className={styles.link}>
           Validar email

@@ -117,7 +117,7 @@ const schema = z
     fields.cpfCnpj = fields.cpfCnpj.replaceAll('-', '');
    }
    if (fields.cpfCnpj.includes('/')) {
-    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/','')
+    fields.cpfCnpj = fields.cpfCnpj.replaceAll('/', '');
    }
    if (fields.cpfCnpj.length == 11) {
     return ValidateCpf(fields.cpfCnpj);
@@ -164,7 +164,10 @@ export default function Boleto({
    const [ano, mes, dia] = data.dueDate.split('-');
    data.dueDate = `${ano}-${mes}-${dia}`;
   }
-  data.cpfCnpj = data.cpfCnpj.replaceAll('.', '').replaceAll('-', '').replaceAll('/','');
+  data.cpfCnpj = data.cpfCnpj
+   .replaceAll('.', '')
+   .replaceAll('-', '')
+   .replaceAll('/', '');
 
   setBoleto({
    dataVencimento: data.dueDate,

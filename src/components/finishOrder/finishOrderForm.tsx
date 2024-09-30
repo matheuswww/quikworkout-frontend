@@ -336,7 +336,9 @@ export default function FinishPurchaseForm({ ...props }: props) {
     );
    }
    if (res.data == 'cubagem excedida') {
-    setResponseError("cubagem excedida, tente remover alguns items de sua bolsa");
+    setResponseError(
+     'cubagem excedida, tente remover alguns items de sua bolsa',
+    );
    }
    if (
     typeof res.data == 'object' &&
@@ -405,7 +407,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
   let id: string = '';
   /*@ts-ignore*/
   await PagSeguro.authenticate3DS(request)
-  /*@ts-ignore*/
+   /*@ts-ignore*/
    .then((result) => {
     if (result.status == 'CHANGE_PAYMENT_METHOD') {
      setResponseError3ds(
@@ -433,8 +435,8 @@ export default function FinishPurchaseForm({ ...props }: props) {
       this.stopLoading();
      }
     }
-  })
-  /*@ts-ignore*/
+   })
+   /*@ts-ignore*/
    .catch((err) => {
     setLoad(false);
     /*@ts-ignore*/
@@ -530,7 +532,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
       newCard.id3DS = id;
      }
     }
-    
+
     const res = await PayOrder(cookie, {
      bairro: address.bairro,
      cep: address.cep,
@@ -561,7 +563,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     });
 
     if (typeof res == 'string' && res == 'recaptcha inválido') {
-     setRecaptchaError("preencha o recaptcha novamente");
+     setRecaptchaError('preencha o recaptcha novamente');
      //@ts-ignore
      window.grecaptcha.reset();
     }
@@ -748,7 +750,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     return;
    }
    if (typeof res == 'string' && res == 'recaptcha inválido') {
-    setRecaptchaError("preencha o recaptcha novamente");
+    setRecaptchaError('preencha o recaptcha novamente');
     //@ts-ignore
     window.grecaptcha.reset();
    }

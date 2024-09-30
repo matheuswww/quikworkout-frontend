@@ -183,7 +183,7 @@ export default function Menu(props: props) {
       </>
      ) : (
       <>
-        <Link href="/" className={`${page == 'home' && styles.currentPage}`}>
+       <Link href="/" className={`${page == 'home' && styles.currentPage}`}>
         <Img
          alt="icone de uma casa"
          src="/img/home.png"

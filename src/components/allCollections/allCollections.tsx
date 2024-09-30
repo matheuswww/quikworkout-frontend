@@ -111,12 +111,10 @@ export default async function AllCollections({ searchParams }: props) {
         }
        })
       ) : (
-
-        <div className={styles.notFound}>
-          <p>Nenhuma roupa foi encontrada</p>
-          {Object.entries(searchParams).length != 0 && <RemoveFilter />}
-        </div>
-     
+       <div className={styles.notFound}>
+        <p>Nenhuma roupa foi encontrada</p>
+        {Object.entries(searchParams).length != 0 && <RemoveFilter />}
+       </div>
       )
      ) : (
       <p className={styles.error}>

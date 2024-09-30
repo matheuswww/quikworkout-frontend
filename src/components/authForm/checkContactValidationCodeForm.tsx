@@ -61,7 +61,7 @@ export default function CheckContactValidationCodeForm({ ...props }: props) {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError("preencha o recaptcha novamente");
+   setRecaptchaError('preencha o recaptcha novamente');
    setLoad(false);
    //@ts-ignore
    window.grecaptcha.reset();

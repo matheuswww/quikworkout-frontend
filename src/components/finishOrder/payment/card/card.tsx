@@ -106,7 +106,7 @@ const schema = z
    .max(20, 'número de cartão inválido')
    .refine(
     (number) => {
-     number = number.replaceAll('-', '').replaceAll(" ", "");
+     number = number.replaceAll('-', '').replaceAll(' ', '');
      if (isNaN(Number(number))) {
       return false;
      }
@@ -256,7 +256,7 @@ export default function Card({
  }, [responseError3ds]);
 
  async function handleForm(data: FormProps) {
-  data.cardNumber = data.cardNumber.replaceAll('-', '').replaceAll(" ","");
+  data.cardNumber = data.cardNumber.replaceAll('-', '').replaceAll(' ', '');
   const expMonth = Number(data.expMonth);
   const installments = Number(data.installments);
   if (!isNaN(expMonth) && !isNaN(installments)) {

@@ -60,7 +60,7 @@ export default function CheckCreateTwoAuthCodeForm({ ...props }: props) {
    token: token,
   });
   if (res == 'recaptcha inválido') {
-   setRecaptchaError("preencha o recaptcha novamente");
+   setRecaptchaError('preencha o recaptcha novamente');
    //@ts-ignore
    window.grecaptcha.reset();
    setLoad(false);
@@ -141,7 +141,7 @@ export default function CheckCreateTwoAuthCodeForm({ ...props }: props) {
    {load && <SpinLoading />}
    <main className={`${styles.main} ${load && styles.lowOpacity}`}>
     <form className={styles.form} onSubmit={handleSubmit(handleForm)}>
-     <h1 style={{width:"290px"}}>Verifique o email informado</h1>
+     <h1 style={{ width: '290px' }}>Verifique o email informado</h1>
      <input
       {...register('code')}
       type="number"

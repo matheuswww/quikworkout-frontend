@@ -148,7 +148,7 @@ export default function UpdateProfileForm({
    senha: data.password,
    token: token,
   });
- 
+
   if (res == 'senha errada') {
    setResponseError('senha inválida');
   }
@@ -163,12 +163,12 @@ export default function UpdateProfileForm({
    router.push('/auth/entrar');
    return;
   }
- 
+
   if (res == 200) {
-    if (data.email != '') {
-      window.location.reload()
-      return
-    }
+   if (data.email != '') {
+    window.location.reload();
+    return;
+   }
    setData((d) => {
     if (d?.data) {
      return {
@@ -186,7 +186,7 @@ export default function UpdateProfileForm({
    });
    closeRef.current instanceof HTMLButtonElement && closeRef.current.click();
   }
-  
+
   setLoad(false);
  }
 

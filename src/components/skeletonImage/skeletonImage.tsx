@@ -46,14 +46,20 @@ const SkeletonImage = React.forwardRef<
  function handleLoad(event: React.SyntheticEvent<HTMLImageElement>) {
   event.currentTarget.style.opacity = 'revert-layer';
   setTimeout(() => {
-    setLoad(false)
+   setLoad(false);
   }, 1500);
  }
 
  return (
   <>
-   <Image style={{opacity: "0"}} {...props} ref={ref} onLoad={handleLoad} />
-   {load && <span tabIndex={0} aria-label="carregando imagem" className={`${styles.skeleton}`}></span>}
+   <Image style={{ opacity: '0' }} {...props} ref={ref} onLoad={handleLoad} />
+   {load && (
+    <span
+     tabIndex={0}
+     aria-label="carregando imagem"
+     className={`${styles.skeleton}`}
+    ></span>
+   )}
   </>
  );
 });

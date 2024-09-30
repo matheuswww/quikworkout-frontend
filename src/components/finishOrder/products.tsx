@@ -207,7 +207,11 @@ export default function Products({
      </div>
     )}
     <Recaptcha className={styles.recaptcha} classNameP={styles.recaptchaP} />
-    {<p className={styles.error} ref={errorRef}>{responseError}</p>}
+    {
+     <p className={styles.error} ref={errorRef}>
+      {responseError}
+     </p>
+    }
     <div className={styles.privacy}>
      <label htmlFor="privacy">
       Aceitar{' '}

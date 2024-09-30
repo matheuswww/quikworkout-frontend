@@ -118,12 +118,12 @@
 }
 
 @media (min-width: 380px) {
-  .button,
-  .form input,
-  .error {
-    width: 310px;
-  }
+ .button,
+ .form input,
+ .error {
+  width: 310px;
  }
+}
 
 @media (min-width: 475px) {
  .button,

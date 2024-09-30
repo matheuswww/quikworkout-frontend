@@ -89,7 +89,7 @@ export default function CreateClothingForm({ ...props }: props) {
  const [inventory, setInventory] = useState<inventory[] | null>(null);
  const [mainInventory, setMainInventory] = useState<number>(0);
  const [success, setSuccess] = useState<boolean>(false);
- const [resetForm, setResetForm] = useState<boolean>(false)
+ const [resetForm, setResetForm] = useState<boolean>(false);
  const buttonRef = useRef<HTMLButtonElement | null>(null);
  const modalRef = useRef<HTMLFormElement | null>(null);
  const buttonCloseRef = useRef<HTMLButtonElement | null>(null);
@@ -145,9 +145,9 @@ export default function CreateClothingForm({ ...props }: props) {
    setPopupError(true);
   }
   if (res == 201) {
-   setInventory(null)
-   setResetForm(true)
-   reset()
+   setInventory(null);
+   setResetForm(true);
+   reset();
    setSuccess(true);
    await refresh('/');
    await refresh('/manager-quikworkout/roupas');
