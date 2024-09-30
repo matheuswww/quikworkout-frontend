@@ -198,7 +198,11 @@ export default function EditClothingCartForm({
       return;
      }
      setData(res);
-     setCount(clothing.quantidade);
+     if(clothing.quantidade > clothing.avaibleQuantity) {
+      setCount(clothing.avaibleQuantity)
+     } else {
+      setCount(clothing.quantidade)
+     }
      setSize(clothing.size);
      setLoad(false);
     })();

@@ -388,7 +388,7 @@ export default function GetClothingCartForm({ ...props }: props) {
          />
         </button>
         <button
-         className={`${styles.edit} ${styles.buttonOpen} ${(data.excedeEstoque || !data.disponivel) && styles.lowOpacity}`}
+         className={`${styles.edit} ${styles.buttonOpen} ${(!data.disponivel) && styles.lowOpacity}`}
          onClick={() =>
           handleEditClothingCart(
            data.roupa_id,
@@ -401,7 +401,6 @@ export default function GetClothingCartForm({ ...props }: props) {
          }
          aria-label="editar produto do carrinho"
          disabled={
-          data.excedeEstoque ||
           !data.disponivel ||
           openDeleteClothingCart ||
           openEditClothingCart ||
@@ -413,7 +412,7 @@ export default function GetClothingCartForm({ ...props }: props) {
           width={12}
           height={12}
           alt="editar produto"
-          className={`${(data.excedeEstoque || !data.disponivel) && styles.linkDisabled}`}
+          className={`${(!data.disponivel) && styles.linkDisabled}`}
          />
         </button>
        </div>
