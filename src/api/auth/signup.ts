@@ -15,6 +15,7 @@ export type ResponseSignup = status | 'recaptcha inválido';
 
 export default async function Signup(params: params): Promise<ResponseSignup> {
  let url = api;
+ 
  url += '/' + authPath + '/signup';
  try {
   let status: number = 0;

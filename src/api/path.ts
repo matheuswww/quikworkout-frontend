@@ -1,3 +1,3 @@
-export const apiImg = process.env.API_IMG ? process.env.API_IMG : "";
-export const api = process.env.API ? process.env.API : "";
-export const env = process.env.ENV ? process.env.ENV : "";
+export const apiImg = process.env.NEXT_PUBLIC_API_IMG || "";
+export const api = process.env.NEXT_PUBLIC_API || "";
+export const env = process.env.NEXT_PUBLIC_ENV || "";

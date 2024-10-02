@@ -4,7 +4,7 @@ const nextConfig = {
   remotePatterns: [
    {
     protocol: 'http',
-    hostname: '192.168.0.104',
+    hostname: 'localhost',
     port: '8081',
     pathname: '/images/**',
    },
@@ -12,6 +12,12 @@ const nextConfig = {
     protocol: 'https',
     hostname: 'sandbox.api.pagseguro.com',
     pathname: '/qrcode/**',
+   },
+   {
+    protocol: 'https',
+    hostname: 'backend.quikworkout.com.br',
+    port: '8081',
+    pathname: '/images/**',
    },
   ],
  },
