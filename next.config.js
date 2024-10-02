@@ -16,7 +16,7 @@ const nextConfig = {
    {
     protocol: 'https',
     hostname: 'backend.quikworkout.com.br',
-    port: '8081',
+    port: '443',
     pathname: '/images/**',
    },
   ],
