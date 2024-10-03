@@ -234,7 +234,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
    });
    setTimeout(() => {
     handleArrowClick(index, type, styles.displayNone);
-   },10);
+   },50);
   }
  }
 
