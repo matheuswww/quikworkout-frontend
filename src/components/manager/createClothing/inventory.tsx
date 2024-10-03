@@ -144,7 +144,6 @@ export default function Inventory({
    const newFileName = data.cor + index + fileType;
    return new File([i], newFileName, { type: i.type });
   });
-  console.log(newImages);
   if (err) {
    return;
   }

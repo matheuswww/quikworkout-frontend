@@ -42,8 +42,6 @@ export default async function CheckSigninCode(
     return res.json();
    }
   });
-  console.log(res);
-
   if (status == 200 || status == 500 || status == 401) {
    return status;
   }

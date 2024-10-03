@@ -805,7 +805,6 @@ export default function FinishPurchaseForm({ ...props }: props) {
     if (typeof res == 'string' && res.includes('order_id:')) {
      const startIndex = res.indexOf('order_id:');
      const beforeOrderId = res.substring(0, startIndex).trim().replace(',', '');
-     console.log(beforeOrderId)
      if(beforeOrderId != "não foi possível pagar o pedido") {
       setResponseError(beforeOrderId);
     } else {
