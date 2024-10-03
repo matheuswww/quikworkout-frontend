@@ -3,10 +3,12 @@
 import { cookies } from 'next/headers';
 
 export async function deleteCookie(key: string) {
- cookies().set({
+ cookies().delete({
   name: key,
-  value: '',
-  expires: new Date('2000-01-01'),
-  path: '/',
-})
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 0,
+  path: "/",
+  });
 }
