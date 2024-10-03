@@ -95,9 +95,7 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
     return;
    }
    setAddressData(res.data);
-   if (allLoad == null) {
-    setAllLoad((c) => c + 1);
-   }
+   setAllLoad((c) => c + 1);
   })();
  }, []);
 
