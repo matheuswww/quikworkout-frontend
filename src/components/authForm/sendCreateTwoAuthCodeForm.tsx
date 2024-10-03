@@ -13,8 +13,6 @@ import { deleteCookie } from '@/action/deleteCookie';
 import CheckCreateTwoAuthCodeForm from './checkCreateTwoAuthCodeForm';
 import GetUser from '@/api/user/getUser';
 import { ValidateEmail } from '@/funcs/validateEmail';
-import Recaptcha from '../recaptcha/recaptcha';
-import RecaptchaForm from '@/funcs/recaptchaForm';
 
 interface props {
  cookieName: string | undefined;
@@ -48,7 +46,6 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
  const [load, setLoad] = useState<boolean>(true);
  const [popUpError, setPopUpError] = useState<boolean>(false);
  const [next, setNext] = useState<boolean>(false);
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
  const {
   register,
   handleSubmit,
@@ -108,23 +105,12 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
  }, [next]);
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setError(null);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   const res = await SendCreateTwoAuthCode(cookie, {
    email: data.email,
    senha: data.password,
-   token: token,
   });
-  if (res == 'recaptcha inválido') {
-   setRecaptchaError('preencha o recaptcha novamente');
-   //@ts-ignore
-   window.grecaptcha.reset();
-  }
   if (res == 'seu código foi gerado porem não foi possivel criar uma sessão') {
    router.push('/auth/entrar');
   }
@@ -180,11 +166,9 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
         ) : (
          error == 'senha inválida' && <p className={styles.error}>{error}</p>
         )}
-        {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
         {error && error != 'senha inválida' && (
          <p className={styles.error}>{error}</p>
         )}
-        <Recaptcha className={styles.recaptcha} />
         <button
          disabled={load ? true : false}
          className={`${load && styles.loading} ${styles.button}`}

@@ -39,10 +39,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
 
  const [type, setType] = useState<'contact' | 'name' | null>(null);
 
- const [activeRecaptcha, setActiveRecatpcha] = useState<
-  'updateProfile' | 'changePassword' | null
- >(null);
-
  const [activeModal, setActiveModal] = useState<boolean>(false);
 
  const modalRefChangePassword = useRef<HTMLFormElement | null>(null);
@@ -125,7 +121,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
    </header>
    {
     <ChangePasswordForm
-     activeRecaptcha={activeRecaptcha}
      closeRef={closeRefChangePassword}
      modalRef={modalRefChangePassword}
      changed={changed}
@@ -154,7 +149,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
      setData={setData}
      cookieName={cookieName}
      cookieVal={cookieVal}
-     activeRecaptcha={activeRecaptcha}
      closeRef={closeRefUpdateProfile}
      modalRef={modalRefUpdateProfile}
      setLoad={setLoad}
@@ -179,7 +173,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
           className={`${styles.edit}`}
           disabled={activeModal}
           onClick={() => {
-           setActiveRecatpcha('updateProfile');
            setType('name');
            setTimeout(() =>
             handleModalClick(
@@ -209,7 +202,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
            className={`${styles.edit}`}
            disabled={activeModal}
            onClick={() => {
-            setActiveRecatpcha('updateProfile');
             setType('contact');
             setTimeout(() =>
              handleModalClick(
@@ -357,7 +349,6 @@ export default function MyAccount({ cookieName, cookieVal }: props) {
           ref={buttonToOpenModalRefChangePassword}
           disabled={activeModal}
           onClick={() => {
-           setActiveRecatpcha('changePassword');
            handleModalClick(
             modalRefChangePassword,
             buttonToOpenModalRefChangePassword,

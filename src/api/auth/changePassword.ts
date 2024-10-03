@@ -6,7 +6,6 @@ export type changePassword =
  | 'cookie inválido'
  | 'senha errada'
  | 'as senhas são as mesmas'
- | 'recaptcha inválido'
  | 500
  | 200
  | 401;
@@ -14,7 +13,6 @@ export type changePassword =
 interface params {
  senhaNova: string;
  senhaAntiga: string;
- token: string;
 }
 
 export default async function ChangePassword(
@@ -46,8 +44,7 @@ export default async function ChangePassword(
   if (
    res.message == 'cookie inválido' ||
    res.message == 'senha errada' ||
-   res.message == 'as senhas são as mesmas' ||
-   res.message == 'recaptcha inválido'
+   res.message == 'as senhas são as mesmas'
   ) {
    msg = res.message;
   }

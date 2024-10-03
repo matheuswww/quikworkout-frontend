@@ -12,8 +12,6 @@ import { deleteCookie } from '@/action/deleteCookie';
 import GetUser from '@/api/user/getUser';
 import SendRemoveTwoAuthCode from '@/api/auth/sendRemoveTwoAuthCode';
 import CheckRemoveTwoAuthCodeForm from './checkRemoveTwoAuthCode';
-import Recaptcha from '../recaptcha/recaptcha';
-import RecaptchaForm from '@/funcs/recaptchaForm';
 
 interface props {
  cookieName: string | undefined;
@@ -36,7 +34,6 @@ export default function SendRemoveTwoAuthCodeForm({ ...props }: props) {
  const [load, setLoad] = useState<boolean>(true);
  const [popUpError, setPopUpError] = useState<boolean>(false);
  const [next, setNext] = useState<boolean>(false);
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
 
  const {
   register,
@@ -93,22 +90,11 @@ export default function SendRemoveTwoAuthCodeForm({ ...props }: props) {
  }, [next]);
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setError(null);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   const res = await SendRemoveTwoAuthCode(cookie, {
    senha: data.password,
-   token: token,
   });
-  if (res == 'recaptcha inválido') {
-   setRecaptchaError('preencha o recaptcha novamente');
-   //@ts-ignore
-   window.grecaptcha.reset();
-  }
   if (res == 'contato não cadastrado') {
    router.push('/auth/entrar');
    return;
@@ -158,8 +144,6 @@ export default function SendRemoveTwoAuthCodeForm({ ...props }: props) {
         ) : (
          error && <p className={styles.error}>{error}</p>
         )}
-        {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-        <Recaptcha className={styles.recaptcha} />
         <button
          disabled={load ? true : false}
          className={`${load && styles.loading} ${styles.button}`}

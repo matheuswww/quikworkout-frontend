@@ -13,7 +13,6 @@ interface params {
  email: string | null;
  nome: string | null;
  senha: string;
- token: string;
 }
 
 export default async function UpdateProfile(

@@ -12,8 +12,6 @@ import CheckForgotPasswordCode, {
  checkForgotPasswordCodeResponse,
 } from '@/api/auth/checkForgotPasswordCode';
 import { deleteCookie } from '@/action/deleteCookie';
-import Recaptcha from '../recaptcha/recaptcha';
-import RecaptchaForm from '@/funcs/recaptchaForm';
 
 const schema = z.object({
  code: z
@@ -31,7 +29,6 @@ export default function CheckForgotPasswordCodeForm() {
   null,
  );
  const [popUpError, setPopUpError] = useState<boolean>(false);
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
  const {
   register,
   handleSubmit,
@@ -44,24 +41,11 @@ export default function CheckForgotPasswordCodeForm() {
 
  async function handleForm(data: FormProps) {
   setPopUpError(false);
-  setRecaptchaError(null);
   setError(null);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   const res = await CheckForgotPasswordCode({
    codigo: data.code,
-   token: token,
   });
-  if (res == 'recaptcha inválido') {
-   setRecaptchaError('preencha o recaptcha novamente');
-   setLoad(false);
-   //@ts-ignore
-   window.grecaptcha.reset();
-   return;
-  }
   if (
    res == 'você não possui um código registrado' ||
    res == 'código expirado'
@@ -149,13 +133,11 @@ export default function CheckForgotPasswordCodeForm() {
      ) : (
       error && <p className={styles.error}>{error}</p>
      )}
-     {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
      <Link onClick={handleClick} href="/auth/esqueci-minha-senha">
       {timer <= 60
        ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}`
        : 'Enviar outro código'}
      </Link>
-     <Recaptcha className={styles.recaptcha} />
      <button
       disabled={load ? true : false}
       type="submit"

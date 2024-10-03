@@ -10,8 +10,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import RecaptchaForm from '@/funcs/recaptchaForm';
-import Recaptcha from '../recaptcha/recaptcha';
 import { ValidateEmail } from '@/funcs/validateEmail';
 import UpdateProfile from '@/api/auth/updateProfile';
 import Password from '../authForm/password';
@@ -63,7 +61,6 @@ interface props {
  cookieName?: string;
  cookieVal?: string;
  type: 'contact' | 'name' | null;
- activeRecaptcha: 'updateProfile' | 'changePassword' | null;
  setData: Dispatch<SetStateAction<getUserResponse | null>>;
  load: boolean;
 }
@@ -76,14 +73,11 @@ export default function UpdateProfileForm({
  modalRef,
  closeRef,
  type,
- activeRecaptcha,
  setData,
  load,
 }: props) {
  const router = useRouter();
  const [responseError, setResponseError] = useState<string | null>(null);
-
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
  const {
   register,
   handleSubmit,
@@ -106,7 +100,6 @@ export default function UpdateProfileForm({
  }, [type]);
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setResponseError(null);
   setPopupError(false);
 
@@ -122,10 +115,6 @@ export default function UpdateProfileForm({
      message: '',
     });
    }
-   return;
-  }
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
    return;
   }
   setLoad(true);
@@ -146,7 +135,6 @@ export default function UpdateProfileForm({
    email: newEmail,
    nome: newName,
    senha: data.password,
-   token: token,
   });
 
   if (res == 'senha errada') {
@@ -226,10 +214,6 @@ export default function UpdateProfileForm({
     !errors.email?.message &&
     !errors.name?.message &&
     responseError && <p className={styles.error}>{responseError}</p>}
-   {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-   {activeRecaptcha == 'updateProfile' && (
-    <Recaptcha className={styles.recaptcha} />
-   )}
    <button type="submit" className={`${styles.button} ${styles.confirm}`}>
     Confirmar
    </button>

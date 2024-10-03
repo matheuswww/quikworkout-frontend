@@ -2,7 +2,6 @@
 
 import { z } from 'zod';
 import styles from './validateCodeForm.module.css';
-import stylesRecaptcha from './checkTwoAuthCode.module.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,8 +11,6 @@ import CheckTwoAuthCode, {
  checkTwoAuthCodeResponse,
 } from '@/api/auth/checkTwoAuthCode';
 import { deleteCookie } from '@/action/deleteCookie';
-import Recaptcha from '../recaptcha/recaptcha';
-import RecaptchaForm from '@/funcs/recaptchaForm';
 
 interface props {
  cookieName: string | undefined;
@@ -44,28 +41,14 @@ export default function CheckTwoAuthCodeForm({ ...props }: props) {
  const [load, setLoad] = useState<boolean>(false);
  const [error, setError] = useState<checkTwoAuthCodeResponse | null>(null);
  const [popUpError, setPopUpError] = useState<boolean>(false);
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setPopUpError(false);
   setError(null);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   const res = await CheckTwoAuthCode(cookie, {
    codigo: data.code,
-   token: token,
   });
-  if (res == 'recaptcha inválido') {
-   setRecaptchaError('preencha o recaptcha novamente');
-   setLoad(false);
-   //@ts-ignore
-   window.grecaptcha.reset();
-   return;
-  }
   if (res == 'usuário não possui autenticação de dois fatores') {
    await deleteCookie('userTwoAuth');
    window.location.href = '/auth/entrar';
@@ -120,8 +103,6 @@ export default function CheckTwoAuthCodeForm({ ...props }: props) {
      ) : (
       error && <p className={styles.error}>{error}</p>
      )}
-     {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-     <Recaptcha className={stylesRecaptcha.recaptcha} />
      <button
       type="submit"
       className={`${load && styles.loading}`}

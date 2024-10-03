@@ -10,14 +10,12 @@ export type checkForgotPasswordCodeResponse =
  | 'usuário já possui autenticação de dois fatores'
  | 'código valido porém não foi possivel criar uma sessão'
  | 'você não possui um código registrado'
- | 'recaptcha inválido'
  | 500
  | 200
  | 401;
 
 interface params {
  codigo: string;
- token: string;
 }
 
 export default async function CheckForgotPasswordCode(
@@ -52,8 +50,7 @@ export default async function CheckForgotPasswordCode(
    res.message == 'código valido porém não foi possivel criar uma sessão' ||
    res.message == 'código inválido' ||
    res.message == 'usuário já possui autenticação de dois fatores' ||
-   res.message == 'você não possui um código registrado' ||
-   res.message == 'recaptcha inválido'
+   res.message == 'você não possui um código registrado'
   ) {
    msg = res.message;
   }

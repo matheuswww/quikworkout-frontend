@@ -7,7 +7,6 @@ export type sendCreateTwoAuthCodeResponse =
  | 'usuário não é verificado'
  | 'seu código foi gerado porem não foi possivel criar uma sessão'
  | 'senha errada'
- | 'recaptcha inválido'
  | 500
  | 200
  | 401;
@@ -15,7 +14,6 @@ export type sendCreateTwoAuthCodeResponse =
 interface params {
  email: string;
  senha: string;
- token: string;
 }
 
 export default async function SendCreateTwoAuthCode(
@@ -49,8 +47,7 @@ export default async function SendCreateTwoAuthCode(
    res?.message == 'usuário não é verificado' ||
    res?.message == 'senha errada' ||
    res?.message ==
-    'seu código foi gerado porem não foi possivel criar uma sessão' ||
-   res?.message == 'recaptcha inválido'
+    'seu código foi gerado porem não foi possivel criar uma sessão'
   ) {
    msg = res?.message;
   }

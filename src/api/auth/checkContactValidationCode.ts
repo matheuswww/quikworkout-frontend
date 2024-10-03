@@ -9,14 +9,12 @@ export type checkContactValidationCodeResponse =
  | 'código inválido'
  | 'código expirado'
  | 'você não possui um código registrado'
- | 'recaptcha inválido'
  | 500
  | 200
  | 401;
 
 interface params {
  codigo: string;
- token: string;
 }
 
 export default async function CheckContactValidationCode(
@@ -52,8 +50,7 @@ export default async function CheckContactValidationCode(
    res.message == 'máximo de tentativas atingido' ||
    res.message == 'código inválido' ||
    res.message == 'código expirado' ||
-   res.message == 'você não possui um código registrado' ||
-   res.message == 'recaptcha inválido'
+   res.message == 'você não possui um código registrado'
   ) {
    msg = res.message;
   }

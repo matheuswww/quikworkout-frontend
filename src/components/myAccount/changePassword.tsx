@@ -12,8 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Password from '../authForm/password';
 import ChangePassword from '@/api/auth/changePassword';
-import RecaptchaForm from '@/funcs/recaptchaForm';
-import Recaptcha from '../recaptcha/recaptcha';
 import { deleteCookie } from '@/action/deleteCookie';
 
 const schema = z.object({
@@ -38,7 +36,6 @@ interface props {
  changed: boolean;
  cookieName?: string;
  cookieVal?: string;
- activeRecaptcha: 'updateProfile' | 'changePassword' | null;
  load: boolean;
 }
 
@@ -51,13 +48,10 @@ export default function ChangePasswordForm({
  changed,
  modalRef,
  closeRef,
- activeRecaptcha,
  load,
 }: props) {
  const router = useRouter();
  const [responseError, setResponseError] = useState<string | null>(null);
-
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
  const {
   register,
   handleSubmit,
@@ -69,13 +63,8 @@ export default function ChangePasswordForm({
  });
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setResponseError(null);
   setPopupError(false);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   if (cookieName == undefined || cookieVal == undefined) {
    router.push('/auth/entrar');
@@ -85,15 +74,9 @@ export default function ChangePasswordForm({
   const res = await ChangePassword(cookie, {
    senhaNova: data.newPassword,
    senhaAntiga: data.password,
-   token: token,
   });
   if (typeof res == 'number' && res == 200) {
    setChanged(true);
-  }
-  if (typeof res == 'string' && res == 'recaptcha inválido') {
-   setRecaptchaError(res);
-   //@ts-ignore
-   window.grecaptcha.reset();
   }
   if (
    typeof res == 'string' &&
@@ -158,10 +141,6 @@ export default function ChangePasswordForm({
    {!errors.password?.message &&
     !errors.newPassword?.message &&
     responseError && <p className={styles.error}>{responseError}</p>}
-   {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-   {activeRecaptcha == 'changePassword' && (
-    <Recaptcha className={styles.recaptcha} />
-   )}
    <button type="submit" className={`${styles.button} ${styles.confirm}`}>
     Confirmar
    </button>

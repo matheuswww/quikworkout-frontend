@@ -12,8 +12,6 @@ import CheckCreateTwoAuthCode, {
  checkCreateTwoAuthCodeResponse,
 } from '@/api/auth/checkCreateTwoAuthCode';
 import { deleteCookie } from '@/action/deleteCookie';
-import Recaptcha from '../recaptcha/recaptcha';
-import RecaptchaForm from '@/funcs/recaptchaForm';
 
 interface props {
  cookie: string;
@@ -35,7 +33,6 @@ export default function CheckCreateTwoAuthCodeForm({ ...props }: props) {
   null,
  );
  const [popUpError, setPopUpError] = useState<boolean>(false);
- const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
  const {
   register,
   handleSubmit,
@@ -47,25 +44,12 @@ export default function CheckCreateTwoAuthCodeForm({ ...props }: props) {
  });
 
  async function handleForm(data: FormProps) {
-  setRecaptchaError(null);
   setPopUpError(false);
   setError(null);
-  const token = RecaptchaForm(setRecaptchaError);
-  if (token == '') {
-   return;
-  }
   setLoad(true);
   const res = await CheckCreateTwoAuthCode(props.cookie, {
    codigo: data.code,
-   token: token,
   });
-  if (res == 'recaptcha inválido') {
-   setRecaptchaError('preencha o recaptcha novamente');
-   //@ts-ignore
-   window.grecaptcha.reset();
-   setLoad(false);
-   return;
-  }
   if (
    res == 'você não possui um código registrado' ||
    res == 'código expirado'
@@ -152,13 +136,11 @@ export default function CheckCreateTwoAuthCodeForm({ ...props }: props) {
      ) : (
       error && <p className={styles.error}>{error}</p>
      )}
-     {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
      <Link onClick={handleClick} href="/auth/criar-dois-fatores">
       {timer <= 60
        ? `Não chegou? Aguarde 1 minuto para pedir outro código ${timer}`
        : 'Enviar outro código'}
      </Link>
-     <Recaptcha className={styles.recaptcha} />
      <button
       disabled={load ? true : false}
       type="submit"
