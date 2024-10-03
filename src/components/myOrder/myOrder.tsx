@@ -83,6 +83,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
       if (
        res.data[i].tipo_pagamento == 'PIX' &&
        res.data[i].status_pagamento != 'SUCESSO' &&
+       res.data[i].status_pagamento != 'pago' &&
        res.data[i].status_pagamento != 'autorizado' &&
        res.data[i].status_pagamento != 'cancelado'
       ) {
@@ -233,7 +234,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
    });
    setTimeout(() => {
     handleArrowClick(index, type, styles.displayNone);
-   });
+   },10);
   }
  }
 
