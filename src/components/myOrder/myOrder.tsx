@@ -153,12 +153,12 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
   tipoPagamento: string,
   pedido_id: string,
  ): Promise<getOrderDetailResponse | null> {
+  setLoad(true);
   if (cookieName == undefined || cookieVal == undefined) {
    router.push('/auth/entrar');
    return null;
   }
   const cookie = cookieName + '=' + cookieVal;
-  setLoad(true);
   setPopupError(false);
 
   let paymentType: string = '';
@@ -234,7 +234,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
    });
    setTimeout(() => {
     handleArrowClick(index, type, styles.displayNone);
-   },50);
+   },10);
   }
  }
 
