@@ -157,6 +157,7 @@ export default function Boleto({
  function handleForm(data: FormProps) {
   const region = data.regionCode.substring(5);
   const regionCode = data.regionCode.slice(0, 2);
+  data.email = data.email.toLocaleLowerCase()
   if (data.cep.includes('-')) {
    data.cep = data.cep.replace('-', '');
   }
@@ -306,7 +307,7 @@ export default function Boleto({
     {...register('cep')}
     className={styles.input}
     placeholder="cep"
-    type="number"
+    type="text"
     id="cep3"
    />
    {errors.cep && <p className={styles.error}>{errors.cep.message}</p>}
