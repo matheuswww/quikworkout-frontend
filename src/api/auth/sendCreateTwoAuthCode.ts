@@ -3,7 +3,6 @@ import { ResponseErr } from '../responseErr';
 import { twoAuthPath } from '../user/userPath';
 
 export type sendCreateTwoAuthCodeResponse =
- | 'contato já utilizado para autenticação'
  | 'usuário já possui autenticação de dois fatores'
  | 'usuário não é verificado'
  | 'seu código foi gerado porem não foi possivel criar uma sessão'
@@ -46,7 +45,6 @@ export default async function SendCreateTwoAuthCode(
   }
   let msg: sendCreateTwoAuthCodeResponse | null = null;
   if (
-   res?.message == 'contato já utilizado para autenticação' ||
    res?.message == 'usuário já possui autenticação de dois fatores' ||
    res?.message == 'usuário não é verificado' ||
    res?.message == 'senha errada' ||

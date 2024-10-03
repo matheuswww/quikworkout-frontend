@@ -130,14 +130,6 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
   }
   if (res == 500) {
    setPopUpError(true);
-  } else if (
-   res == 'contato já utilizado para autenticação'
-  ) {
-   if (res == 'contato já utilizado para autenticação') {
-    setError('email já utilizado para autenticação');
-   } else {
-    setError(res);
-   }
   } else if (res == 'senha errada') {
    setError('senha inválida');
   } else if (res == 'usuário já possui autenticação de dois fatores') {
