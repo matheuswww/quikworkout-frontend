@@ -5,8 +5,6 @@ import { twoAuthPath } from '../user/userPath';
 export type sendCreateTwoAuthCodeResponse =
  | 'contato já utilizado para autenticação'
  | 'usuário já possui autenticação de dois fatores'
- | 'este email já é utilizado para sua autenticação'
- | 'este telefone já é utilizado para sua autenticação'
  | 'usuário não é verificado'
  | 'seu código foi gerado porem não foi possivel criar uma sessão'
  | 'senha errada'
@@ -50,8 +48,6 @@ export default async function SendCreateTwoAuthCode(
   if (
    res?.message == 'contato já utilizado para autenticação' ||
    res?.message == 'usuário já possui autenticação de dois fatores' ||
-   res?.message == 'este email já é utilizado para sua autenticação' ||
-   res?.message == 'este telefone já é utilizado para sua autenticação' ||
    res?.message == 'usuário não é verificado' ||
    res?.message == 'senha errada' ||
    res?.message ==

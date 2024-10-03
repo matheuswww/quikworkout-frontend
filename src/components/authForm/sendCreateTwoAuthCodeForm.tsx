@@ -131,8 +131,7 @@ export default function SendCreateTwoAuthCodeForm({ ...props }: props) {
   if (res == 500) {
    setPopUpError(true);
   } else if (
-   res == 'contato já utilizado para autenticação' ||
-   res == 'este email já é utilizado para sua autenticação'
+   res == 'contato já utilizado para autenticação'
   ) {
    if (res == 'contato já utilizado para autenticação') {
     setError('email já utilizado para autenticação');
