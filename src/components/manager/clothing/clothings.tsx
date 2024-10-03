@@ -61,15 +61,14 @@ export default function Clothings({ ...props }: props) {
      router.push('/manager-quikworkout/auth');
      return;
     }
-    if (res.status == 200) {
-     setData(res);
-    }
     if (data?.clothing && res.clothing) {
      data.clothing.push(...res.clothing);
      setData({
       clothing: data.clothing,
       status: 200,
      });
+    } else {
+      setData(res)
     }
     setNewPage(false);
     setTimeout(() => {

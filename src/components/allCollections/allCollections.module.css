@@ -10,7 +10,7 @@
  justify-content: center;
  max-width: 1020px;
  margin-top: 50px;
- min-height: 665px;
+ min-height: 770px;
 }
 
 .h2 {
@@ -183,7 +183,6 @@
 @media (min-width: 660px) {
  .firstCard {
   position: relative;
-  bottom: 48px;
   display: block;
  }
 }

@@ -104,6 +104,7 @@ export default function Inventory({
  const [error, setError] = useState<string | null>(null);
 
  function handleForm(data: FormProps) {
+  setError(null)
   const seenColors = new Set();
   let error: boolean = false;
   seenColors.add(data.cor);

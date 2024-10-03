@@ -62,7 +62,7 @@ export default async function AllCollections({ searchParams }: props) {
               '?img=' +
               image
              }
-             style={{ display: 'block' }}
+             style={{ display: 'block'}}
              className={styles.card}
             >
              <SkeletonImage

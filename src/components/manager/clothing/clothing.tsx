@@ -228,7 +228,7 @@ export default function Clothing({
     }
     return true;
    });
-   if (newAllData && newAllData?.length > 1) {
+   if (newAllData && newAllData?.length >= 1) {
     setData({
      clothing: newAllData,
      status: 200,

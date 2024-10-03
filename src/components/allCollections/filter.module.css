@@ -114,13 +114,14 @@
  text-align: center;
  color: #e4e4e4;
  margin-top: 15px;
- margin-left: 14px;
  font-family: var(--interSemiBold);
 }
 
-@media (max-width: 660px) {
+@media (min-width: 660px) {
  .filterButton {
-  margin-left: 0px;
+  margin-left: 14px;
+  position: absolute;
+  top: -48px;
  }
 }
 
