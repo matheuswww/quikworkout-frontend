@@ -183,14 +183,15 @@
 }
 
 @media (max-height: 500px) {
- .main {
-  height: 1000%;
+  .main {
+   height: initial;
+   padding-top: 20px;
+  }
+ 
+  .containerBackground {
+   height: 100vh;
+  }
  }
-
- .containerBackground {
-  height: 520px;
- }
-}
 
 @media (hover: hover) {
  .login:hover {
