@@ -267,6 +267,14 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
   }
  }
 
+ function hasSevenDaysPassed(date: string): boolean {
+  const originalDate = new Date(date).getTime();
+  const currentDate = new Date().getTime();
+  const diffInMilliseconds = currentDate - originalDate;
+  const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+  return diffInMilliseconds > sevenDaysInMilliseconds;
+}
+
  return (
   <>
    <header>
@@ -841,7 +849,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
             </Link>
            </div>
           )}
-         <p className={styles.cancelOrder}>
+         {!hasSevenDaysPassed(infos.criadoEm) && <p className={styles.cancelOrder}>
           Deseja cancelar o pedido? Nos chame no:{' '}
           <Link
            style={{ fontSize: '.9rem' }}
@@ -851,7 +859,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
           >
            whatsapp
           </Link>
-         </p>
+         </p>}
         </div>
        );
       })
