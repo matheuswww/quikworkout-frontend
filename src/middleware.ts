@@ -45,7 +45,6 @@ function CheckAdminProfileExist(request: NextRequest) {
 
 function CheckAdminProfileCookieNotExist(request: NextRequest) {
  const cookie = request.cookies.get('adminProfile');
- console.log(cookie);
  if (!cookie) {
   return NextResponse.next();
  }
