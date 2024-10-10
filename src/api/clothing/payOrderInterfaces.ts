@@ -5,7 +5,15 @@ export interface card {
  expAno: string;
  cvv: string;
  parcelas: number;
+ encriptado: string;
  id3DS: string | null;
+}
+
+export interface cardRequest {
+  nome: string;
+  parcelas: number;
+  encriptado: string;
+  id3DS: string | null;
 }
 
 export interface boleto {

@@ -197,6 +197,16 @@ export default function Card({
  const formRef = useRef<HTMLFormElement | null>(null);
 
  useEffect(() => {
+  if (paymentType == 'debit_card' || paymentType == 'credit_card') {
+    const pagbank_script = document.querySelector('#pagbank_script');
+    if (!(pagbank_script instanceof HTMLScriptElement)) {
+     const script = document.createElement('script');
+     script.src =
+      'https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js';
+     script.id = 'pagbank_script';
+     document.body.append(script);
+    }
+  }
   if (paymentType == 'debit_card') {
    (async function () {
     setError(false);
@@ -229,14 +239,6 @@ export default function Card({
      setPaymentType('card');
      return;
     }
-    const pagbank_script = document.querySelector('#pagbank_script');
-    if (!(pagbank_script instanceof HTMLScriptElement)) {
-     const script = document.createElement('script');
-     script.src =
-      'https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js';
-     script.id = 'pagbank_script';
-     document.body.append(script);
-    }
     setIdTo3ds(data.session);
     setIdTo3dsExpiration(data.expires_at);
     setLoad(false);
@@ -260,7 +262,26 @@ export default function Card({
   const expMonth = Number(data.expMonth);
   const installments = Number(data.installments);
   if (!isNaN(expMonth) && !isNaN(installments)) {
+    /*@ts-ignore*/
+  const encryptedCard = PagSeguro.encryptCard({
+    publicKey: process.env.NEXT_PUBLIC_PAGBANK_KEY,
+    holder: data.holder,
+    number: data.cardNumber,
+    expMonth: expMonth,
+    expYear: data.expYear,
+    securityCode: data.cvv
+  });
+  if (encryptedCard.hasErrors) {
+    setError(true)
+    return
+  }
+  if(encryptedCard.errors.length >= 1) {
+    setError(true)
+    return
+  }
+  
    setCard({
+    encriptado: encryptedCard.encryptedCard,
     nome: data.holder,
     numeroCartao: data.cardNumber.replace(/\s+/g, ''),
     cvv: data.cvv,

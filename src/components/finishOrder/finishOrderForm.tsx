@@ -405,6 +405,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
    env: env,
   });
   let id: string = '';
+
   /*@ts-ignore*/
   await PagSeguro.authenticate3DS(request)
    /*@ts-ignore*/
@@ -529,8 +530,11 @@ export default function FinishPurchaseForm({ ...props }: props) {
       return;
      }
      if (newCard) {
-      newCard.id3DS = id;
-     }
+       newCard.id3DS = id;
+      }
+    }
+    if(!newCard) {
+     return
     }
 
     const res = await PayOrder(cookie, {
@@ -548,7 +552,12 @@ export default function FinishPurchaseForm({ ...props }: props) {
      rua: address.rua,
      servico: address.servico,
      boleto: boleto,
-     cartao: newCard,
+     cartao: {
+      encriptado: newCard.encriptado,
+      id3DS: newCard.id3DS,
+      nome: newCard.nome,
+      parcelas: newCard.parcelas,
+     },
      roupa: clothing,
      telefone: address.telefone,
      tipoPagamento:
@@ -736,11 +745,19 @@ export default function FinishPurchaseForm({ ...props }: props) {
      newCard.id3DS = id;
     }
    }
+   if (!newCard) {
+    return;
+   }
 
    const res = await RetryPayment(cookie, {
     novoTipoPagamento: newPayment,
     boleto: boleto,
-    cartao: newCard,
+    cartao: {
+      encriptado: newCard.encriptado,
+      id3DS: newCard.id3DS,
+      nome: newCard.nome,
+      parcelas: newCard.parcelas,
+    },
     pedido_id: retryPaymentId,
     precoTotal: tp,
     roupa: clothing,

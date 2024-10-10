@@ -3,7 +3,7 @@ import { ResponseErr } from '../responseErr';
 import { clothingPath } from './clothingPath';
 import {
  boleto,
- card,
+ cardRequest,
  clothing,
  phoneNumber,
  responseErrorsPayOrder,
@@ -44,7 +44,7 @@ interface params {
 
  tipoPagamento: string;
 
- cartao: card | null;
+ cartao: cardRequest | null;
  boleto: boleto | null;
 
  token: string;
