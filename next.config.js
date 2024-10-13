@@ -15,6 +15,11 @@ const nextConfig = {
    },
    {
     protocol: 'https',
+    hostname: 'api.pagseguro.com',
+    pathname: '/qrcode/**',
+   },
+   {
+    protocol: 'https',
     hostname: 'backend.quikworkout.com.br',
     pathname: '/images/**',
    },
