@@ -4,6 +4,11 @@
  height: 300px;
 }
 
+.clothing {
+  width: 225px;
+  height: 300px;
+}
+
 .allCollections {
  position: relative;
  display: grid;

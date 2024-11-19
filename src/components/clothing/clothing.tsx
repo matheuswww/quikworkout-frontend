@@ -524,8 +524,8 @@ export default function Clothing({ ...props }: props) {
                src={src}
                alt={imgDesc}
                loading="lazy"
-               width={290}
-               height={460}
+               width={600}
+               height={900}
                className={styles.clothing}
                key={data.clothing?.id}
                id={index.toString()}

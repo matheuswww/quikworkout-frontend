@@ -68,8 +68,8 @@ export default async function AllCollections({ searchParams }: props) {
              <SkeletonImage
               src={images[0]}
               alt={clothing.inventario[indexInventory].imgDesc}
-              width={225}
-              height={300}
+              width={600}
+              height={900}
               className={styles.clothing}
              />
              <div className={styles.clothingInfos}>
@@ -98,8 +98,8 @@ export default async function AllCollections({ searchParams }: props) {
            <SkeletonImage
             src={images[0]}
             alt={clothing.inventario[indexInventory].imgDesc}
-            width={225}
-            height={300}
+            width={600}
+            height={900}
             className={styles.clothing}
            />
            <div className={styles.clothingInfos}>

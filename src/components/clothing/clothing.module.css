@@ -52,6 +52,8 @@
  -moz-user-select: none;
  -ms-user-select: none;
  user-select: none;
+ width: 290px;
+ height: 460px;
 }
 
 .slide {

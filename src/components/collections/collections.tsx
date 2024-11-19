@@ -29,7 +29,7 @@ export default function Collections() {
      ref={wrapper}
      aria-label="slide com diversas coleções de roupas"
     >
-     <h2 className={styles.h2}>Coleções</h2>
+     <h2 className={styles.h2}>Nova Coleção</h2>
      <ul className={styles.slide} ref={slide}>
       <li className={styles.product}>
        <Link className={styles.card} href="#">
@@ -37,8 +37,8 @@ export default function Collections() {
         <SkeletonImage
          draggable={false}
          src="/img/collection_white.jpg"
-         width={145}
-         height={200}
+         width={600}
+         height={900}
          alt="mulher olhando para a câmera com uma regata branca"
          className={styles.skeleton}
         />
@@ -50,8 +50,8 @@ export default function Collections() {
         <SkeletonImage
          draggable={false}
          src="/img/collection_black.jpg"
-         width={145}
-         height={200}
+         width={600}
+         height={900}
          alt="mulher olhando para a câmera com uma regata preta"
          className={styles.skeleton}
         />
@@ -63,8 +63,8 @@ export default function Collections() {
         <SkeletonImage
          draggable={false}
          src="/img/collection_pink.jpg"
-         width={145}
-         height={200}
+         width={600}
+         height={900}
          alt="mulher olhando para a câmera com uma regata rosa"
          className={styles.skeleton}
         />
@@ -76,8 +76,8 @@ export default function Collections() {
         <SkeletonImage
          draggable={false}
          src="/img/collection_green.jpg"
-         width={145}
-         height={200}
+         width={600}
+         height={900}
          alt="mulher olhando para a câmera com uma regata verde"
          className={styles.skeleton}
         />
