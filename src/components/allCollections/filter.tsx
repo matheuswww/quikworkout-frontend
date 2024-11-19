@@ -129,20 +129,20 @@ export default function Filter() {
    <label htmlFor="color">Cor</label>
    <select id="color" {...register('cor')}>
     <option value="">Selecione uma opção</option>
-    <option value="vermelho">preta</option>
-    <option value="vermelho">branca</option>
-    <option value="vermelho">verde</option>
-    <option value="vermelho">rosa</option>
+    <option value="Preta">Preta</option>
+    <option value="Branca">branca</option>
+    <option value="Verde">Verde</option>
+    <option value="Rosa">Rosa</option>
    </select>
    <label htmlFor="category">Categoria</label>
    <select id="category" {...register('category')}>
     <option value="">Selecione uma opção</option>
-    <option value="crossfit">Modelo Pry</option>
+    <option value="Modelo Pry">Modelo Pry</option>
    </select>
    <label htmlFor="material">Material</label>
    <select id="material" {...register('material')}>
     <option value="">Selecione uma opção</option>
-    <option value="drif-t">Poliamida</option>
+    <option value="Poliamida">Poliamida</option>
    </select>
    <label>Genêro</label>
    <div className={styles.gender}>
