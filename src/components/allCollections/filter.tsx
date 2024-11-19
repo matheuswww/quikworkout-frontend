@@ -130,7 +130,7 @@ export default function Filter() {
    <select id="color" {...register('cor')}>
     <option value="">Selecione uma opção</option>
     <option value="Preta">Preta</option>
-    <option value="Branca">branca</option>
+    <option value="Branca">Branca</option>
     <option value="Verde">Verde</option>
     <option value="Rosa">Rosa</option>
    </select>
