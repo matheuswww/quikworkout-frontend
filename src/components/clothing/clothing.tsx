@@ -607,7 +607,7 @@ export default function Clothing({ ...props }: props) {
         </div>
         <div className={styles.freight}>
          {data?.clothing &&
-         Math.round((data.clothing.preco * count * 100) / 100) < 200 ? (
+         Math.round((data.clothing.preco * count * 100) / 100) < 300 ? (
           <button
            className={styles.calcFreight}
            ref={buttonToOpenModalFreight}

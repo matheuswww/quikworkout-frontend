@@ -236,7 +236,7 @@ export default function CalcFreightForm({
       </div>
       {data?.vlrFrete && (
        <p className={styles.price}>
-        {totalPrice < 200
+        {totalPrice < 300
          ? `Frete: R$${formatPrice(data.vlrFrete)}`
          : 'Frete grátis'}
        </p>

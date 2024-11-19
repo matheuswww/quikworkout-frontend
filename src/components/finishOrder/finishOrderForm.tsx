@@ -518,7 +518,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
     if (vlrFrete == null) {
      return;
     }
-    if (totalPrice >= 200) {
+    if (totalPrice >= 300) {
      vlrFrete = 0;
     }
     const newCard = card;
@@ -878,7 +878,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
        <p className={`${styles.price} ${styles.totalPrice}`}>
         Preço: R${formatPrice(totalPrice)}
        </p>
-       {totalPrice >= 200 ? (
+       {totalPrice >= 300 ? (
         <p style={{ marginBottom: '10px' }} className={styles.price}>
          Frete grátis
         </p>
