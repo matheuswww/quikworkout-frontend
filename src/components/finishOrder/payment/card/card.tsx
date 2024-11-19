@@ -401,7 +401,7 @@ export default function Card({
     <option value="2035">2040</option>
    </select>
    {errors.expYear && <p className={styles.error}>{errors.expYear.message}</p>}
-   {paymentType == 'credit_card' && price >= 200 && (
+   {paymentType == 'credit_card' && price >= 300 && (
     <>
      <label
       className={`${styles.label}`}
