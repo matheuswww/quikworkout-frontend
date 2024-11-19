@@ -13,6 +13,8 @@
 .clothing {
  object-fit: cover;
  border-radius: 5px;
+ width: 290px;
+ height: 460px;
 }
 
 .slide {

@@ -122,8 +122,9 @@ export default function Products({
          <ClothingImg
           src={infos.imagem}
           alt={infos.alt}
-          width={80}
-          height={85}
+          
+          width={300}
+          height={450}
           className={`${(infos.excedeEstoque || !infos.disponivel) && styles.lowOpacity}`}
          />
          <div className={`${styles.values}`}>

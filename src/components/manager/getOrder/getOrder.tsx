@@ -368,8 +368,9 @@ export default function GetOrderAdmin({
                <Image
                 src={clothing.imagem}
                 alt={clothing.alt}
-                width={80}
-                height={85}
+                width={100}
+                height={150}
+                className={styles.img}
                />
                <div className={`${styles.values}`}>
                 <p className={styles.field}>Nome: </p>

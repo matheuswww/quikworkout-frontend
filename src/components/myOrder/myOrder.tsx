@@ -795,8 +795,9 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
                 <ClothingImg
                  src={clothing.imagem}
                  alt={clothing.alt}
-                 width={80}
-                 height={85}
+                 width={300}
+                 height={450}
+                 className={styles.img}
                 />
                 <div className={`${styles.values}`}>
                  <p className={styles.field}>Preço: </p>
