@@ -36,10 +36,10 @@ export default function Collections() {
         <p>Cropped</p>
         <SkeletonImage
          draggable={false}
-         src="/img/cropped.png"
+         src="/img/collection_white.jpg"
          width={145}
          height={200}
-         alt="mulher olhando para baixo vestindo uma roupa escrito just workout"
+         alt="mulher "
          className={styles.skeleton}
         />
        </Link>
@@ -49,10 +49,10 @@ export default function Collections() {
         <p>Cropped</p>
         <SkeletonImage
          draggable={false}
-         src="/img/cropped.png"
+         src="/img/collection_black.jpg"
          width={145}
          height={200}
-         alt="mulher olhando para baixo vestindo uma roupa escrito just workout"
+         alt="mulher "
          className={styles.skeleton}
         />
        </Link>
@@ -62,10 +62,23 @@ export default function Collections() {
         <p>Cropped</p>
         <SkeletonImage
          draggable={false}
-         src="/img/cropped.png"
+         src="/img/collection_pink.jpg"
          width={145}
          height={200}
-         alt="mulher olhando para baixo vestindo uma roupa escrito just workout"
+         alt="mulher "
+         className={styles.skeleton}
+        />
+       </Link>
+      </li>
+      <li className={styles.product}>
+       <Link className={styles.card} href="#">
+        <p>Cropped</p>
+        <SkeletonImage
+         draggable={false}
+         src="/img/collection_green.jpg"
+         width={145}
+         height={200}
+         alt="mulher "
          className={styles.skeleton}
         />
        </Link>
