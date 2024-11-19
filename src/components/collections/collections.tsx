@@ -33,52 +33,52 @@ export default function Collections() {
      <ul className={styles.slide} ref={slide}>
       <li className={styles.product}>
        <Link className={styles.card} href="#">
-        <p>Cropped</p>
+        <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
          src="/img/collection_white.jpg"
          width={145}
          height={200}
-         alt="mulher "
+         alt="mulher olhando para a câmera com uma regata branca"
          className={styles.skeleton}
         />
        </Link>
       </li>
       <li className={styles.product}>
        <Link className={styles.card} href="#">
-        <p>Cropped</p>
+        <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
          src="/img/collection_black.jpg"
          width={145}
          height={200}
-         alt="mulher "
+         alt="mulher olhando para a câmera com uma regata preta"
          className={styles.skeleton}
         />
        </Link>
       </li>
       <li className={styles.product}>
        <Link className={styles.card} href="#">
-        <p>Cropped</p>
+        <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
          src="/img/collection_pink.jpg"
          width={145}
          height={200}
-         alt="mulher "
+         alt="mulher olhando para a câmera com uma regata rosa"
          className={styles.skeleton}
         />
        </Link>
       </li>
       <li className={styles.product}>
        <Link className={styles.card} href="#">
-        <p>Cropped</p>
+        <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
          src="/img/collection_green.jpg"
          width={145}
          height={200}
-         alt="mulher "
+         alt="mulher olhando para a câmera com uma regata verde"
          className={styles.skeleton}
         />
        </Link>

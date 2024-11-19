@@ -36,6 +36,10 @@
  list-style: none;
 }
 
+.product p {
+  width: max-content;
+}
+
 .card img {
  opacity: 35%;
  height: 100%;
