@@ -12,7 +12,6 @@ const schema = z
   minPrice: z.string(),
   category: z.string(),
   material: z.string(),
-  cor: z.string(),
   m: z.boolean(),
   f: z.boolean(),
  })
@@ -105,8 +104,7 @@ export default function Filter() {
      : data.minPrice,
    );
   if (data.category) params.append('categoria', data.category);
-  if (data.material) params.append('material', data.material);
-  if (data.cor) params.append('cor', data.cor);
+  if (data.material) params.append('material', data.material)
   if (data.m == true) params.append('m', data.m.toString());
   if (data.f == true) params.append('f', data.f.toString());
   const newUrl = `${baseUrl}?${params.toString()}`;
@@ -126,14 +124,6 @@ export default function Filter() {
    tabIndex={0}
   >
    <p className={styles.filterClothing}>Filtrar roupas</p>
-   <label htmlFor="color">Cor</label>
-   <select id="color" {...register('cor')}>
-    <option value="">Selecione uma opção</option>
-    <option value="Preta">Preta</option>
-    <option value="Branca">Branca</option>
-    <option value="Verde">Verde</option>
-    <option value="Rosa">Rosa</option>
-   </select>
    <label htmlFor="category">Categoria</label>
    <select id="category" {...register('category')}>
     <option value="">Selecione uma opção</option>

@@ -4,7 +4,6 @@ import { clothingPath } from './clothingPath';
 interface params {
  sexo?: string;
  categoria?: string;
- cor?: string;
  material?: string;
  cursor?: string;
  precoMaximo?: number;
@@ -98,9 +97,6 @@ function getParams(params: params): string {
  }
  if (params.categoria !== undefined) {
   urlParams += 'categoria=' + params.categoria + '&';
- }
- if (params.cor !== undefined) {
-  urlParams += 'cor=' + params.cor + '&';
  }
  if (params.material !== undefined) {
   urlParams += 'material=' + params.material + '&';

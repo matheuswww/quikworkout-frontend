@@ -17,7 +17,6 @@ interface props {
  searchParams: {
   categoria?: string;
   material?: string;
-  cor?: string;
   m?: string;
   f?: string;
   precoMaximo?: number;

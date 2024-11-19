@@ -11,7 +11,6 @@ interface props {
  searchParams: {
   categoria?: string;
   material?: string;
-  cor?: string;
   m?: string;
   f?: string;
   precoMaximo?: number;
@@ -23,7 +22,6 @@ export default async function AllCollections({ searchParams }: props) {
  const data = await GetAllClothing({
   categoria: searchParams.categoria,
   material: searchParams.material,
-  cor: searchParams.cor,
   precoMinimo: searchParams.precoMinimo,
   precoMaximo: searchParams.precoMaximo,
   m: searchParams.m,
