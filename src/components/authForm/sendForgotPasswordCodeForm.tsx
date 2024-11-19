@@ -64,6 +64,7 @@ export default function SendForgotPasswordCodeForm() {
  }, [next]);
 
  async function handleForm(data: FormProps) {
+  setError(null);
   setRecaptchaError(null);
   const token = RecaptchaForm(setRecaptchaError);
   if (token == '') {
