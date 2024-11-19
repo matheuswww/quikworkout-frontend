@@ -42,7 +42,7 @@ const schema = z.object({
  nome: z
   .string()
   .min(1, 'é necessário pelo menos 1 caracter')
-  .max(25, 'nome deve ter no maxímo 80 caracteres'),
+  .max(15, 'nome deve ter no maxímo 15 caracteres'),
  descricao: z
   .string()
   .min(1, 'é necessário pelo menos 1 caracter')
@@ -67,11 +67,11 @@ const schema = z.object({
  categoria: z
   .string()
   .min(1, 'é necessário pelo menos 1 caracter')
-  .max(25, 'categoria deve ter no maxímo 25 caracteres'),
+  .max(15, 'categoria deve ter no maxímo 15 caracteres'),
  material: z
   .string()
   .min(1, 'é necessário pelo menos 1 caracter')
-  .max(25, 'material deve ter no maxímo 25 caracteres'),
+  .max(15, 'material deve ter no maxímo 15 caracteres'),
 });
 
 type FormProps = z.infer<typeof schema>;
