@@ -25,12 +25,12 @@ export function generateMetadata({ ...props }: clothingProps): Metadata {
   image = undefined;
  }
  return {
-  title: 'Roupa ' + props.params.name,
+  title: 'Roupa ' + decodeURIComponent(props.params.name),
   description: decodeURIComponent(props.params.description),
   keywords:
-   'roupa crossfit, roupa academia, crossfit, academia, ' + props.params.name,
+   'roupa crossfit, roupa academia, crossfit, academia, ' + decodeURIComponent(props.params.name),
   openGraph: {
-   title: 'Roupa ' + props.params.name,
+   title: 'Roupa ' + decodeURIComponent(props.params.name),
    description: decodeURIComponent(props.params.description),
    images: image,
   },
