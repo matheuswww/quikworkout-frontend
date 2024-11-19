@@ -17,7 +17,7 @@ export default function Footer() {
      />
     </Link>
     <Link
-     href="https://api.whatsapp.com/send/?phone=5513997763561&text&type=phone_number&app_absent=0"
+     href="https://wa.me/5555139820579"
      target="_blank"
     >
      <Image

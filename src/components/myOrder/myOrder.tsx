@@ -855,7 +855,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
           <Link
            style={{ fontSize: '.9rem' }}
            className={styles.link}
-           href="https://api.whatsapp.com/send/?phone=5513997763561&text&type=phone_number&app_absent=0"
+           href="https://wa.me/5555139820579"
            target="_blank"
           >
            whatsapp
