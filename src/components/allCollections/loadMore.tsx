@@ -11,9 +11,18 @@ import formatPrice from '@/funcs/formatPrice';
 
 interface props {
  cursor?: string;
+ searchParams: {
+  categoria?: string;
+  material?: string;
+  cor?: string;
+  m?: string;
+  f?: string;
+  precoMaximo?: number;
+  precoMinimo?: number;
+ };
 }
 
-export default function LoadMore({ cursor }: props) {
+export default function LoadMore({ cursor,searchParams }: props) {
  const [data, setData] = useState<responseGetAllClothing | null>(null);
  const [load, setLoad] = useState<boolean>(false);
  const [newPage, setNewPage] = useState<boolean>(false);
@@ -27,7 +36,7 @@ export default function LoadMore({ cursor }: props) {
      newCursor = data.clothing[data.clothing.length - 1].criadoEm;
     }
     setLoad(true);
-    const res = await GetAllClothing({ cursor: newCursor });
+    const res = await GetAllClothing({ cursor: newCursor, ...searchParams });
     if (res.status == 500 || res.status == 400) {
      setLoad(false);
      setNewPage(false);

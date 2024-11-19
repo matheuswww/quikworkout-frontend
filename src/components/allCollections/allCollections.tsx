@@ -122,7 +122,7 @@ export default async function AllCollections({ searchParams }: props) {
       </p>
      )}
      {data.clothing && (
-      <LoadMore cursor={data.clothing[data.clothing.length - 1].criadoEm} />
+      <LoadMore searchParams={searchParams} cursor={data.clothing[data.clothing.length - 1].criadoEm} />
      )}
     </div>
     <span
