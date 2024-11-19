@@ -51,7 +51,7 @@ const schema = z.object({
   .refine(
    (files: File[]) => {
     const val = Array.from(files).map((file) => {
-     if (file.size > 1024 * 1024 * 2) {
+     if (file.size > 1024 * 1024 * 5) {
       return false;
      }
      return true;
@@ -62,7 +62,7 @@ const schema = z.object({
     return true;
    },
    {
-    message: 'cada arquivo deve ter no maxímo 2MB',
+    message: 'cada arquivo deve ter no maxímo 5MB',
    },
   )
   .refine(
@@ -123,7 +123,6 @@ export default function Inventory({
   const g = Number(data.g);
   const gg = Number(data.gg);
   const images: Blob[] = Array.from(data.file);
-  images.reverse();
 
   let err = false;
   const newImages = images.map((i, index) => {
