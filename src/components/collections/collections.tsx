@@ -32,7 +32,7 @@ export default function Collections() {
      <h2 className={styles.h2}>Nova Coleção</h2>
      <ul className={styles.slide} ref={slide}>
       <li className={styles.product}>
-       <Link className={styles.card} href="#">
+       <Link className={styles.card} href="/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
         <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
@@ -45,7 +45,7 @@ export default function Collections() {
        </Link>
       </li>
       <li className={styles.product}>
-       <Link className={styles.card} href="#">
+       <Link className={styles.card} href="/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
         <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
@@ -58,7 +58,7 @@ export default function Collections() {
        </Link>
       </li>
       <li className={styles.product}>
-       <Link className={styles.card} href="#">
+       <Link className={styles.card} href="https://quikworkout.com.br/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
         <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
@@ -71,7 +71,7 @@ export default function Collections() {
        </Link>
       </li>
       <li className={styles.product}>
-       <Link className={styles.card} href="#">
+       <Link className={styles.card} href="https://quikworkout.com.br/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
         <p>Regatinhas Pry</p>
         <SkeletonImage
          draggable={false}
