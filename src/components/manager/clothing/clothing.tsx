@@ -643,9 +643,9 @@ export default function Clothing({
             src={imagens[0]}
             alt={alt}
             loading="lazy"
-            width={600}
-            height={900}
-            className={styles.clothing}
+            width={290}
+            height={460}
+            className={styles.img}
             key={data.id}
             id={index.toString()}
             draggable={false}
