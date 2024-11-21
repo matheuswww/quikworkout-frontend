@@ -44,7 +44,7 @@ const schema = z
    if (fields.cep.includes('-')) {
     cepNumber = fields.cep.replace('-', '');
    }
-   if (isNaN(Number(cepNumber))) {
+   if (isNaN(Number(cepNumber)) || cepNumber.length > 8) {
     return false;
    }
    return true;
