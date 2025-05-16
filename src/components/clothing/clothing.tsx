@@ -86,8 +86,7 @@ export default function Clothing({ ...props }: props) {
  const buttonToOpenModalRef = useRef<HTMLButtonElement | null>(null);
  const modalRef = useRef<HTMLDivElement | null>(null);
  const [error, setError] = useState<string | null>(null);
- const [delivery, setDelivery] = useState<'E' | 'X' | 'R'>('E');
- const [freightData, setFreightData] = useState<calcFreightData | null>(null);
+ const [freightData, setFreightData] = useState<calcFreightData[] | null>(null);
  const [success, setSuccess] = useState<boolean>(false);
  const [activeModal, setActiveModal] = useState<boolean>(false);
  const calcFreightRef = useRef<HTMLFormElement | null>(null);
@@ -173,7 +172,6 @@ export default function Clothing({ ...props }: props) {
     cep: formData.cep,
     quantidadeProduto: [count],
     roupa: [data?.clothing?.id],
-    servico: delivery,
    });
    if (res.status == 500) {
     setPopUpError(true);
@@ -181,42 +179,14 @@ export default function Clothing({ ...props }: props) {
     setFreightData(null);
     return;
    }
-   if (res.data == 'cep de destino inválido') {
+   if (res.data == 'frete não disponível') {
     setError(res.data);
     setLoad(false);
     setFreightData(null);
     return;
    }
-   if (res.data == 'frete não disponível') {
-    setError('frete não disponível para este endereço e tipo de entrega');
-    setLoad(false);
-    setFreightData(null);
-    return;
-   }
-   if (res.data == 'peso maxímo atingido') {
-    setError(
-     'tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega',
-    );
-    setLoad(false);
-    setFreightData(null);
-    return;
-   }
-   if (res.data == 'cubagem excedida') {
-    setError('cubagem excedida, tente diminuir a quantidade de roupas');
-    setLoad(false);
-    setFreightData(null);
-    return;
-   }
-   if (res.data == 'roupa não encontrada') {
-    setError(
-     'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
-    );
 
-    setLoad(false);
-    setFreightData(null);
-    return;
-   }
-   if (res.data?.vlrFrete) {
+   if (res) {
     setFreightData(res.data);
    }
    setLoad(false);
@@ -394,49 +364,21 @@ export default function Clothing({ ...props }: props) {
      ) : (
       errors.cep && <p className={styles.error}>{errors.cep.message}</p>
      )}
-     <div style={{ marginTop: '5px' }}>
-      <label htmlFor="E">entrega normal</label>
-      <input
-       className={styles.checkbox}
-       type="checkbox"
-       id="E"
-       value="E"
-       onChange={() => setDelivery('E')}
-       checked={delivery === 'E'}
-      />
-     </div>
-     <div>
-      <label htmlFor="X">entrega expressa</label>
-      <input
-       className={styles.checkbox}
-       type="checkbox"
-       id="X"
-       value="X"
-       onChange={() => setDelivery('X')}
-       checked={delivery === 'X'}
-      />
-     </div>
-     <div>
-      <label htmlFor="R">retirar{'(correios)'}</label>
-      <input
-       className={styles.checkbox}
-       type="checkbox"
-       id="R"
-       value="R"
-       onChange={() => setDelivery('R')}
-       checked={delivery === 'R'}
-      />
-     </div>
-     {freightData?.vlrFrete && data?.clothing && (
-      <p
-       className={styles.freightPrice}
-      >{`Frete: R$${formatPrice(freightData.vlrFrete)}`}</p>
-     )}
-     {freightData?.prazoEnt && (
-      <p className={styles.freightPrice}>
-       Prazo de entrega: {freightData.prazoEnt} dias úteis
-      </p>
-     )}
+    {freightData &&
+      freightData.map((f, i) => (
+        <React.Fragment key={f?.vlrFrete || f?.prazoEnt}>
+          <>
+            <p className={styles.freightData}>Entrega {f.transp_nome}:</p>
+            <p className={styles.freightData}>
+              {`Frete: R$${formatPrice(f.vlrFrete)}`}
+            </p>
+            <p className={styles.freightData}>
+              Prazo de entrega: {f.prazoEnt} dias úteis
+            </p>
+            {i === 0 && <span className={styles.padding}></span>}
+          </>
+        </React.Fragment>
+      ))}
      <button type="submit" disabled={load} className={styles.calcFreightButton}>
       Calcular frete
      </button>
@@ -629,16 +571,6 @@ export default function Clothing({ ...props }: props) {
           </button>
          ) : (
           <p className={styles.noFreight}>Frete grátis</p>
-         )}
-         {freightData && data && (
-          <>
-           <div className={styles.freightPrice}>
-            <p className={styles.freightPrice}>
-             Frete: R${formatPrice(freightData.vlrFrete)}
-            </p>
-            <p>Prazo de entrega: {freightData.prazoEnt} dias utéis</p>
-           </div>
-          </>
          )}
         </div>
         <button

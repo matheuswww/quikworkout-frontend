@@ -13,7 +13,7 @@ interface props {
  clothing: dataGetClothingCart[] | null | undefined;
  retryPaymentData: getOrderDetailResponse | null;
  totalPrice: string;
- freight: string | null;
+ freight: number | null;
  responseError: string | null;
  totalPriceWithFreight: string | null;
  setTotalPriceWithFreight: Dispatch<SetStateAction<string | null>>;
@@ -41,20 +41,17 @@ export default function Products({
    setTotalPriceWithFreight(null);
    return;
   }
-  let val: string | null = freight;
-  let val2: string | null = totalPrice;
-
-  if (freight?.includes(',')) {
-   val = freight.replace(',', '.');
-  }
+  let val: string | null = totalPrice;
+ 
   if (totalPrice.includes(',')) {
-   val2 = totalPrice.replace(',', '.');
+   val = totalPrice.replaceAll(',', '.');
   }
-  if (Number(totalPrice) >= 200) {
-   setTotalPriceWithFreight(formatPrice(Number(totalPrice)));
+  
+  if (Number(val) >= 300) {
+   setTotalPriceWithFreight(formatPrice(Number(val)));
    return;
   }
-  const total = Math.round((Number(val2) + Number(val)) * 100) / 100;
+  const total = Math.round((Number(val) + Number(freight)) * 100) / 100;
   if (!isNaN(total)) {
    setTotalPriceWithFreight(formatPrice(total));
    return;

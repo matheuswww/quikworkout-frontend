@@ -350,9 +350,9 @@
  width: 280px;
 }
 
-.freightPrice {
+.freightData {
  font-size: 0.9rem;
- margin-top: 4px;
+ margin-top: 5px;
  color: #c8c8c8;
  font-family: var(--interSemiBold);
 }
@@ -397,11 +397,16 @@
  outline: none;
  border: none;
  margin-top: 5px;
+ margin-bottom: 10px;
  font-family: var(--interSemiBold);
  color: #c8c8c8;
  background-color: transparent;
  border-radius: 0px;
  border-bottom: 1px solid white;
+}
+
+.padding {
+  padding: 3px;
 }
 
 .calcFreightForm label {

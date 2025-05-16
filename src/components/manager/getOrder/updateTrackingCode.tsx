@@ -55,8 +55,8 @@ export default function UpdateTrackingCodeForm({
     if (err) {
      return;
     }
-    if (i.value.length < 10 || i.value.length > 10) {
-     setResponseError('todos os códigos devem conter 10 caracteres');
+    if (i.value.length < 12 || i.value.length > 12) {
+     setResponseError('todos os códigos devem conter 15 caracteres');
      err = true;
      return;
     }

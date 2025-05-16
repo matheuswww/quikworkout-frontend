@@ -24,7 +24,7 @@ import {
  responseErrorsPayOrderType,
 } from '@/api/clothing/payOrderInterfaces';
 import PayOrder from '@/api/clothing/payOrder';
-import CalcFreight from '@/api/clothing/calcFreight';
+import CalcFreight, { calcFreightData } from '@/api/clothing/calcFreight';
 import RetryPayment from '@/api/clothing/retryPayment';
 import GetOrderDetail, {
  getOrderDetailResponse,
@@ -49,7 +49,9 @@ interface props {
 export default function FinishPurchaseForm({ ...props }: props) {
  const router = useRouter();
 
- const [delivery, setDelivery] = useState<'E' | 'X' | 'R'>('E');
+ const [delivery, setDelivery] = useState<'PAC' | 'SEDEX' | null>(null);
+ const [calcFreightData, setCalcFreightData] = useState<calcFreightData[] | 'error' | null>(null);
+
  const [data, setData] = useState<getClothingCartResponse | null>(null);
  const [popupError, setPopupError] = useState<boolean>(false);
  const [load, setLoad] = useState<boolean>(true);
@@ -59,7 +61,7 @@ export default function FinishPurchaseForm({ ...props }: props) {
  const [totalPriceWithFreight, setTotalPriceWithFreight] = useState<
   string | null
  >(null);
- const [freight, setFreight] = useState<string | null>(null);
+ const [freight, setFreight] = useState<number | null>(null);
  const [paymentType, setPaymentType] = useState<
   'card' | 'credit_card' | 'debit_card' | 'pix' | 'boleto' | null
  >(null);
@@ -311,42 +313,31 @@ export default function FinishPurchaseForm({ ...props }: props) {
     cep: address.cep,
     quantidadeProduto: productQuantity,
     roupa: clothingIds,
-    servico: delivery,
    });
 
    if (res.status == 500) {
     setPopupError(true);
-   }
-   if (res.data == 'cep de destino inválido') {
-    setResponseError(res.data);
    }
    if (res.data == 'frete não disponível') {
     setResponseError(
      'frete não disponível para este endereço e tipo de entrega',
     );
    }
-   if (res.data == 'peso maxímo atingido') {
-    setResponseError(
-     'tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega',
-    );
-   }
-   if (res.data == 'roupa não encontrada') {
-    setResponseError(
-     'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
-    );
-   }
-   if (res.data == 'cubagem excedida') {
-    setResponseError(
-     'cubagem excedida, tente remover alguns items de sua bolsa',
-    );
-   }
    if (
-    typeof res.data == 'object' &&
     res.data &&
-    'vlrFrete' in res.data &&
-    res.data?.vlrFrete
+    res.data instanceof Array
    ) {
-    return res.data.vlrFrete;
+    let vlrFrete: number | null = null;
+    res.data.forEach((data) => {      
+      if (data.transp_nome == delivery) {
+        vlrFrete = data.vlrFrete;
+        return
+      }
+    })
+    if (vlrFrete) {
+      return vlrFrete;
+    }
+    setPopupError(true);
    }
    setLoad(false);
    return null;
@@ -863,35 +854,15 @@ export default function FinishPurchaseForm({ ...props }: props) {
       <>
        {!retryPaymentData?.data && !retryPaymentId && (
         <CalcFreightForm
-         popupError={popupError}
+         address={address}
+         setCalcFreightData={setCalcFreightData}
          setPopupError={setPopupError}
          totalPrice={totalPrice}
-         setFreight={setFreight}
          load={load}
          setLoad={setLoad}
          end={end}
          clothing={data?.clothing}
-         setDelivery={setDelivery}
-         delivery={delivery}
         />
-       )}
-       <p className={`${styles.price} ${styles.totalPrice}`}>
-        Preço: R${formatPrice(totalPrice)}
-       </p>
-       {totalPrice >= 300 ? (
-        <p style={{ marginBottom: '10px' }} className={styles.price}>
-         Frete grátis
-        </p>
-       ) : !totalPriceWithFreight ? (
-        <p style={{ marginBottom: '10px' }} className={styles.price}>
-         Digite seu cep acima para visualizar seu preço juntamente com o frete
-        </p>
-       ) : (
-        <>
-         <p style={{ marginBottom: '10px' }} className={styles.price}>
-          Total: R${totalPriceWithFreight}
-         </p>
-        </>
        )}
        <Payment
         payment={payment}
@@ -927,7 +898,25 @@ export default function FinishPurchaseForm({ ...props }: props) {
          addressRef={addressRef}
          setAddress={setAddress}
          address={address}
+         freightData={calcFreightData}
+         setFreight={setFreight}
+         setDelivery={setDelivery}
+         delivery={delivery}
         />
+       )}
+
+       {totalPriceWithFreight && address && freight && (
+        <>
+        <p className={`${styles.price} ${styles.totalPrice}`}>
+          Preço: R${formatPrice(totalPrice)}
+        </p>
+        <p className={`${styles.price}`}>
+          { totalPrice < 300 ? `Frete: R$${formatPrice(freight)}` : `Frete grátis`}
+        </p>
+         <p style={{ marginBottom: '10px !important' }} className={styles.price}>
+          Total: R${totalPriceWithFreight}
+         </p>
+        </>
        )}
        <form onSubmit={handleSubmit}>
         <Products

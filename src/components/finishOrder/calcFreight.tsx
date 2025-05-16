@@ -1,5 +1,5 @@
 'use client';
-import { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styles from './calcFreight.module.css';
 import { dataGetClothingCart } from '@/api/clothing/getClothingCart';
 import CalcFreight, { calcFreightData } from '@/api/clothing/calcFreight';
@@ -9,17 +9,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ArrowUp from 'next/image';
 import ArrowDown from 'next/image';
 import formatPrice from '@/funcs/formatPrice';
+import { enderecoContato } from '@/api/clothing/payOrderInterfaces';
 
 interface props {
- setDelivery: Dispatch<SetStateAction<'E' | 'X' | 'R'>>;
- delivery: 'E' | 'X' | 'R';
+ address: enderecoContato | null
+ setCalcFreightData: Dispatch<SetStateAction<calcFreightData[] | 'error' | null>>;
  clothing: dataGetClothingCart[] | null | undefined;
  end: boolean;
  load: boolean;
  setLoad: Dispatch<boolean>;
  setPopupError: Dispatch<SetStateAction<boolean>>;
- popupError: boolean;
- setFreight: Dispatch<SetStateAction<string | null>>;
  totalPrice: number;
 }
 
@@ -48,20 +47,20 @@ const schema = z
 type FormProps = z.infer<typeof schema>;
 
 export default function CalcFreightForm({
- setDelivery,
- delivery,
  end,
  load,
  setLoad,
  setPopupError,
  clothing,
- setFreight,
  totalPrice,
+ setCalcFreightData,
+ address,
 }: props) {
  const {
   register,
   handleSubmit,
   formState: { errors },
+  setValue,
  } = useForm<FormProps>({
   mode: 'onSubmit',
   reValidateMode: 'onSubmit',
@@ -69,8 +68,19 @@ export default function CalcFreightForm({
  });
 
  const [calcFreight, setCalcFreight] = useState<boolean>(true);
- const [data, setData] = useState<calcFreightData | null>(null);
+ const [data, setData] = useState<calcFreightData[] | null>(null);
  const [error, setError] = useState<string | null>(null);
+
+ const button = useRef<HTMLButtonElement | null>(null);
+
+ useEffect(() => {
+  const input = document.querySelector("input");
+  if (button.current && input && address) {
+    input.value = address.cep;
+    setValue('cep', address.cep);
+    button.current.click();
+  }
+ }, [address]);
 
  async function handleForm(values: FormProps) {
   if (end) {
@@ -97,52 +107,28 @@ export default function CalcFreightForm({
     const res = await CalcFreight({
      cep: values.cep,
      quantidadeProduto: productQuantity,
-     roupa: clothingIds,
-     servico: delivery,
+     roupa: clothingIds
     });
     if (res.status == 500) {
      setPopupError(true);
      setLoad(false);
-     setFreight(null);
-     return;
-    }
-    if (res.data == 'cep de destino inválido') {
-     setError(res.data);
-     setLoad(false);
-     setFreight(null);
+     if(address && address.cep == values.cep) {
+      setCalcFreightData('error');
+     }
      return;
     }
     if (res.data == 'frete não disponível') {
      setError('frete não disponível para este endereço e tipo de entrega');
      setLoad(false);
-     setFreight(null);
      return;
     }
-    if (res.data == 'peso maxímo atingido') {
-     setError(
-      'tente deletar alguns items do carrinho pois o peso excede o peso máximo de entrega',
-     );
-     setLoad(false);
-     setFreight(null);
-     return;
-    }
-    if (res.data == 'roupa não encontrada') {
-     setError(
-      'parece que uma das suas roupas está indisponível, verifique sua bolsa e remova a roupa',
-     );
-     setLoad(false);
-     setFreight(null);
-     return;
-    }
-    if (res.data == 'cubagem excedida') {
-     setError('cubagem excedida, tente remover alguns items de sua bolsa');
-     setLoad(false);
-     setFreight(null);
-     return;
-    }
-    if (res.data?.vlrFrete) {
+    
+    if (res.data && res.data instanceof Array) {
      setData(res.data);
-     setFreight(formatPrice(res.data.vlrFrete));
+     
+     if(address && address.cep == values.cep) {
+      setCalcFreightData(res.data);
+     }
     }
     setLoad(false);
    }
@@ -201,52 +187,27 @@ export default function CalcFreightForm({
       ) : (
        errors.cep && <p className={styles.error}>{errors.cep.message}</p>
       )}
-      <div style={{ marginTop: '5px' }}>
-       <label htmlFor="E">entrega normal</label>
-       <input
-        type="checkbox"
-        className={styles.checkbox}
-        id="E"
-        value="E"
-        onChange={() => setDelivery('E')}
-        checked={delivery === 'E'}
-       />
-      </div>
-      <div>
-       <label htmlFor="X">entrega expressa</label>
-       <input
-        type="checkbox"
-        className={styles.checkbox}
-        id="X"
-        value="X"
-        onChange={() => setDelivery('X')}
-        checked={delivery === 'X'}
-       />
-      </div>
-      <div>
-       <label htmlFor="R">retirar{'(correios)'}</label>
-       <input
-        type="checkbox"
-        className={styles.checkbox}
-        id="R"
-        value="R"
-        onChange={() => setDelivery('R')}
-        checked={delivery === 'R'}
-       />
-      </div>
-      {data?.vlrFrete && (
-       <p className={styles.price}>
-        {totalPrice < 300
-         ? `Frete: R$${formatPrice(data.vlrFrete)}`
-         : 'Frete grátis'}
-       </p>
-      )}
-      {data?.prazoEnt && (
-       <p className={styles.price}>
-        Prazo de entrega: {data?.prazoEnt} dias úteis
-       </p>
-      )}
-      <button disabled={load} className={`${styles.calcFreight}`}>
+      {data && data.map((f, i) => (
+        <React.Fragment key={f.transp_nome}>
+          {f?.vlrFrete && (
+            <>
+              <p className={styles.price}>Entrega {f.transp_nome}:</p>
+              <p className={styles.price}>
+                {totalPrice < 300
+                ? `Frete: R$${formatPrice(f.vlrFrete)}`
+                : 'Frete grátis'}
+              </p>
+            </>
+          )}
+          {f?.prazoEnt && (
+            <p className={styles.price}>
+              Prazo de entrega: {f?.prazoEnt} dias úteis
+            </p>
+          )}
+          {i === 0 && <span className={styles.padding}></span>}
+        </React.Fragment>
+      ))}
+      <button disabled={load} className={`${styles.calcFreight}`} ref={button}>
        Calcular frete
       </button>
      </form>

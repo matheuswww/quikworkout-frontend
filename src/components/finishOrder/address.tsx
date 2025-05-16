@@ -20,6 +20,7 @@ import { getAddressData } from '@/api/user/getAddress';
 import { useRouter } from 'next/navigation';
 import GetAddress from '@/api/user/getAddress';
 import { handlePhoneNumber } from '@/funcs/handlePhoneNumber';
+import { calcFreightData } from '@/api/clothing/calcFreight';
 
 const schema = z
  .object({
@@ -111,6 +112,8 @@ const schema = z
 type FormProps = z.infer<typeof schema>;
 
 interface props {
+ setDelivery: Dispatch<SetStateAction<'PAC' | 'SEDEX' | null>>;
+ delivery: 'PAC' | 'SEDEX' | null;
  setAddress: Dispatch<SetStateAction<enderecoContato | null>>;
  address: enderecoContato | null;
  addressRef: MutableRefObject<HTMLElement | null>;
@@ -120,6 +123,8 @@ interface props {
  setAdressStatus: Dispatch<500 | null>;
  addressForm: boolean;
  setAddressForm: Dispatch<SetStateAction<boolean>>;
+ setFreight: Dispatch<SetStateAction<number | null>>;
+ freightData: calcFreightData[] | 'error' | null;
 }
 
 export default function Address({
@@ -132,6 +137,10 @@ export default function Address({
  setAdressStatus,
  addressForm,
  setAddressForm,
+ setFreight,
+ freightData,
+ delivery,
+ setDelivery
 }: props) {
  const router = useRouter();
  const {
@@ -146,11 +155,11 @@ export default function Address({
   resolver: zodResolver(schema),
  });
 
- const [delivery, setDelivery] = useState<'E' | 'X' | 'R'>('E');
  const [saved, setSaved] = useState<boolean>(false);
  const [addressSaved, setAddressSaved] = useState<getAddressData[] | null>(
   null,
  );
+ const [error, setError] = useState<string | null>(null);
 
  useEffect(() => {
   (async function () {
@@ -181,14 +190,17 @@ export default function Address({
 
  function handleSavedAdressClick(i: number) {
   const regionCode = document.querySelector('#regionCode');
+  let val: string = "";
   if (regionCode instanceof HTMLSelectElement && addressSaved) {
    for (let j = 0; j < regionCode.options.length; j++) {
     if (
      regionCode.options[j].value.includes(`${addressSaved[i].codigoRegiao} - `)
     ) {
-     regionCode.options[j].selected = true;
+      val = regionCode.options[j].value
+      console.log(regionCode.options[j])
     }
    }
+   
    reset({
     street: addressSaved[i].rua,
     residenceNumber: addressSaved[i].numeroResidencia,
@@ -196,12 +208,18 @@ export default function Address({
     neighbordhood: addressSaved[i].bairro,
     city: addressSaved[i].cidade,
     cep: addressSaved[i].cep,
-   });
+    regionCode: val,
+  });
    setAddressSaved(null);
   }
  }
 
  function handleForm(data: FormProps) {
+  if (delivery == null) {
+    setError("tipo de entrega não selecionado");
+    return;
+  }
+  setError(null);
   data.phoneNumber = data.phoneNumber
    .replaceAll(' ', '')
    .replaceAll('-', '')
@@ -237,8 +255,28 @@ export default function Address({
    tax_id: data.cpfCnpj,
    servico: delivery,
   });
-  setSaved(true);
  }
+
+ useEffect(() => {
+  let found = false;
+  if(freightData != null) {
+    if (freightData == 'error') { 
+      return;
+    }
+    freightData.map((data) => {
+      if (data.transp_nome == delivery) {
+        setFreight(data.vlrFrete);
+        found = true
+      }
+    })
+    if (!found) {
+      setError("tipo de entrega não disponível para este cep");
+      setAddress(null);
+    } else {
+      setSaved(true);
+    }
+  };
+ }, [freightData]);
 
  function handleOtherAddressClick() {
   setAddressSaved(null);
@@ -464,44 +502,33 @@ export default function Address({
        id="cep2"
       />
       {errors.cep && <p className={styles.error}>{errors.cep.message}</p>}
+      <label className={styles.label}>Tipo de entrega</label>
       <div style={{ marginTop: '5px' }}>
        <label className={styles.label} htmlFor="E2">
-        entrega normal
+        Entrega PAC
        </label>
        <input
         type="checkbox"
         className={styles.checkbox}
         id="E2"
         value="E"
-        onChange={() => setDelivery('E')}
-        checked={delivery === 'E'}
+        onChange={() => setDelivery('PAC')}
+        checked={delivery === 'PAC'}
        />
       </div>
       <div>
        <label className={styles.label} htmlFor="X2">
-        entrega expressa
+        Entrega SEDEX
        </label>
        <input
         type="checkbox"
         className={styles.checkbox}
         id="X2"
         value="X"
-        onChange={() => setDelivery('X')}
-        checked={delivery === 'X'}
+        onChange={() => setDelivery('SEDEX')}
+        checked={delivery === 'SEDEX'}
        />
-      </div>
-      <div>
-       <label className={styles.label} htmlFor="R2">
-        retirar
-       </label>
-       <input
-        type="checkbox"
-        className={styles.checkbox}
-        id="R2"
-        value="R"
-        onChange={() => setDelivery('R')}
-        checked={delivery === 'R'}
-       />
+      {error && <p className={styles.error}>{error}</p>}
       </div>
       <label className={styles.label} htmlFor="regionCode">
        Código de região
@@ -509,7 +536,7 @@ export default function Address({
       <select id="regionCode" {...register('regionCode')}>
        {Object.entries(regions).map(([estado, capital]) => (
         <option key={estado} value={`${estado} - ${capital}`}>
-         {estado} - {capital}
+          {estado} - {capital}
         </option>
        ))}
       </select>
@@ -572,11 +599,11 @@ export default function Address({
        <div className={styles.values}>
         <p className={styles.field}>Tipo de entrega: </p>
         <p className={styles.value}>
-         {delivery == 'E'
-          ? 'entrega normal'
-          : delivery == 'R'
-            ? 'retirar'
-            : delivery == 'X' && 'entrega expressa'}
+         { delivery == 'PAC'
+          ? 'entrega PAC'
+          : delivery == 'SEDEX'
+            && 'entrega SEDEX'
+        }
         </p>
        </div>
        <button

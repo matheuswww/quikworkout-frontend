@@ -4,29 +4,24 @@ import { clothingPath } from './clothingPath';
 
 export interface calcFreightResponse {
  status: statusCode;
- data: calcFreightData | responseErrors | null;
+ data: calcFreightData[] | responseErrors | null;
 }
 
 type statusCode = 500 | 200 | 401 | 400;
 
 type responseErrors =
- | 'cep de destino inválido'
- | 'frete não disponível'
- | 'roupa não encontrada'
- | 'peso maxímo atingido'
- | 'cubagem excedida';
+ | 'frete não disponível';
 
 export interface calcFreightData {
  vlrFrete: number;
  prazoEnt: number;
- transport: string;
+ transp_nome: string;
 }
 
 interface params {
  roupa: string[];
  quantidadeProduto: number[];
  cep: string;
- servico: 'E' | 'X' | 'R';
 }
 
 export default async function CalcFreight(
@@ -47,10 +42,10 @@ export default async function CalcFreight(
    url += '&roupa=' + id + '&quantidadeProduto=' + params.quantidadeProduto[i];
   }
  });
- url += '&cep=' + params.cep + '&servico=' + params.servico;
+ url += '&cep=' + params.cep
  try {
   let status: number = 0;
-  const res: ResponseErr | calcFreightData | null = await fetch(url, {
+  const res: ResponseErr | calcFreightData[] | null = await fetch(url, {
    method: 'GET',
    headers: {
     'Content-Type': 'application/json',
@@ -60,7 +55,7 @@ export default async function CalcFreight(
    status = res.status;
    return res.json();
   });
-  if (status == 200 && res && 'vlrFrete' in res) {
+  if (status == 200 && res instanceof Array) {
    return {
     data: res,
     status: status,
@@ -69,11 +64,8 @@ export default async function CalcFreight(
   if (
    res &&
    'message' in res &&
-   (res.message == 'cep de destino inválido' ||
-    res.message == 'frete não disponível' ||
-    res.message == 'roupa não encontrada' ||
-    res.message == 'peso maxímo atingido' ||
-    res.message == 'cubagem excedida')
+   (
+    res.message == 'frete não disponível')
   ) {
    return {
     data: res.message,

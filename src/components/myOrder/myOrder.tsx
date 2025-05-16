@@ -17,7 +17,6 @@ import QRCODE from 'next/image';
 import ClothingImg from 'next/image';
 import Menu from '../menu/menu';
 import handleArrowClick from '@/funcs/handleArrowClick';
-import Image from 'next/image';
 
 interface props {
  cookieName?: string;
@@ -253,20 +252,6 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
   }
  }
 
- function copyCode(event: SyntheticEvent, code: string) {
-  event.preventDefault();
-  if (event.target instanceof HTMLElement) {
-   if (navigator.clipboard) {
-    navigator.clipboard
-     .writeText(code)
-     .then(() => window.alert('código de rastreio copiado'))
-     .catch((err) => console.error('Failed to copy the code: ', err));
-   } else {
-    console.error('Clipboard API is not supported.');
-   }
-  }
- }
-
  function hasSevenDaysPassed(date: string): boolean {
   const originalDate = new Date(date).getTime();
   const currentDate = new Date().getTime();
@@ -353,7 +338,7 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
              Você possui {infos.pacotes.length} pacotes a caminho
             </p>
            )}
-           {infos.pacotes.map(({ rastreio, codigoRastreio }, v) => {
+           {infos.pacotes.map(({ codigoRastreio }, v) => {
             const id = Math.floor(Math.random() * 1000000) + 1;
             return (
              <React.Fragment key={`codigoRastreio${v}`}>
@@ -400,77 +385,20 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
                 id={`arrowDown_package_${id}`}
                />
               </div>
-              {rastreio.acao != '' ||
-              rastreio.data != '' ||
-              rastreio.observacao != '' ||
-              rastreio.ocorrencia != '' ? (
-               <>
-                <div
-                 id={`item_package_${id}`}
-                 className={`${styles.displayNone} ${styles.package}`}
+              <div
+              id={`item_package_${id}`}
+              className={`${styles.displayNone} ${styles.package}`}
+              >
+              <div className={`${styles.values} ${styles.infos}`}>
+                <Link
+                className={styles.link}
+                href={`https://app.melhorrastreio.com.br/app/${codigoRastreio}`}
+                target="_blank"
                 >
-                 {rastreio.acao != '' && (
-                  <div className={`${styles.values} ${styles.infos}`}>
-                   <p>Rastreio</p>
-                   <p>{rastreio.ocorrencia}</p>
-                  </div>
-                 )}
-                 {rastreio.ocorrencia != '' && (
-                  <div className={`${styles.values} ${styles.infos}`}>
-                   <p>Ocorrência</p>
-                   <p>{rastreio.ocorrencia}</p>
-                  </div>
-                 )}
-                 {rastreio.observacao != '' && (
-                  <div className={`${styles.values} ${styles.infos}`}>
-                   <p>Observação</p>
-                   <p>{rastreio.observacao}</p>
-                  </div>
-                 )}
-                 {rastreio.data != '' && (
-                  <div className={`${styles.values} ${styles.infos}`}>
-                   <p>Data de entrega</p>
-                   <p>{rastreio.data}</p>
-                  </div>
-                 )}
-                </div>
-               </>
-              ) : (
-               <div
-                id={`item_package_${id}`}
-                className={`${styles.displayNone} ${styles.package}`}
-               >
-                <div className={`${styles.values} ${styles.infos}`}>
-                 <p>Digite seu código de rastreio aqui: </p>
-                 <Link
-                  className={styles.link}
-                  href={'https://www.kangu.com.br/rastreio'}
-                  target="_blank"
-                 >
-                  rastrear pacote
-                 </Link>
-                </div>
-                <div className={`${styles.values} ${styles.infos}`}>
-                 <label htmlFor="tracking" className={styles.labelTrackingCode}>
-                  Código de rastreio:{' '}
-                 </label>
-                 <p>{codigoRastreio}</p>
-                 <button
-                  onClick={(e) => copyCode(e, codigoRastreio)}
-                  id="tracking"
-                  aria-label="copiar código de rastreio"
-                  className={styles.copyCode}
-                 >
-                  <Image
-                   src="/img/copy.png"
-                   height={22}
-                   width={21}
-                   alt="icone para copiar valor"
-                  />
-                 </button>
-                </div>
-               </div>
-              )}
+                Rastrear pacote
+                </Link>
+              </div>
+              </div>
              </React.Fragment>
             );
            })}
@@ -525,11 +453,11 @@ export default function MyOrder({ cookieName, cookieVal }: props) {
            <div className={`${styles.values} ${styles.infos}`}>
             <p>Serviço de entrega: </p>
             <p>
-             {infos.servico == 'E'
-              ? 'entrega normal'
-              : infos.servico == 'X'
-                ? 'entrega expressa'
-                : 'retirar'}
+             {infos.servico == 'PAC'
+              ? 'PAC'
+              : infos.servico == 'SEDEX'
+                && 'SEDEX'
+              }
             </p>
            </div>
            <div className={`${styles.values} ${styles.infos}`}>
