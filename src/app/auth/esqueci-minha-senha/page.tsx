@@ -7,6 +7,12 @@ export const metadata: Metadata = {
  keywords: 'esqueci minha senha, quikworkout, esqueci minha senha quikworkout',
 };
 
-export default function ForgotPassword() {
- return <SendForgotPasswordCodeForm />;
+interface props {
+  searchParams: {
+    from?: string
+  }
+}
+
+export default function ForgotPassword({...props}:props) {
+ return <SendForgotPasswordCodeForm from={props.searchParams.from} />;
 }

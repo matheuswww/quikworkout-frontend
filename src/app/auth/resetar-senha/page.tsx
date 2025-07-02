@@ -7,13 +7,20 @@ export const metadata: Metadata = {
  description: 'Resetar senha',
 };
 
-export default function SendCreateTwoAuthCode() {
+interface props {
+  searchParams: {
+    from: string
+  }
+}
+
+export default function SendCreateTwoAuthCode({...props}:props) {
  const cookieInfos = cookies().get('userAuthResetPass');
 
  return (
   <ResetPasswordForm
    cookieName={cookieInfos?.name}
    cookieVal={cookieInfos?.value}
+   from={props.searchParams.from}
   />
  );
 }

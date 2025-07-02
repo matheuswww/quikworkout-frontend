@@ -28,7 +28,11 @@ const schema = z
 
 type FormProps = z.infer<typeof schema>;
 
-export default function SendForgotPasswordCodeForm() {
+interface props {
+  from?: string
+}
+
+export default function SendForgotPasswordCodeForm({...props}:props) {
  const [error, setError] = useState<string | null>(null);
  const [load, setLoad] = useState<boolean>(true);
  const [popUpError, setPopUpError] = useState<boolean>(false);
@@ -137,7 +141,7 @@ export default function SendForgotPasswordCodeForm() {
      </main>
     </>
    ) : (
-    <CheckForgotPasswordCodeForm />
+    <CheckForgotPasswordCodeForm from={props.from} />
    )}
   </>
  );

@@ -123,11 +123,6 @@ export default async function AllCollections({ searchParams }: props) {
       <LoadMore searchParams={searchParams} cursor={data.clothing[data.clothing.length - 1].criadoEm} />
      )}
     </div>
-    <span
-     aria-hidden={true}
-     id="final"
-     className={`${data && styles.show}`}
-    ></span>
    </section>
   </>
  );

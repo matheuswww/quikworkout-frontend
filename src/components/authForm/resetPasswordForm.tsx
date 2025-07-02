@@ -14,6 +14,7 @@ import { deleteCookie } from '@/action/deleteCookie';
 interface props {
  cookieName: string | undefined;
  cookieVal: string | undefined;
+ from?: string
 }
 
 const schema = z.object({
@@ -45,32 +46,49 @@ export default function ResetPasswordForm({ ...props }: props) {
   const res = await ResetPassword(cookie, {
    senha: data.password,
   });
+
   if (
    res == 'você não possui um código registrado' ||
    res == 'máximo de tentativas atingido' ||
    res == 'código expirado'
   ) {
-   router.push('/auth/entrar');
+   if(props.from == "games") {
+    router.push('/auth/entrar?from=games');
+   } else {
+    router.push('/auth/entrar');
+   }
    return;
   }
   if (res == 401) {
    await deleteCookie('userResetPass');
    localStorage.removeItem('timeResetPassword');
-   router.push('/auth/entrar');
+   if(props.from == "games") {
+    router.push('/auth/entrar?from=games');
+   } else {
+    router.push('/auth/entrar');
+   }
    return;
   } else if (res == 500) {
    setPopUpError(res);
    setLoad(false);
   } else {
    localStorage.removeItem('timeResetPassword');
-   router.push('/auth/entrar');
+   if(props.from == "games") {
+    router.push('/auth/entrar?from=games');
+   } else {
+    router.push('/auth/entrar');
+   }
    return;
   }
  }
 
  useEffect(() => {
   if (props.cookieName == undefined || props.cookieVal == undefined) {
-   router.push('/auth/entrar');
+   if(props.from == "games") {
+    router.push('/auth/entrar?from=games');
+   } else {
+    router.push('/auth/entrar');
+   }
   } else {
    const prevTime = Number(localStorage.getItem('timeResetPassword'));
    const currentTIme = new Date().getTime();
@@ -79,7 +97,11 @@ export default function ResetPasswordForm({ ...props }: props) {
     elapsedTime = Math.round(Math.abs(currentTIme - prevTime) / 1000);
     if (elapsedTime > 60 * 6) {
      localStorage.removeItem('timeResetPassword');
-     router.push('/auth/entrar');
+     if(props.from == "games") {
+      router.push('/auth/entrar?from=games');
+     } else {
+      router.push('/auth/entrar');
+     }
     } else {
      setLoad(false);
     }

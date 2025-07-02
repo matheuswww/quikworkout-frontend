@@ -11,10 +11,12 @@ import CheckTwoAuthCode, {
  checkTwoAuthCodeResponse,
 } from '@/api/auth/checkTwoAuthCode';
 import { deleteCookie } from '@/action/deleteCookie';
+import { quikworkoutGamesPath } from '@/api/quikworkoutGamesPath';
 
 interface props {
  cookieName: string | undefined;
  cookieVal: string | undefined;
+ from?: string;
 }
 
 const schema = z.object({
@@ -25,6 +27,7 @@ const schema = z.object({
 });
 
 type FormProps = z.infer<typeof schema>;
+
 
 export default function CheckTwoAuthCodeForm({ ...props }: props) {
  const cookie = props.cookieName + '=' + props.cookieVal;
@@ -79,7 +82,12 @@ export default function CheckTwoAuthCodeForm({ ...props }: props) {
    }
    setLoad(false);
   } else {
-   window.location.href = '/';
+   if(props.from == 'games') {
+    window.location.href = quikworkoutGamesPath+"/conta/minha-conta"
+   }
+   else {
+    window.location.href = '/'
+   }
   }
  }
 

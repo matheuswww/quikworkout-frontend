@@ -13,6 +13,7 @@ interface props {
  cookieName: string | undefined;
  cookieVal: string | undefined;
  welcome: boolean | undefined;
+ from?:string
 }
 
 export default function SendContactValidationCodeForm({ ...props }: props) {
@@ -128,7 +129,7 @@ export default function SendContactValidationCodeForm({ ...props }: props) {
      </main>
     </>
    ) : (
-    <CheckContactValidationCodeForm cookie={cookie} />
+    <CheckContactValidationCodeForm from={props.from} cookie={cookie} />
    )}
   </>
  );

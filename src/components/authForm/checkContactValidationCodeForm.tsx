@@ -13,9 +13,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import SpinLoading from '../spinLoading/spinLoading';
 import { deleteCookie } from '@/action/deleteCookie';
+import { quikworkoutGamesPath } from '@/api/quikworkoutGamesPath';
 
 interface props {
- cookie: string;
+ cookie: string
+ from?: string
 }
 
 const schema = z.object({
@@ -77,7 +79,11 @@ export default function CheckContactValidationCodeForm({ ...props }: props) {
    setLoad(false);
   } else {
    localStorage.removeItem('timeSendContactValidationCode');
-   window.location.href = '/';
+   if(props.from == 'games') {
+    window.location.href = quikworkoutGamesPath+"/conta/minha-conta";
+   } else {
+    window.location.href = "/"
+   }
    return;
   }
  }

@@ -7,13 +7,20 @@ export const metadata: Metadata = {
  description: 'validação do código de dois fatores',
 };
 
-export default async function CheckTwoAuthCode() {
+interface props {
+  searchParams: {
+    from: string
+  }
+}
+
+export default async function CheckTwoAuthCode({...props}: props) {
  const cookieInfos = cookies().get('userTwoAuth');
 
  return (
   <CheckTwoAuthCodeForm
    cookieName={cookieInfos?.name}
    cookieVal={cookieInfos?.value}
+   from={props.searchParams.from}
   />
  );
 }

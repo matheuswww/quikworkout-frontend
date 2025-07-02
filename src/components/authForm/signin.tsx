@@ -14,6 +14,7 @@ import Signin from '@/api/auth/signin';
 import { ValidateEmail } from '@/funcs/validateEmail';
 import Recaptcha from '../recaptcha/recaptcha';
 import RecaptchaForm from '@/funcs/recaptchaForm';
+import { quikworkoutGamesPath } from '@/api/quikworkoutGamesPath';
 
 const schema = z
  .object({
@@ -32,7 +33,11 @@ const schema = z
 
 type FormProps = z.infer<typeof schema>;
 
-export default function SigninForm() {
+interface props {
+  from?: string
+}
+
+export default function SigninForm({...props}:props) {
  const [error, setError] = useState<string | null>(null);
  const [status, setStatus] = useState<number>(0);
  const [load, setLoad] = useState<boolean>(false);
@@ -66,10 +71,14 @@ export default function SigninForm() {
   });
   if (typeof res == 'object') {
    if (!res.twoAuth) {
-    window.location.href = '/';
+    window.location.href = quikworkoutGamesPath+"/conta/minha-conta";
     return;
    }
-   window.location.href = '/auth/validar-codigo-dois-fatores';
+   if(props.from == "games") {
+    window.location.href = '/auth/validar-codigo-dois-fatores?from=games';
+   } else {
+    window.location.href = '/auth/validar-codigo-dois-fatores'
+   }
    return;
   }
   if (res == 'recaptcha inválido') {
@@ -134,11 +143,11 @@ export default function SigninForm() {
        <p className={styles.error}>senha inválida</p>
       )}
       {recaptchaError && <p className={styles.error}>{recaptchaError}</p>}
-      <Link href="/auth/esqueci-minha-senha" className={styles.forgotPassword}>
+      <Link href={props.from == "games" ? "/auth/esqueci-minha-senha?from=games" : "/auth/esqueci-minha-senha"} className={styles.forgotPassword}>
        Esqueceu sua senha?
       </Link>
       <Recaptcha className={styles.recaptcha} />
-      <Link href="/auth/cadastrar">Não possui uma conta?</Link>
+      <Link href={props.from == "games" ? "/auth/cadastrar?from=games" : "/auth/cadastrar"}>Não possui uma conta?</Link>
       <button
        disabled={load ? true : false}
        className={`${styles.login} ${load && styles.loading}`}

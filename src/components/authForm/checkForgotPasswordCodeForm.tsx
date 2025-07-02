@@ -22,7 +22,11 @@ const schema = z.object({
 
 type FormProps = z.infer<typeof schema>;
 
-export default function CheckForgotPasswordCodeForm() {
+interface props {
+ from?: string
+}
+
+export default function CheckForgotPasswordCodeForm({...props}: props) {
  const [timer, setTimer] = useState<number>(0);
  const [load, setLoad] = useState<boolean>(false);
  const [error, setError] = useState<checkForgotPasswordCodeResponse | null>(
@@ -54,11 +58,6 @@ export default function CheckForgotPasswordCodeForm() {
    window.location.href = '/auth/esqueci-minha-senha';
    return;
   }
-  if (res == 'usuário já possui autenticação de dois fatores') {
-   localStorage.removeItem('timeSendForgotPasswordCode');
-   window.location.href = '/';
-   return;
-  }
   if (res == 'código valido porém não foi possivel criar uma sessão') {
    await deleteCookie('userAuthResetPass');
    localStorage.removeItem('timeSendForgotPasswordCode');
@@ -80,7 +79,11 @@ export default function CheckForgotPasswordCodeForm() {
   } else {
    localStorage.removeItem('timeSendForgotPasswordCode');
    localStorage.setItem('timeResetPassword', new Date().getTime().toString());
-   window.location.href = '/auth/resetar-senha';
+    if (props.from == "games") {
+      window.location.href = "/auth/resetar-senha?from=games"
+    } else {
+      window.location.href = "/auth/resetar-senha"
+    }
    return;
   }
  }

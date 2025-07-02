@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 interface sendContactValidationCode {
  searchParams: {
   welcome: string | undefined;
+  from: string
  };
 }
 
@@ -25,6 +26,7 @@ export default async function SendContactValidationCode({
    welcome={props.searchParams.welcome == 'true' ? true : false}
    cookieName={cookieInfos?.name}
    cookieVal={cookieInfos?.value}
+   from={props.searchParams.from}
   />
  );
 }

@@ -45,9 +45,15 @@ const schema = z
   },
  );
 
+ interface props {
+  searchParams: {
+    from?: string
+  }
+}
+
 type FormProps = z.infer<typeof schema>;
 
-export default function SignupForm() {
+export default function SignupForm({...props}:props) {
  const [res, setStatus] = useState<ResponseSignup | null>(null);
  const [load, setLoad] = useState<boolean>(false);
  const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
@@ -81,7 +87,11 @@ export default function SignupForm() {
    window.grecaptcha.reset();
   }
   if (res == 201) {
-   window.location.href = '/auth/validar-contato';
+    if (props.searchParams.from == "games") {
+      window.location.href = '/auth/validar-contato?from=games'
+    } else {
+      window.location.href = '/auth/validar-contato'
+    }
    return;
   }
   setStatus(res);

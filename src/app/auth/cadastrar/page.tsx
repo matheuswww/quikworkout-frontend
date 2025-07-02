@@ -13,6 +13,12 @@ export const metadata: Metadata = {
  },
 };
 
-export default function Signup() {
- return <SignupForm />;
+interface props {
+  searchParams: {
+    from: string
+  }
+}
+
+export default function Signup({...props}:props) {
+ return <SignupForm searchParams={{ from: props.searchParams.from }} />;
 }
