@@ -1,8 +1,9 @@
 import { api } from '@/api/path';
 import { managerClothing } from './pathClothing';
 import { pathManager } from '../pathManager';
+import { ResponseErr } from '@/api/responseErr';
 
-export type createClothingResponse = 500 | 201 | 401;
+export type createClothingResponse = 500 | 201 | 401 | "nome já existe";
 
 interface params {
  nome: string;
@@ -37,7 +38,7 @@ export default async function CreateClothing(
  });
  try {
   let status: number = 0;
-  await fetch(url, {
+  const res: ResponseErr = await fetch(url, {
    method: 'POST',
    headers: {
     Cookie: cookie,
@@ -45,11 +46,17 @@ export default async function CreateClothing(
    credentials: 'include',
    body: formData,
   }).then((res) => {
-   status = res.status;
+    status = res.status;
+   if(status == 400) {
+    return res.json()
+   }
   });
   if (status == 201 || status == 401) {
    return status;
   }
+  if (status == 400) {
+    if (res.message == "nome já existe") return "nome já existe"
+  } 
   return 500;
  } catch (err) {
   console.error('error trying createClothing:', err);

@@ -144,6 +144,9 @@ export default function CreateClothingForm({ ...props }: props) {
   if (res == 500) {
    setPopupError(true);
   }
+  if (res == "nome já existe") {
+    setError("Este nome já é utilizado")
+  }
   if (res == 201) {
    setInventory(null);
    setResetForm(true);
