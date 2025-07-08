@@ -181,7 +181,7 @@ export default function Card({
   register,
   handleSubmit,
   formState: { errors },
- } = useForm<FormProps>({
+ } = useForm({
   mode: 'onBlur',
   reValidateMode: 'onBlur',
   resolver: zodResolver(schema),
