@@ -71,7 +71,11 @@ export default function SigninForm({...props}:props) {
   });
   if (typeof res == 'object') {
    if (!res.twoAuth) {
-    window.location.href = quikworkoutGamesPath+"/conta/minha-conta";
+    if(props.from == "games") {
+      window.location.href = quikworkoutGamesPath+"/conta/minha-conta";
+    } else {
+      window.location.href = "/";
+    }
     return;
    }
    if(props.from == "games") {
