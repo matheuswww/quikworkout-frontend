@@ -422,7 +422,7 @@ export default function Card({
    )}
    {responseError3ds && <p className={styles.error}>{responseError3ds}</p>}
    <button className={styles.button} type="submit" id="submit">
-    Salvar dados do cartão
+    Confirmar cartão
    </button>
   </form>
  ) : (

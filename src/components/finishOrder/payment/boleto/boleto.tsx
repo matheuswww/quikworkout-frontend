@@ -353,7 +353,7 @@ export default function Boleto({
     type="submit"
     id="submit"
    >
-    Salvar dados do boleto
+    Confirmar boleto
    </button>
   </form>
  ) : (

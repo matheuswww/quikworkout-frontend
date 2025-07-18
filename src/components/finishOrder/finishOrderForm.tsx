@@ -463,20 +463,14 @@ export default function FinishPurchaseForm({ ...props }: props) {
   ) {
    if (paymentRef.current instanceof HTMLElement) {
     !payment && setPayment(true);
-    paymentRef.current.scrollIntoView({
-     behavior: 'smooth',
-     block: 'center',
-    });
+    setResponseError("confirme seu meio de pagamento")
     return;
    }
   }
   if (address == null) {
    if (addressRef.current instanceof HTMLElement) {
     !address && setAddressForm(true);
-    addressRef.current.scrollIntoView({
-     behavior: 'smooth',
-     block: 'center',
-    });
+    setResponseError("confirme seu endereço e contato")
     return;
    }
   }

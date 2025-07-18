@@ -197,7 +197,6 @@ export default function Address({
      regionCode.options[j].value.includes(`${addressSaved[i].codigoRegiao} - `)
     ) {
       val = regionCode.options[j].value
-      console.log(regionCode.options[j])
     }
    }
    
@@ -541,7 +540,7 @@ export default function Address({
        ))}
       </select>
       <button type="submit" id="submit" className={styles.button}>
-       Salvar endereço e contato
+       Confimar endereço e contato
       </button>
      </form>
     ) : (
