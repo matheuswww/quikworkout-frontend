@@ -171,8 +171,8 @@
 
 @media (max-width: 940px) {
  .logo {
-  width: 120px;
-  height: 40px;
+  width: 115px;
+  height: 55px;
  }
 }
 
@@ -180,7 +180,7 @@
  .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 21px;
+  grid-template-rows: 24px;
   top: 0px;
   position: relative;
  }
