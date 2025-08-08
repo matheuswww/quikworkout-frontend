@@ -151,9 +151,8 @@
 }
 
 .logo {
- margin-top: 5px;
- margin-left: 10px;
-}
+  margin-top: 13px;
+ }
 
 @media (max-width: 490px) {
  .menu {
@@ -169,10 +168,10 @@
 }
 
 @media (max-width: 940px) {
- .logo {
-  width: 120px;
-  height: 41px;
- }
+  .logo {
+  margin-top: 5px;
+  margin-left: 10px;
+  }
 }
 
 @media (min-width: 950px) {
@@ -183,9 +182,9 @@
   top: 0px;
   position: relative;
  }
- .logo {
-  margin-top: 13px;
- }
+  .logo {
+    margin-top: 9px;
+  }
  .content {
   position: initial;
   grid-column: span 2;
