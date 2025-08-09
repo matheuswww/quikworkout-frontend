@@ -32,53 +32,14 @@ export default function Collections() {
      <h2 className={styles.h2}>Nova Coleção</h2>
      <ul className={styles.slide} ref={slide}>
       <li className={styles.product}>
-       <Link className={styles.card} href="/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
-        <p>Regatinhas Pry</p>
+       <Link className={styles.card} href="/roupa/Games/Camiseta%20para%20participar%20do%20quikworkout%20games!/b9c39e96-1296-4901-aefc-3a5d23f22e09?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYjljMzllOTYtMTI5Ni00OTAxLWFlZmMtM2E1ZDIzZjIyZTA5L1ByZXRhL1ByZXRhMC5qcGVn">
+        <p>Games</p>
         <SkeletonImage
          draggable={false}
-         src="/img/collection_white.jpg"
+         src="/img/collection_games.jpeg"
          width={600}
          height={900}
-         alt="mulher olhando para a câmera com uma regata branca"
-         className={styles.skeleton}
-        />
-       </Link>
-      </li>
-      <li className={styles.product}>
-       <Link className={styles.card} href="/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
-        <p>Regatinhas Pry</p>
-        <SkeletonImage
-         draggable={false}
-         src="/img/collection_black.jpg"
-         width={600}
-         height={900}
-         alt="mulher olhando para a câmera com uma regata preta"
-         className={styles.skeleton}
-        />
-       </Link>
-      </li>
-      <li className={styles.product}>
-       <Link className={styles.card} href="https://quikworkout.com.br/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
-        <p>Regatinhas Pry</p>
-        <SkeletonImage
-         draggable={false}
-         src="/img/collection_pink.jpg"
-         width={600}
-         height={900}
-         alt="mulher olhando para a câmera com uma regata rosa"
-         className={styles.skeleton}
-        />
-       </Link>
-      </li>
-      <li className={styles.product}>
-       <Link className={styles.card} href="https://quikworkout.com.br/roupa/Regatinha%20Pry/Regatinha%20malha%20canelada%20em%20poliamida%20com%20forro/ae62b558-46db-414b-a820-ee156fb8377d?img=aHR0cHM6Ly9iYWNrZW5kLnF1aWt3b3Jrb3V0LmNvbS5ici9pbWFnZXMvYWU2MmI1NTgtNDZkYi00MTRiLWE4MjAtZWUxNTZmYjgzNzdkL1ByZXRhL1ByZXRhMC5qcGVn">
-        <p>Regatinhas Pry</p>
-        <SkeletonImage
-         draggable={false}
-         src="/img/collection_green.jpg"
-         width={600}
-         height={900}
-         alt="mulher olhando para a câmera com uma regata verde"
+         alt="Mulher com uma camiseta escrito quikworkout games"
          className={styles.skeleton}
         />
        </Link>

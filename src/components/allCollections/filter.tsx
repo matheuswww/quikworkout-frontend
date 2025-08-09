@@ -127,12 +127,12 @@ export default function Filter() {
    <label htmlFor="category">Categoria</label>
    <select id="category" {...register('category')}>
     <option value="">Selecione uma opção</option>
-    <option value="Modelo Pry">Modelo Pry</option>
+    <option value="Modelo Pry">Games</option>
    </select>
    <label htmlFor="material">Material</label>
    <select id="material" {...register('material')}>
     <option value="">Selecione uma opção</option>
-    <option value="Poliamida">Poliamida</option>
+    <option value="Poliamida">Viscolycra</option>
    </select>
    <label>Genêro</label>
    <div className={styles.gender}>
